@@ -2,6 +2,7 @@ using backend.DTOs;
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace backend.Controllers
 {
@@ -17,6 +18,7 @@ namespace backend.Controllers
         }
 
         [HttpPost("register")]
+        [SwaggerOperation(Summary = "Đăng ký tài khoản mới")]
         public async Task<ActionResult<AuthResponseDto>> Register(RegisterUserDto registerDto)
         {
             try
@@ -31,6 +33,7 @@ namespace backend.Controllers
         }
 
         [HttpPost("login")]
+        [SwaggerOperation(Summary = "Đăng nhập")]
         public async Task<ActionResult<AuthResponseDto>> Login(LoginDto loginDto)
         {
             try
@@ -46,6 +49,7 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpGet("me")]
+        [SwaggerOperation(Summary = "Xem thông tin cá nhân")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -68,6 +72,7 @@ namespace backend.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
+        [SwaggerOperation(Summary = "Xem tất cả người dùng(ADMIN)")]
         public async Task<ActionResult<List<UserDto>>> GetAllUsers()
         {
             var users = await _authService.GetAllUsersAsync();
@@ -76,6 +81,7 @@ namespace backend.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("users/{id}")]
+        [SwaggerOperation(Summary = "Xem chi tiết người dùng dựa vào id(ADMIN)")]
         public async Task<ActionResult<UserDto>> GetUserById(Guid id)
         {
             try
@@ -89,8 +95,10 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPut("users/{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, RegisterUserDto updateDto)
+        [Authorize]
+        [HttpPatch("users/{id}")]
+        [SwaggerOperation(Summary = "Cập nhật thông tin")]
+        public async Task<IActionResult> UpdateUser(Guid id, UpdateUserDto updateDto)
         {
             try
             {
@@ -105,6 +113,7 @@ namespace backend.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("users/{id}")]
+        [SwaggerOperation(Summary = "Xóa người dùng(ADMIN)")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             try

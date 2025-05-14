@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Buffers;
+using backend.role;
 
 namespace backend.Models
 {
@@ -12,11 +12,7 @@ namespace backend.Models
 
         [Required]
         [StringLength(50)]
-        public string FirstName { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(50)]
-        public string LastName { get; set; } = string.Empty;
+        public string Full_name {get; set;} = string.Empty;
 
         [Required]
         [EmailAddress]
@@ -26,14 +22,15 @@ namespace backend.Models
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
 
-        public string? PhoneNumber { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? LastLogin { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = false;
 
-        public string Role { get; set; } = "User"; // Default role
+        public Role Role { get; set; }
     }
 }
