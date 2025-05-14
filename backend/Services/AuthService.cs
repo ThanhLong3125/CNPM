@@ -1,6 +1,7 @@
 using backend.Data;
 using backend.DTOs;
 using backend.Models;
+using backend.role;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,7 +16,7 @@ namespace backend.Services
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
         Task<UserDto> GetUserByIdAsync(Guid id);
         Task<List<UserDto>> GetAllUsersAsync();
-        Task<bool> UpdateUserAsync(Guid id, RegisterUserDto updateDto);
+        Task<bool> UpdateUserAsync(Guid id, UpdateUserDto updateDto);
         Task<bool> DeleteUserAsync(Guid id);
     }
 
@@ -37,19 +38,10 @@ namespace backend.Services
             {
                 throw new ApplicationException("User with this email already exists");
             }
-
-            // Validate role
-            if (registerDto.Role != "User" && registerDto.Role != "Doctor" && registerDto.Role != "Admin")
-            {
-                throw new ApplicationException("Invalid role. Role must be User, Doctor, or Admin");
-            }
-
-            // Create new user
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
+                Full_name = registerDto.Full_name,
                 Email = registerDto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
                 PhoneNumber = registerDto.PhoneNumber,
@@ -106,7 +98,7 @@ namespace backend.Services
             return users.Select(MapToUserDto).ToList();
         }
 
-        public async Task<bool> UpdateUserAsync(Guid id, RegisterUserDto updateDto)
+        public async Task<bool> UpdateUserAsync(Guid id, UpdateUserDto updateDto)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -115,31 +107,27 @@ namespace backend.Services
                 throw new ApplicationException("User not found");
             }
 
-            // Check if email is being changed and if it's already in use
-            if (user.Email != updateDto.Email &&
-                await _context.Users.AnyAsync(u => u.Email == updateDto.Email))
+            // Chỉ cập nhật khi có giá trị (không null hoặc trắng)
+            if (!string.IsNullOrWhiteSpace(updateDto.Full_name))
             {
-                throw new ApplicationException("Email is already in use");
+                user.Full_name = updateDto.Full_name;
             }
 
-            // Validate role
-            if (updateDto.Role != "User" && updateDto.Role != "Doctor" && updateDto.Role != "Admin")
+            if (!string.IsNullOrWhiteSpace(updateDto.PhoneNumber))
             {
-                throw new ApplicationException("Invalid role. Role must be User, Doctor, or Admin");
+                user.PhoneNumber = updateDto.PhoneNumber;
             }
 
-            // Update user properties
-            user.FirstName = updateDto.FirstName;
-            user.LastName = updateDto.LastName;
-            user.Email = updateDto.Email;
-            user.PhoneNumber = updateDto.PhoneNumber;
-            user.Role = updateDto.Role;
-
-            // Update password if provided
-            if (!string.IsNullOrEmpty(updateDto.Password))
+            if (!string.IsNullOrWhiteSpace(updateDto.Password))
             {
+                if (updateDto.Password.Length < 6 || updateDto.Password.Length > 100)
+                {
+                    throw new ApplicationException("Password must be between 6 and 100 characters.");
+                }
+
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updateDto.Password);
             }
+
 
             await _context.SaveChangesAsync();
             return true;
@@ -166,14 +154,15 @@ namespace backend.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is not configured"));
 
+            string roleName = user.Role.ToString();
+
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Name, user.Full_name),
+        new Claim(ClaimTypes.Role, roleName)
+    };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -192,20 +181,19 @@ namespace backend.Services
             {
                 Token = tokenHandler.WriteToken(token),
                 Expiration = tokenDescriptor.Expires ?? DateTime.UtcNow.AddDays(7),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Full_name = user.Full_name,
                 Email = user.Email,
                 Role = user.Role
             };
         }
+
 
         private UserDto MapToUserDto(User user)
         {
             return new UserDto
             {
                 Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Full_name = user.Full_name,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Role = user.Role,

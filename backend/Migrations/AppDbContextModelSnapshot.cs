@@ -36,7 +36,7 @@ namespace backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Full_name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -47,21 +47,16 @@ namespace backend.Migrations
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -70,14 +65,14 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a22bf6fa-8a73-4ad4-955b-a325c6b31718"),
-                            CreatedAt = new DateTime(2025, 5, 7, 5, 29, 40, 101, DateTimeKind.Utc).AddTicks(5396),
+                            Id = new Guid("11a19533-f2b9-419a-a462-a9743b4954c1"),
+                            CreatedAt = new DateTime(2025, 5, 14, 16, 15, 21, 714, DateTimeKind.Utc).AddTicks(5983),
                             Email = "admin@aidims.com",
-                            FirstName = "Admin",
+                            Full_name = "Admin",
                             IsActive = true,
-                            LastName = "User",
-                            PasswordHash = "$2a$11$DCzSJ3XzZ37H2T2BTul8oOeB70ZM2PSsypS0AnntbhF0BkvHxbrli",
-                            Role = "Admin"
+                            PasswordHash = "$2a$11$//zOPRdQ/6hlwkdfCyrwMuouRfYYBE7Ak1N68DNYOQmuNnqfiDYe.",
+                            PhoneNumber = "",
+                            Role = 1
                         });
                 });
 #pragma warning restore 612, 618

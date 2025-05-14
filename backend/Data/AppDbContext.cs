@@ -1,4 +1,5 @@
 using backend.Models;
+using backend.role;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data
@@ -20,12 +21,11 @@ namespace backend.Data
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = adminId,
-                FirstName = "Admin",
-                LastName = "User",
+                Full_name = "Admin",
                 Email = "admin@aidims.com",
-                // Default password: Admin123! (hashed)
+                PhoneNumber = "null",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
-                Role = "Admin",
+                Role = Role.Admin,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             });
