@@ -1,5 +1,4 @@
 using backend.Models;
-using backend.role;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data
@@ -11,6 +10,7 @@ namespace backend.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,9 @@ namespace backend.Data
                 Id = adminId,
                 Full_name = "Admin",
                 Email = "admin@aidims.com",
-                PhoneNumber = "null",
+                // Default password: Admin123! (hashed)
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
-                Role = Role.Admin,
+                Role = role.Role.Admin,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             });
