@@ -1,0 +1,39 @@
+# Visual Studio related
+.vs/
+*.suo
+*.user
+*.sln.docstates
+*.cache
+*.resharper.user*
+_ReSharper.*
+*.csproj.user
+*.pfx
+*.vspscc
+*.vssscc
+*.xaml.designer.cs
+
+# Build output
+bin/
+obj/
+
+# Package management
+packages/
+*.nupkg
+*.paket
+
+# Rider
+.idea/
+
+# Node.js frontend (nếu có)
+frontend/node_modules/
+frontend/build/
+frontend/.cache/
+frontend/dist/
+
+# General OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
