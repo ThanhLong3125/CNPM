@@ -12,7 +12,7 @@ namespace backend.Models
 
         [Required]
         [StringLength(50)]
-        public string Full_name {get; set;} = string.Empty;
+        public string Full_name { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
@@ -32,5 +32,7 @@ namespace backend.Models
         public bool IsActive { get; set; } = false;
 
         public Role Role { get; set; }
+        
+        public string? Specialty { get; set; }
     }
 }

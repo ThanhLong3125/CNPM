@@ -29,6 +29,60 @@ namespace backend.Data
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             });
+            var staffId = Guid.NewGuid();
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = staffId,
+                Full_name = "Staff",
+                Email = "staff@aidims.com",
+                // Default password: Staff123! (hashed)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Staff123!"),
+                Role = role.Role.Staff,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            });
+
+            // Seed doctor users with different specialties
+            var doctorId1 = Guid.NewGuid();
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = doctorId1,
+                Full_name = "Thanh Long",
+                Email = "doctor1@aidims.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doctor123!"),
+                Role = role.Role.Doctor,
+                Specialty = "Radiology",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            });
+
+            var doctorId2 = Guid.NewGuid();
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = doctorId2,
+                Full_name = "Hoang Thien",
+                Email = "doctor2@aidims.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doctor123!"),
+                Role = role.Role.Doctor,
+                Specialty = "Cardiology",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            });
+
+            var doctorId3 = Guid.NewGuid();
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = doctorId3,
+                Full_name = "Khang To",
+                Email = "doctor3@aidims.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doctor123!"),
+                Role = role.Role.Doctor,
+                Specialty = "Neurology",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            });
         }
     }
 }
+
+
