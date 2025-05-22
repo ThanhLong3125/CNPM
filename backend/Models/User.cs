@@ -25,12 +25,6 @@ namespace backend.Models
         [Required]
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public DateTime? LastLogin { get; set; }
-
-        public bool IsActive { get; set; } = false;
-
         public Role Role { get; set; }
         
         public string? Specialty { get; set; }

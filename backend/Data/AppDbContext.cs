@@ -11,6 +11,8 @@ namespace backend.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<MedicalRecord> MedicalRecords { get; set; }
+        public DbSet<Patient> Patients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,8 +28,6 @@ namespace backend.Data
                 // Default password: Admin123! (hashed)
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
                 Role = role.Role.Admin,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
             });
             var staffId = Guid.NewGuid();
             modelBuilder.Entity<User>().HasData(new User
@@ -38,8 +38,6 @@ namespace backend.Data
                 // Default password: Staff123! (hashed)
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Staff123!"),
                 Role = role.Role.Staff,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
             });
 
             // Seed doctor users with different specialties
@@ -52,8 +50,7 @@ namespace backend.Data
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doctor123!"),
                 Role = role.Role.Doctor,
                 Specialty = "Radiology",
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
+
             });
 
             var doctorId2 = Guid.NewGuid();
@@ -65,8 +62,6 @@ namespace backend.Data
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doctor123!"),
                 Role = role.Role.Doctor,
                 Specialty = "Cardiology",
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
             });
 
             var doctorId3 = Guid.NewGuid();
@@ -78,8 +73,6 @@ namespace backend.Data
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doctor123!"),
                 Role = role.Role.Doctor,
                 Specialty = "Neurology",
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
             });
         }
     }

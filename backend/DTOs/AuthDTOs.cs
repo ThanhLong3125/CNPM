@@ -24,7 +24,7 @@ namespace backend.DTOs
         [Required]
         [EnumDataType(typeof(Role))]
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Role Role { get; set; } = Role.User;
+        public Role Role { get; set; } = Role.Staff;
     }
 
     public class UpdateUserDto
@@ -60,8 +60,5 @@ namespace backend.DTOs
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public Role Role { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? LastLogin { get; set; }
-        public bool IsActive { get; set; }
     }
 }
