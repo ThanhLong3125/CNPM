@@ -46,8 +46,6 @@ namespace backend.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
                 PhoneNumber = registerDto.PhoneNumber,
                 Role = registerDto.Role,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
             };
 
             await _context.Users.AddAsync(user);
@@ -66,15 +64,6 @@ namespace backend.Services
             {
                 throw new ApplicationException("Invalid email or password");
             }
-
-            if (!user.IsActive)
-            {
-                throw new ApplicationException("User account is deactivated");
-            }
-
-            // Update last login
-            user.LastLogin = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
 
             // Generate JWT token
             return GenerateJwtToken(user);
@@ -197,9 +186,6 @@ namespace backend.Services
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Role = user.Role,
-                CreatedAt = user.CreatedAt,
-                LastLogin = user.LastLogin,
-                IsActive = user.IsActive
             };
         }
     }

@@ -7,18 +7,9 @@ namespace backend.DTOs
         public int Id { get; set; }
         public string FullName { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
-        public int Age => CalculateAge(DateOfBirth);
         public string Gender { get; set; } = string.Empty;
         public string? ContactInfo { get; set; }
         public string? MedicalHistory { get; set; }
-        
-        private int CalculateAge(DateTime birthDate)
-        {
-            var today = DateTime.Today;
-            var age = today.Year - birthDate.Year;
-            if (birthDate.Date > today.AddYears(-age)) age--;
-            return age;
-        }
     }
 
     public class CreatePatientDto
@@ -41,7 +32,21 @@ namespace backend.DTOs
         public string? MedicalHistory { get; set; }
     }
 
-    public class UpdatePatientDto : CreatePatientDto
+    public class UpdatePatientDto
     {
+        [StringLength(100)]
+        public string? FullName { get; set; }
+
+        public DateTime? DateOfBirth { get; set; }
+
+        [StringLength(20)]
+        public string? Gender { get; set; }
+
+        [StringLength(200)]
+        public string? ContactInfo { get; set; }
+
+        [StringLength(500)]
+        public string? MedicalHistory { get; set; }
     }
+
 }

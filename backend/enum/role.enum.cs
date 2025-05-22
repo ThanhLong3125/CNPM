@@ -2,13 +2,10 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 namespace backend.role
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]  // Bắt buộc nếu muốn serialize là chuỗi
+    [JsonConverter(typeof(JsonStringEnumConverter))]
 
     public enum Role
     {
-        [EnumMember(Value = "User")]
-        User = 0,
-
         [EnumMember(Value = "Admin")]
         Admin = 1,
 
@@ -16,6 +13,9 @@ namespace backend.role
         Doctor = 2,
 
         [EnumMember(Value = "Staff")]
-        Staff = 3
+        Staff = 3,
+
+        [EnumMember(Value = "Technician")]
+        Technician = 4
     }
 }
