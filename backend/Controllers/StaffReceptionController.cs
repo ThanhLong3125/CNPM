@@ -95,8 +95,22 @@ namespace backend.Controllers
         [HttpGet("AllDoctors")]
         public async Task<IActionResult> ListDoctors()
         {
-            var doctors = await _staffReceptionService.ListUserAsync();
+            var doctors = await _staffReceptionService.ListDoctorAsync();
             return Ok(doctors);
         }
+
+        [HttpGet("medicalrecords/patient/{id}")]
+        public async Task<IActionResult> GetMedicalRecordsByPatientId(Guid id)
+        {
+            var records = await _staffReceptionService.SreachlistMediaRecordbyId(id);
+
+            if (records == null || !records.Any())
+            {
+                return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
+            }
+
+            return Ok(records);
+        }
+
     }
 }
