@@ -2,6 +2,7 @@ using backend.DTOs;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace backend.Controllers
 {
@@ -18,6 +19,7 @@ namespace backend.Controllers
 
         // POST: api/StaffReception/patient
         [HttpPost("patient")]
+        [SwaggerOperation(Summary = "Tạo hồ sơ bệnh nhân")]
         public async Task<IActionResult> CreatePatient([FromBody] CreatePatientDto dto)
         {
             if (!ModelState.IsValid)
@@ -35,6 +37,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("patients")]
+        [SwaggerOperation(Summary = "Chỉnh sửa hồ sơ bệnh nhân")]
         public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientDto dto)
         {
             try
@@ -51,6 +54,7 @@ namespace backend.Controllers
 
         // GET: api/StaffReception/patient/{id}
         [HttpGet("patient/{id}")]
+        [SwaggerOperation(Summary = "Tìm kiếm bệnh nhân theo id")]
         public async Task<IActionResult> GetPatientById([FromRoute] Guid id)
         {
             try
@@ -69,6 +73,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("patients")]
+        [SwaggerOperation(Summary = "Tìm kiếm tất cả bệnh nhân")]
         public async Task<IActionResult> GetAllPatients()
         {
             var patients = await _staffReceptionService.ListPatientAsync();
@@ -76,6 +81,7 @@ namespace backend.Controllers
         }
 
         [HttpPost("medicalrecords")]
+        [SwaggerOperation(Summary = "Tạo hồ sơ bệnh án")]
         public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto dto)
         {
             if (!ModelState.IsValid)
@@ -93,6 +99,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("AllDoctors")]
+        [SwaggerOperation(Summary = "Xem các bác sĩ")]
         public async Task<IActionResult> ListDoctors()
         {
             var doctors = await _staffReceptionService.ListDoctorAsync();
@@ -100,6 +107,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("medicalrecords/patient/{id}")]
+        [SwaggerOperation(Summary = "Tìm kiếm hồ sơ bệnh án")]
         public async Task<IActionResult> GetMedicalRecordsByPatientId(Guid id)
         {
             var records = await _staffReceptionService.SreachlistMediaRecordbyId(id);
