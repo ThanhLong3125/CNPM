@@ -18,6 +18,7 @@ namespace backend.Services
         Task<List<UserDto>> GetAllUsersAsync();
         Task<bool> UpdateUserAsync(Guid id, UpdateUserDto updateDto);
         Task<bool> DeleteUserAsync(Guid id);
+        Task<bool> ResetPasswordByEmailAsync(string email, string newPassword);
     }
 
     public class AuthService : IAuthService
@@ -187,6 +188,24 @@ namespace backend.Services
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Role = user.Role,
             };
+        }
+
+        public async Task<bool> ResetPasswordByEmailAsync(string email, string newPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                throw new ApplicationException("Email không tồn tại.");
+            }
+
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+            {
+                throw new ApplicationException("Mật khẩu phải có ít nhất 6 ký tự.");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -3,8 +3,6 @@ using backend.DTOs;
 using backend.Models;
 using backend.role;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -13,12 +11,12 @@ namespace backend.Services
     public interface IStaffReceptionService
     {
         Task<string> CreatePatientAsync(CreatePatientDto createPatientDto);
-
         Task<Patient> UpdatePatientAsync(Guid id, UpdatePatientDto updatePatientDto);
         Task<Patient> SreachPatientAsync(Guid id);
         Task<List<Patient>> ListPatientAsync();
-        Task<List<User>> ListUserAsync();
+        Task<List<User>> ListDoctorAsync();
         Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto createMedicalRecordDto);
+        Task<List<MedicalRecord>> SreachlistMediaRecordbyId(Guid id);
     }
 
     public class StaffReceptionService : IStaffReceptionService
@@ -127,12 +125,22 @@ namespace backend.Services
             return medicalRecord.Id.ToString();
         }
 
-        public async Task<List<User>> ListUserAsync()
+        public async Task<List<User>> ListDoctorAsync()
         {
             var doctors = await _context.Users
                 .Where(u => u.Role == Role.Doctor)
                 .ToListAsync();
             return doctors;
         }
+
+        public async Task<List<MedicalRecord>> SreachlistMediaRecordbyId(Guid id)
+        {
+            var records = await _context.MedicalRecords
+                .Where(r => r.PatientId == id)
+                .ToListAsync();
+
+            return records;
+        }
+
     }
 }
