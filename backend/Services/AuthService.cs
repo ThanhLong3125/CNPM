@@ -18,6 +18,7 @@ namespace backend.Services
         Task<List<UserDto>> GetAllUsersAsync();
         Task<bool> UpdateUserAsync(Guid id, UpdateUserDto updateDto);
         Task<bool> DeleteUserAsync(Guid id);
+        Task<bool> ResetPasswordByEmailAsync(string email, string newPassword);
     }
 
     public class AuthService : IAuthService
@@ -46,8 +47,6 @@ namespace backend.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
                 PhoneNumber = registerDto.PhoneNumber,
                 Role = registerDto.Role,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
             };
 
             await _context.Users.AddAsync(user);
@@ -66,15 +65,6 @@ namespace backend.Services
             {
                 throw new ApplicationException("Invalid email or password");
             }
-
-            if (!user.IsActive)
-            {
-                throw new ApplicationException("User account is deactivated");
-            }
-
-            // Update last login
-            user.LastLogin = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
 
             // Generate JWT token
             return GenerateJwtToken(user);
@@ -197,10 +187,25 @@ namespace backend.Services
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Role = user.Role,
-                CreatedAt = user.CreatedAt,
-                LastLogin = user.LastLogin,
-                IsActive = user.IsActive
             };
+        }
+
+        public async Task<bool> ResetPasswordByEmailAsync(string email, string newPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                throw new ApplicationException("Email không tồn tại.");
+            }
+
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+            {
+                throw new ApplicationException("Mật khẩu phải có ít nhất 6 ký tự.");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

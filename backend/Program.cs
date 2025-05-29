@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.Services;
+using backend.Services.BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,7 +10,13 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 
 // Configure Swagger with JWT authentication
@@ -31,7 +38,6 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -73,6 +79,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Register services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IStaffReceptionService, StaffReceptionService>();
+
+// Register background services
+builder.Services.AddSingleton<NotificationBackgroundService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<NotificationBackgroundService>());
 
 // Add CORS
 builder.Services.AddCors(options =>

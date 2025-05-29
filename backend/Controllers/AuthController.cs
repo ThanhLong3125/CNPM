@@ -126,5 +126,13 @@ namespace backend.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        [HttpPost("reset-password-email")]
+        public async Task<IActionResult> ResetPasswordByEmail([FromBody] ResetPasswordByEmailDto dto)
+        {
+            var result = await _authService.ResetPasswordByEmailAsync(dto.Email, dto.NewPassword);
+            return Ok(new { message = "Mật khẩu đã được đặt lại thành công." });
+        }
+
     }
 }
