@@ -1,6 +1,4 @@
-using backend.Models;
 using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace backend.DTOs
 {

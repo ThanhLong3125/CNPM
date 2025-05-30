@@ -60,13 +60,6 @@ namespace backend.Models
         // A medical record can have many images associated with it.
         public ICollection<Image>? Images { get; set; }
 
-        // NEW: Track who uploaded the image (Technician)
-        [Required]
-        public Guid UploadedByUserId { get; set; }
-
-        [ForeignKey("UploadedByUserId")]
-        public User UploadedByUser { get; set; } = null!;
-
         // --- Audit Fields ---
         [Column("LastUpdatedAt")]
         public DateTime? LastUpdatedAt { get; set; }

@@ -32,5 +32,16 @@ namespace backend.Models
         // Status of the image in the workflow (e.g., "Pending Review", "Reviewed", "Retake Needed")
         [StringLength(50)]
         public string? Status { get; set; }
+
+        // NEW: Track who uploaded the image (Technician)
+        [Required]
+        public Guid UploadedByUserId { get; set; }
+
+        [ForeignKey("UploadedByUserId")]
+        public User UploadedByUser { get; set; } = null!;
+
+        // NEW: Fields for Doctor's use related to THIS IMAGE
+        [StringLength(1000)]
+        public string? DoctorImageNotes { get; set; } // Specific notes about this image
     }
 }
