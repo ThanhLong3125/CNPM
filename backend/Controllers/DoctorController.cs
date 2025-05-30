@@ -2,6 +2,7 @@
 using System.Security.Claims; // Needed for ClaimTypes
 using backend.DTOs;
 using backend.Filters; // If you put your filter in this namespace
+using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

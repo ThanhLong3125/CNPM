@@ -460,7 +460,7 @@ namespace backend.Services
                     Id = d.Id,
                     Full_name = d.Full_name,
                     Email = d.Email,
-                    Role = d.Role.ToString(), // Here, we correctly convert the enum to a string for the DTO
+                    Role = d.Role, // Here, we correctly convert the enum to a string for the DTO
                     Specialty = d.Specialty,
                 })
                 .ToList();
