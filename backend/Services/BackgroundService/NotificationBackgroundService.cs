@@ -1,6 +1,5 @@
-using backend.DTOs;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
+using backend.DTOs;
 
 namespace backend.Services.BackgroundServices
 {
@@ -12,7 +11,8 @@ namespace backend.Services.BackgroundServices
 
         public NotificationBackgroundService(
             IServiceScopeFactory scopeFactory,
-            ILogger<NotificationBackgroundService> logger)
+            ILogger<NotificationBackgroundService> logger
+        )
         {
             _scopeFactory = scopeFactory;
             _notificationQueue = new ConcurrentQueue<CreateNotificationDto>();
@@ -54,13 +54,17 @@ namespace backend.Services.BackgroundServices
             }
 
             using var scope = _scopeFactory.CreateScope();
-            var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
+            var notificationService =
+                scope.ServiceProvider.GetRequiredService<INotificationService>();
 
             // Process up to 20 notifications at a time
             var processCount = 0;
             var maxProcessCount = 20;
 
-            while (processCount < maxProcessCount && _notificationQueue.TryDequeue(out var notification))
+            while (
+                processCount < maxProcessCount
+                && _notificationQueue.TryDequeue(out var notification)
+            )
             {
                 try
                 {
@@ -69,7 +73,11 @@ namespace backend.Services.BackgroundServices
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error creating notification: {Message}", notification.Message);
+                    _logger.LogError(
+                        ex,
+                        "Error creating notification: {Message}",
+                        notification.Message
+                    );
                 }
 
                 if (stoppingToken.IsCancellationRequested)
@@ -88,7 +96,10 @@ namespace backend.Services.BackgroundServices
     // Extension method to make it easier to queue notifications from anywhere in the application
     public static class NotificationBackgroundServiceExtensions
     {
-        public static void QueueNotification(this IServiceProvider services, CreateNotificationDto notification)
+        public static void QueueNotification(
+            this IServiceProvider services,
+            CreateNotificationDto notification
+        )
         {
             var backgroundService = services.GetService<NotificationBackgroundService>();
             backgroundService?.QueueNotification(notification);
