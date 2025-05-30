@@ -118,7 +118,7 @@ You'll likely need new services or significant enhancements to existing ones:
 ### 6\. **Program.cs (DI)**
 
   * Register all your new services in `Program.cs`:
-    ```csharp
+    ```cs
     builder.Services.AddScoped<IDoctorService, DoctorService>();
     builder.Services.AddScoped<IImagingTechnicianService, ImagingTechnicianService>();
     // ... any other new services or interfaces

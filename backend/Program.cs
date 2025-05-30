@@ -1,7 +1,7 @@
 using System.Text;
 using backend.Data;
-using backend.Filters;
-using backend.Services;
+using backend.Filters; // <-- Make sure this using directive is present
+using backend.Services; // <-- Make sure this using directive is present
 using backend.Services.BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder
-    .Services.AddControllers()
+    .Services.AddControllers(options => // <-- ADD THE OPTIONS HERE
+    {
+        options.Filters.Add<CustomExceptionFilter>(); // Add globally
+    }) // <--- ENSURE THE CLOSING PARENTHESIS IS HERE
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = System
@@ -26,11 +29,6 @@ builder
             .JsonNamingPolicy
             .CamelCase;
     });
-
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<CustomExceptionFilter>(); // Add globally
-});
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -111,6 +109,7 @@ builder
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IStaffReceptionService, StaffReceptionService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>(); // <-- ADD THIS HERE
 
 // Register background services
 builder.Services.AddSingleton<NotificationBackgroundService>();
