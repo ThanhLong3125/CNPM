@@ -12,6 +12,7 @@ namespace backend.Data
         public DbSet<User> Users { get; set; } = null!; // Tells the compiler it won't be null
         public DbSet<Patient> Patients { get; set; } = null!;
         public DbSet<MedicalRecord> MedicalRecords { get; set; } = null!;
+        public DbSet<Image> Images { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
