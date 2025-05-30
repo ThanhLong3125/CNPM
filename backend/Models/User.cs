@@ -22,11 +22,8 @@ namespace backend.Models
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
 
-        [Required]
-        public string PhoneNumber { get; set; } = string.Empty;
-
         public Role Role { get; set; }
-        
+
         public string? Specialty { get; set; }
     }
 }

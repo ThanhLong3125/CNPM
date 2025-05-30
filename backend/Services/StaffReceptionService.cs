@@ -3,8 +3,6 @@ using backend.DTOs;
 using backend.Models;
 using backend.role;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using System.Text;
 
 namespace backend.Services
 {
@@ -33,9 +31,10 @@ namespace backend.Services
         public async Task<string> CreatePatientAsync(CreatePatientDto createPatientDto)
         {
             var existingPatient = await _context.Patients.FirstOrDefaultAsync(p =>
-                p.FullName.ToLower() == createPatientDto.FullName.ToLower().Trim() &&
-                p.DateOfBirth.Date == createPatientDto.DateOfBirth.Date &&
-                p.Gender.ToLower() == createPatientDto.Gender.ToLower().Trim());
+                p.FullName.ToLower() == createPatientDto.FullName.ToLower().Trim()
+                && p.DateOfBirth.Date == createPatientDto.DateOfBirth.Date
+                && p.Gender.ToLower() == createPatientDto.Gender.ToLower().Trim()
+            );
             if (existingPatient != null)
             {
                 throw new Exception("Bệnh nhân đã tồn tại trong hệ thống.");
@@ -47,7 +46,7 @@ namespace backend.Services
                 DateOfBirth = createPatientDto.DateOfBirth,
                 Gender = createPatientDto.Gender.Trim(),
                 ContactInfo = createPatientDto.ContactInfo?.Trim(),
-                MedicalHistory = createPatientDto.MedicalHistory?.Trim()
+                MedicalHistory = createPatientDto.MedicalHistory?.Trim(),
             };
 
             await _context.Patients.AddAsync(patient);
@@ -100,10 +99,13 @@ namespace backend.Services
             return patients;
         }
 
-
-        public async Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto createMedicalRecordDto)
+        public async Task<string> CreateMediaRecordAsync(
+            CreateMedicalRecordDto createMedicalRecordDto
+        )
         {
-            var patientExists = await _context.Patients.AnyAsync(p => p.Id == createMedicalRecordDto.PatientId);
+            var patientExists = await _context.Patients.AnyAsync(p =>
+                p.Id == createMedicalRecordDto.PatientId
+            );
             if (!patientExists)
             {
                 throw new Exception("Bệnh nhân không tồn tại.");
@@ -116,7 +118,7 @@ namespace backend.Services
                 CreatedDate = DateTime.UtcNow,
                 Symptoms = createMedicalRecordDto.Symptoms.Trim(),
                 IsPriority = createMedicalRecordDto.IsPriority,
-                AssignedPhysicianId = createMedicalRecordDto.AssignedPhysicianId
+                AssignedPhysicianId = createMedicalRecordDto.AssignedPhysicianId,
             };
 
             await _context.MedicalRecords.AddAsync(medicalRecord);
@@ -127,20 +129,16 @@ namespace backend.Services
 
         public async Task<List<User>> ListDoctorAsync()
         {
-            var doctors = await _context.Users
-                .Where(u => u.Role == Role.Doctor)
-                .ToListAsync();
+            var doctors = await _context.Users.Where(u => u.Role == Role.Doctor).ToListAsync();
             return doctors;
         }
 
         public async Task<List<MedicalRecord>> SreachlistMediaRecordbyId(Guid id)
         {
-            var records = await _context.MedicalRecords
-                .Where(r => r.PatientId == id)
-                .ToListAsync();
+            var records = await _context.MedicalRecords.Where(r => r.PatientId == id).ToListAsync();
 
             return records;
         }
-
     }
 }
+

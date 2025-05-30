@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic; // Don't forget to add this for ICollection
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

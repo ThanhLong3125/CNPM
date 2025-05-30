@@ -60,7 +60,7 @@ Based on the provided functional requirements and your current directory structu
 
   * **`Data/AppDbContext.cs`**:
       * Add `DbSet` for your new models:
-        ```csharp
+        ```cs
         public DbSet<DICOMImage> DICOMImages { get; set; }
         public DbSet<DiagnosisReport> DiagnosisReports { get; set; }
         // ... and any other new models

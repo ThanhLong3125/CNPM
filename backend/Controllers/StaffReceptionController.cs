@@ -1,5 +1,4 @@
 using backend.DTOs;
-using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -50,7 +49,6 @@ namespace backend.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
-
 
         // GET: api/StaffReception/patient/{id}
         [HttpGet("patient/{id}")]
@@ -114,11 +112,12 @@ namespace backend.Controllers
 
             if (records == null || !records.Any())
             {
-                return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
+                return NotFound(
+                    new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." }
+                );
             }
 
             return Ok(records);
         }
-
     }
 }

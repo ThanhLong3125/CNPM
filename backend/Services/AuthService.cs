@@ -1,12 +1,11 @@
-using backend.Data;
-using backend.DTOs;
-using backend.Models;
-using backend.role;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using backend.Data;
+using backend.DTOs;
+using backend.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace backend.Services
 {
@@ -45,7 +44,6 @@ namespace backend.Services
                 Full_name = registerDto.Full_name,
                 Email = registerDto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
-                PhoneNumber = registerDto.PhoneNumber,
                 Role = registerDto.Role,
             };
 
@@ -58,8 +56,7 @@ namespace backend.Services
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
             {
@@ -103,21 +100,17 @@ namespace backend.Services
                 user.Full_name = updateDto.Full_name;
             }
 
-            if (!string.IsNullOrWhiteSpace(updateDto.PhoneNumber))
-            {
-                user.PhoneNumber = updateDto.PhoneNumber;
-            }
-
             if (!string.IsNullOrWhiteSpace(updateDto.Password))
             {
                 if (updateDto.Password.Length < 6 || updateDto.Password.Length > 100)
                 {
-                    throw new ApplicationException("Password must be between 6 and 100 characters.");
+                    throw new ApplicationException(
+                        "Password must be between 6 and 100 characters."
+                    );
                 }
 
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updateDto.Password);
             }
-
 
             await _context.SaveChangesAsync();
             return true;
@@ -138,21 +131,23 @@ namespace backend.Services
             return true;
         }
 
-
         private AuthResponseDto GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is not configured"));
+            var key = Encoding.ASCII.GetBytes(
+                _configuration["Jwt:Key"]
+                    ?? throw new InvalidOperationException("JWT key is not configured")
+            );
 
             string roleName = user.Role.ToString();
 
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Email, user.Email),
-        new Claim(ClaimTypes.Name, user.Full_name),
-        new Claim(ClaimTypes.Role, roleName)
-    };
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Full_name),
+                new Claim(ClaimTypes.Role, roleName),
+            };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -160,9 +155,10 @@ namespace backend.Services
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
                 Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"]
+                Audience = _configuration["Jwt:Audience"],
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -173,10 +169,9 @@ namespace backend.Services
                 Expiration = tokenDescriptor.Expires ?? DateTime.UtcNow.AddDays(7),
                 Full_name = user.Full_name,
                 Email = user.Email,
-                Role = user.Role
+                Role = user.Role,
             };
         }
-
 
         private UserDto MapToUserDto(User user)
         {
@@ -185,7 +180,6 @@ namespace backend.Services
                 Id = user.Id,
                 Full_name = user.Full_name,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Role = user.Role,
             };
         }

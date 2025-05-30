@@ -19,9 +19,6 @@ namespace backend.DTOs
         public string Password { get; set; } = string.Empty;
 
         [Required]
-        public string PhoneNumber { get; set; } = string.Empty;
-
-        [Required]
         [EnumDataType(typeof(Role))]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Role Role { get; set; } = Role.Staff;
@@ -30,7 +27,6 @@ namespace backend.DTOs
     public class UpdateUserDto
     {
         public string? Full_name { get; set; } = string.Empty;
-        public string? PhoneNumber { get; set; } = string.Empty;
         public string? Password { get; set; } = string.Empty;
     }
 
@@ -58,13 +54,12 @@ namespace backend.DTOs
         public Guid Id { get; set; }
         public string Full_name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
         public Role Role { get; set; }
     }
+
     public class ResetPasswordByEmailDto
     {
         public string Email { get; set; } = string.Empty;
         public string NewPassword { get; set; } = string.Empty;
     }
-
 }
