@@ -23,4 +23,5 @@ public interface IDoctorService
     // Image Interaction (Doctor specific)
     Task<ImageDto> AddOrUpdateImageNotesAsync(Guid imageId, string notes, Guid doctorId); // "Ghi chú và chú thích ảnh" (image-specific)
     Task<ImageDto> AnalyzeImageWithAIAsync(Guid imageId, Guid doctorId); // Trigger AI analysis and store results
+    Task GetMedicalRecordAsync(Guid medicalRecordId);
 }

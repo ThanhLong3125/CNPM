@@ -42,4 +42,11 @@ namespace backend.DTOs
         [StringLength(1000, ErrorMessage = "Doctor image notes cannot exceed 1000 characters.")]
         public string? DoctorImageNotes { get; set; }
     }
+
+    public class CreateImageAnalysisRequestDto
+    {
+        // Add properties as needed, e.g.:
+        public Guid MedicalRecordId { get; set; }
+        public string? RequestNotes { get; set; }
+    }
 }

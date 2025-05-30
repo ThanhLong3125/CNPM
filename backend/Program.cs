@@ -1,5 +1,6 @@
 using System.Text;
 using backend.Data;
+using backend.Filters;
 using backend.Services;
 using backend.Services.BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,6 +26,11 @@ builder
             .JsonNamingPolicy
             .CamelCase;
     });
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<CustomExceptionFilter>(); // Add globally
+});
 
 builder.Services.AddEndpointsApiExplorer();
 
