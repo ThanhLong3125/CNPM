@@ -11,6 +11,9 @@ namespace backend.Models
         public int Image_ID { get; set; }
 
         [Required]
+        public int PatientID { get; set; } 
+
+        [Required]
         public int Series_ID { get; set; }
 
         [ForeignKey("Series_ID")]
@@ -38,5 +41,8 @@ namespace backend.Models
 
         [StringLength(50)]
         public string? ImageType { get; set; }
+
+        [StringLength(1000)]  
+        public string? DoctorComment { get; set; }
     }
 }

@@ -16,6 +16,9 @@ namespace backend.Models
         [ForeignKey("Patient_ID")]
         public Patient Patient { get; set; } = null!;
 
+        [ForeignKey("Annotation_ID")]
+        public Annotation Annotation { get; set; } = null!;
+
         [Required]
         public DateTime CreatedDate { get; set; }
 
@@ -32,5 +35,10 @@ namespace backend.Models
         [Required]
         [StringLength(50)]
         public string Status { get; set; } = string.Empty;
+
+        [Required]
+        public bool IsPriority { get; set; } = false;
     }
 }
+// co notee cua bac si 
+

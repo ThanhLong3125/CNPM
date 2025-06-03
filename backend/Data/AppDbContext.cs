@@ -11,6 +11,10 @@ namespace backend.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<MedicalRecord> MedicalRecords { get; set; }  // Thêm dòng này
+
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<ImageDICOM> ImageDICOM { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
