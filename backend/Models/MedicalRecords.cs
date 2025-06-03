@@ -8,10 +8,10 @@ namespace backend.Models
     public class MedicalRecord
     {
         [Key]
-        public int Record_ID { get; set; }
+        public Guid Record_ID { get; set; }
 
         [Required]
-        public int Patient_ID { get; set; }
+        public Guid Patient_ID { get; set; }
 
         [ForeignKey("Patient_ID")]
         public Patient Patient { get; set; } = null!;
@@ -27,7 +27,7 @@ namespace backend.Models
         public string Symptoms { get; set; } = string.Empty;
 
         [Required]
-        public int AssignedPhysicianID { get; set; }
+        public Guid AssignedPhysicianID { get; set; }
 
         [ForeignKey("AssignedPhysicianID")]
         public User AssignedPhysician { get; set; } = null!;

@@ -29,29 +29,8 @@ namespace backend.Services
 
        public async Task<List<PatientDto>> GetPatientsByCreatedDateAsync(DateTime? startDate, DateTime? endDate)
     {
-        var query = _context.MedicalRecords
-            .Include(m => m.Patient)
-            .AsQueryable();
-
-        if (startDate.HasValue && endDate.HasValue)
-        {
-            query = query.Where(m => m.CreatedDate >= startDate && m.CreatedDate <= endDate);
-        }
-
-        var records = await query.ToListAsync();
-
-        return records.Select(m => new PatientDto
-        {
-            Id = m.Patient.Patient_ID,
-            FullName = m.Patient.Full_name,
-            DateOfBirth = m.Patient.DateOfBirth,
-            Gender = m.Patient.Gender,
-            Email = m.Patient.ContactInfo  // hoặc email nếu có
-        })
-    // Loại bỏ bệnh nhân trùng nếu có nhiều hồ sơ
-        .GroupBy(p => p.Id)
-        .Select(g => g.First())
-        .ToList();
+        var query = _context.MedicalRecords.FindAsync
+            
     }
 
 // xem hồ sơ ưu tiên 

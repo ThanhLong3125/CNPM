@@ -134,12 +134,12 @@ namespace backend.Services
 
             var medicalRecord = new MedicalRecord
             {
-                Id = Guid.NewGuid(),
-                PatientId = createMedicalRecordDto.PatientId,
+                Record_ID = Guid.NewGuid(),
+                Patient_ID = createMedicalRecordDto.PatientId,
                 CreatedDate = DateTime.UtcNow,
                 Symptoms = createMedicalRecordDto.Symptoms.Trim(),
                 IsPriority = createMedicalRecordDto.IsPriority,
-                AssignedPhysicianId = createMedicalRecordDto.AssignedPhysicianId
+                AssignedPhysicianID = createMedicalRecordDto.AssignedPhysicianId
             };
 
             await _context.MedicalRecords.AddAsync(medicalRecord);
@@ -151,7 +151,7 @@ namespace backend.Services
                 Details = createMedicalRecordDto,
             });
 
-            return medicalRecord.Id.ToString();
+            return medicalRecord.Record_ID.ToString();
         }
 
         public async Task<List<User>> ListDoctorAsync()
@@ -171,7 +171,7 @@ namespace backend.Services
         public async Task<List<MedicalRecord>> SreachlistMediaRecordbyId(Guid id)
         {
             var records = await _context.MedicalRecords
-                .Where(r => r.PatientId == id)
+                .Where(r => r.Patient_ID == id)
                 .ToListAsync();
             await _auditService.WriteLogAsync(new WriteLogDto
             {

@@ -37,7 +37,7 @@ namespace backend.Services
 
             var notification = new Notification
             {
-                UserId = createDto.UserId,
+                User_ID = createDto.UserId,
                 Message = createDto.Message,
                 CreatedAt = DateTime.UtcNow,
                 IsRead = false
@@ -53,7 +53,7 @@ namespace backend.Services
         {
             var notification = await _context.Notifications
                 .Include(n => n.User)
-                .FirstOrDefaultAsync(n => n.Id == id);
+                .FirstOrDefaultAsync(n => n.Notification_ID == id);
 
             if (notification == null)
             {
@@ -73,7 +73,7 @@ namespace backend.Services
             }
 
             var query = _context.Notifications
-                .Where(n => n.UserId == userId);
+                .Where(n => n.User_ID == userId);
 
             // Apply filters
             if (filter.IsRead.HasValue)
@@ -127,10 +127,10 @@ namespace backend.Services
             }
 
             var totalCount = await _context.Notifications
-                .CountAsync(n => n.UserId == userId);
+                .CountAsync(n => n.User_ID == userId);
 
             var unreadCount = await _context.Notifications
-                .CountAsync(n => n.UserId == userId && !n.IsRead);
+                .CountAsync(n => n.User_ID == userId && !n.IsRead);
 
             return new NotificationCountDto
             {
@@ -163,7 +163,7 @@ namespace backend.Services
             }
 
             var unreadNotifications = await _context.Notifications
-                .Where(n => n.UserId == userId && !n.IsRead)
+                .Where(n => n.User_ID == userId && !n.IsRead)
                 .ToListAsync();
 
             if (!unreadNotifications.Any())
@@ -203,7 +203,7 @@ namespace backend.Services
             }
 
             var notifications = await _context.Notifications
-                .Where(n => n.UserId == userId)
+                .Where(n => n.User_ID == userId)
                 .ToListAsync();
 
             if (!notifications.Any())
@@ -220,8 +220,8 @@ namespace backend.Services
         {
             return new NotificationDto
             {
-                Id = notification.Id,
-                UserId = notification.UserId,
+                Id = notification.Notification_ID,
+                UserId = notification.User_ID,
                 Message = notification.Message,
                 IsRead = notification.IsRead,
                 CreatedAt = notification.CreatedAt
