@@ -3,8 +3,6 @@ using backend.DTOs;
 using backend.Models;
 using backend.role;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using System.Text;
 
 namespace backend.Services
 {
@@ -23,11 +21,13 @@ namespace backend.Services
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IAuditService _auditService;
 
-        public StaffReceptionService(AppDbContext context, IConfiguration configuration)
+        public StaffReceptionService(AppDbContext context, IConfiguration configuration, IAuditService auditService)
         {
             _context = context;
             _configuration = configuration;
+            _auditService = auditService;
         }
 
         public async Task<string> CreatePatientAsync(CreatePatientDto createPatientDto)
@@ -52,6 +52,12 @@ namespace backend.Services
 
             await _context.Patients.AddAsync(patient);
             await _context.SaveChangesAsync();
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Create Patient",
+                Details = createPatientDto,
+            });
             return patient.Id.ToString();
         }
 
@@ -79,7 +85,12 @@ namespace backend.Services
             if (!string.IsNullOrEmpty(updatePatientDto.MedicalHistory))
                 patient.MedicalHistory = updatePatientDto.MedicalHistory;
             await _context.SaveChangesAsync();
-
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Update Patient",
+                Details = updatePatientDto,
+            });
             return patient;
         }
 
@@ -91,12 +102,24 @@ namespace backend.Services
             {
                 throw new ApplicationException("User not found");
             }
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Sreach Patient",
+                Details = id,
+            });
             return patient;
         }
 
         public async Task<List<Patient>> ListPatientAsync()
         {
             var patients = await _context.Patients.ToListAsync();
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Get list Patient",
+                Details = patients,
+            });
             return patients;
         }
 
@@ -121,6 +144,12 @@ namespace backend.Services
 
             await _context.MedicalRecords.AddAsync(medicalRecord);
             await _context.SaveChangesAsync();
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Create Medical Record",
+                Details = createMedicalRecordDto,
+            });
 
             return medicalRecord.Id.ToString();
         }
@@ -130,6 +159,12 @@ namespace backend.Services
             var doctors = await _context.Users
                 .Where(u => u.Role == Role.Doctor)
                 .ToListAsync();
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Get Doctor",
+                Details = doctors,
+            });
             return doctors;
         }
 
@@ -138,9 +173,13 @@ namespace backend.Services
             var records = await _context.MedicalRecords
                 .Where(r => r.PatientId == id)
                 .ToListAsync();
-
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Create Medical Record",
+                Details = records,
+            });
             return records;
         }
-
     }
 }

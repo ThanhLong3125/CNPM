@@ -81,6 +81,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IStaffReceptionService, StaffReceptionService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
 
 // Register background services
 builder.Services.AddSingleton<NotificationBackgroundService>();
