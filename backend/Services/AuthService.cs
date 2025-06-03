@@ -18,26 +18,29 @@ namespace backend.Services
         Task<List<UserDto>> GetAllUsersAsync();
         Task<bool> UpdateUserAsync(Guid id, UpdateUserDto updateDto);
         Task<bool> DeleteUserAsync(Guid id);
+        Task<bool> ResetPasswordByEmailAsync(string email, string newPassword);
     }
 
     public class AuthService : IAuthService
     {
+        private readonly IAuditService _auditService;
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public AuthService(AppDbContext context, IConfiguration configuration)
+        public AuthService(AppDbContext context, IConfiguration configuration, IAuditService auditService)
         {
             _context = context;
             _configuration = configuration;
+            _auditService = auditService;
         }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterUserDto registerDto)
         {
-            // Check if user already exists
             if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
             {
                 throw new ApplicationException("User with this email already exists");
             }
+
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -46,14 +49,16 @@ namespace backend.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
                 PhoneNumber = registerDto.PhoneNumber,
                 Role = registerDto.Role,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
             };
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-
-            // Generate JWT token
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Register",
+                Details = registerDto
+            });
             return GenerateJwtToken(user);
         }
 
@@ -66,17 +71,12 @@ namespace backend.Services
             {
                 throw new ApplicationException("Invalid email or password");
             }
-
-            if (!user.IsActive)
+            await _auditService.WriteLogAsync(new WriteLogDto
             {
-                throw new ApplicationException("User account is deactivated");
-            }
-
-            // Update last login
-            user.LastLogin = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-
-            // Generate JWT token
+                User = "Staff",
+                Action = "Login",
+                Details = loginDto
+            });
             return GenerateJwtToken(user);
         }
 
@@ -88,7 +88,12 @@ namespace backend.Services
             {
                 throw new ApplicationException("User not found");
             }
-
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "GetProfile",
+                Details = id
+            });
             return MapToUserDto(user);
         }
 
@@ -106,13 +111,10 @@ namespace backend.Services
             {
                 throw new ApplicationException("User not found");
             }
-
-            // Chỉ cập nhật khi có giá trị (không null hoặc trắng)
             if (!string.IsNullOrWhiteSpace(updateDto.Full_name))
             {
                 user.Full_name = updateDto.Full_name;
             }
-
             if (!string.IsNullOrWhiteSpace(updateDto.PhoneNumber))
             {
                 user.PhoneNumber = updateDto.PhoneNumber;
@@ -130,6 +132,12 @@ namespace backend.Services
 
 
             await _context.SaveChangesAsync();
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Update",
+                Details = updateDto
+            });
             return true;
         }
 
@@ -142,9 +150,14 @@ namespace backend.Services
                 throw new ApplicationException("User not found");
             }
 
-            // Hard delete - remove user from database
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Delete",
+                Details = id
+            });
             return true;
         }
 
@@ -197,10 +210,25 @@ namespace backend.Services
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Role = user.Role,
-                CreatedAt = user.CreatedAt,
-                LastLogin = user.LastLogin,
-                IsActive = user.IsActive
             };
+        }
+
+        public async Task<bool> ResetPasswordByEmailAsync(string email, string newPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                throw new ApplicationException("Email không tồn tại.");
+            }
+
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+            {
+                throw new ApplicationException("Mật khẩu phải có ít nhất 6 ký tự.");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

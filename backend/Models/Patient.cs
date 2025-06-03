@@ -1,31 +1,33 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Models
 {
-    [Table("Patients")]
     public class Patient
     {
         [Key]
-        public int Patient_ID { get; set; }
+        [Column("Patient_ID")]
+        public Guid Id { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string Full_name { get; set; } = string.Empty;
+        [Column("Full_name")]
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
+        [Column("DateOfBirth")]
         public DateTime DateOfBirth { get; set; }
 
         [Required]
-        [StringLength(10)]
+        [Column("Gender")]
         public string Gender { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(100)]
-        public string ContactInfo { get; set; } = string.Empty;
+        [Column("ContactInfo")]
+        public string? ContactInfo { get; set; }
 
-        [StringLength(1000)]
+        [Column("MedicalHistory")]
         public string? MedicalHistory { get; set; }
+
+        // Navigation property
+        public ICollection<MedicalRecord>? MedicalRecords { get; set; }
     }
 }
