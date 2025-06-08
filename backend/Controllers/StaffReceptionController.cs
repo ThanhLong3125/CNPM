@@ -1,5 +1,4 @@
 using backend.DTOs;
-using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -51,7 +50,6 @@ namespace backend.Controllers
             }
         }
 
-
         // GET: api/StaffReception/patient/{id}
         [HttpGet("patient/{id}")]
         [SwaggerOperation(Summary = "Tìm kiếm bệnh nhân theo id")]
@@ -59,7 +57,7 @@ namespace backend.Controllers
         {
             try
             {
-                var patient = await _staffReceptionService.SreachPatientAsync(id);
+                var patient = await _staffReceptionService.SearchPatientAsync(id);
                 return Ok(patient);
             }
             catch (ApplicationException ex)
@@ -110,15 +108,16 @@ namespace backend.Controllers
         [SwaggerOperation(Summary = "Tìm kiếm hồ sơ bệnh án")]
         public async Task<IActionResult> GetMedicalRecordsByPatientId(Guid id)
         {
-            var records = await _staffReceptionService.SreachlistMediaRecordbyId(id);
+            var records = await _staffReceptionService.SearchlistMediaRecordbyId(id);
 
             if (records == null || !records.Any())
             {
-                return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
+                return NotFound(
+                    new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." }
+                );
             }
 
             return Ok(records);
         }
-
     }
 }
