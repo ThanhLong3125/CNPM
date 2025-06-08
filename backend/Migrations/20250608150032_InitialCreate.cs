@@ -54,6 +54,7 @@ namespace backend.Migrations
                     Record_ID = table.Column<Guid>(type: "uuid", nullable: false),
                     Patient_ID = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AssignedPhysicianId = table.Column<Guid>(type: "uuid", nullable: false),
                     Symptoms = table.Column<string>(type: "text", nullable: false),
                     IsPriority = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -90,17 +91,42 @@ namespace backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Diagnoses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MedicalRecordId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DiagnosedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Notes = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Diagnoses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Diagnoses_MedicalRecords_MedicalRecordId",
+                        column: x => x.MedicalRecordId,
+                        principalTable: "MedicalRecords",
+                        principalColumn: "Record_ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "Full_name", "PasswordHash", "PhoneNumber", "Role", "Specialty" },
                 values: new object[,]
                 {
-                    { new Guid("378c9c57-ba1a-44c0-a0b5-fa7eac2b1060"), "admin@aidims.com", "Admin", "$2a$11$2.pAd0rkvzkbgGj0.ofSveplmdqu6w5Y4Y8enYPopEtUEpWdUNNUS", "", 1, null },
-                    { new Guid("898b7b4c-b505-4a02-ae2c-1ec86d93e3b1"), "staff@aidims.com", "Staff", "$2a$11$MyqkNc9VqnJ8yFS2fFfHDuz8QLyIMBQpEguaFScTqx1/0P9XhiVC6", "", 3, null },
-                    { new Guid("9ef843f0-73b5-4ddc-8794-2fd9850e0a8c"), "doctor1@aidims.com", "Thanh Long", "$2a$11$TwS3r49AOhrT2Ykie.PWnudt/nyiHgCsbzhHmhZ65enqFQlRm4NES", "", 2, "Radiology" },
-                    { new Guid("9f648053-4ba9-48c0-be73-8633bea2f1ac"), "doctor2@aidims.com", "Hoang Thien", "$2a$11$WPWnlvkcsmzcYdIMZ7Lin.dG8Pnpllj9grHPH7U/sVjVqMOAne9Wu", "", 2, "Cardiology" },
-                    { new Guid("ba956c08-0c0c-4c5c-a2f4-34b1b31d5d5e"), "doctor3@aidims.com", "Khang To", "$2a$11$vEyQG5y2rgctkem5CAULeeCICQmrkVqxyjPme6cmfn1X5Z2ed03qO", "", 2, "Neurology" }
+                    { new Guid("2bb3186e-c9be-4289-a0ea-925b80625033"), "doctor2@aidims.com", "Hoang Thien", "$2a$11$7HloDhzXEvCYewLhAS5Yd.VloXTlBHnR1rF81ujEo.tTQgNZi18QK", "", 2, "Cardiology" },
+                    { new Guid("3ba675d4-3d54-4bd9-bfb7-6d5ee8c2971b"), "admin@aidims.com", "Admin", "$2a$11$mp6bkFZy7UKeLoidfIrIM.RcufdIwzXXeZbV8.U6zUp7Jti5GgZHe", "", 1, null },
+                    { new Guid("87249296-fa86-4ab2-807a-60ea32ecb2c8"), "staff@aidims.com", "Staff", "$2a$11$V0dvADwMR8uBFXct24HnBOhfk0F8KFhcJTALVrtDYcq08WYuC3qy.", "", 3, null },
+                    { new Guid("f096938c-2989-452d-9b47-6d59aa11e817"), "doctor1@aidims.com", "Thanh Long", "$2a$11$tVb1EZvpKqE.k2ln5IBve.M3oHJNr6B0TDmC7jzIsd6e25FJf2yaC", "", 2, "Radiology" },
+                    { new Guid("f8fea9c7-6b03-4604-9d6c-c0f8f4a615a0"), "doctor3@aidims.com", "Khang To", "$2a$11$onOkyVFnPkJt6v.ktRYUg.qzxtrZwFDliyIjg3UsDqgGPHbFGshsq", "", 2, "Neurology" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Diagnoses_MedicalRecordId",
+                table: "Diagnoses",
+                column: "MedicalRecordId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalRecords_Patient_ID",
@@ -117,16 +143,19 @@ namespace backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MedicalRecords");
+                name: "Diagnoses");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Patients");
+                name: "MedicalRecords");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Patients");
         }
     }
 }

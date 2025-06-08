@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -11,6 +12,7 @@ namespace backend.Models
 
         [Required]
         [Column("Patient_ID")]
+        [JsonIgnore]
         public Guid PatientId { get; set; }
 
         [ForeignKey("PatientId")]
@@ -30,5 +32,8 @@ namespace backend.Models
 
         [Column("IsPriority")]
         public bool IsPriority { get; set; } = false;
+
+        // Navigation property
+        public ICollection<Diagnosis>? Diagnoses { get; set; }
     }
 }

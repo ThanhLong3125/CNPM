@@ -188,7 +188,11 @@ namespace backend.Services
 
         public async Task<List<MedicalRecord>> SearchlistMediaRecordbyId(Guid id)
         {
-            var records = await _context.MedicalRecords.Where(r => r.PatientId == id).ToListAsync();
+            var records = await _context
+                .MedicalRecords.Where(r => r.PatientId == id)
+                .Include(r => r.Diagnoses)
+                .Include(r => r.Patient)
+                .ToListAsync();
             await _auditService.WriteLogAsync(
                 new WriteLogDto
                 {
@@ -201,4 +205,3 @@ namespace backend.Services
         }
     }
 }
-

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -28,6 +29,7 @@ namespace backend.Models
         public string? MedicalHistory { get; set; }
 
         // Navigation property
+        [JsonIgnore]
         public ICollection<MedicalRecord>? MedicalRecords { get; set; }
     }
 }

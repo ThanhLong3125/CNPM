@@ -86,6 +86,7 @@ namespace backend.Services
         {
             var diagnosis = await _context
                 .Diagnoses.Where(d => d.MedicalRecordId == id)
+                .Include(d => d.MedicalRecord) // <--- Add this line to eagerly load MedicalRecord
                 .ToListAsync();
             await _auditService.WriteLogAsync(
                 new WriteLogDto

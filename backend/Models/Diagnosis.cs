@@ -1,6 +1,7 @@
 // Models/Diagnosis.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -10,9 +11,11 @@ namespace backend.Models
         public Guid Id { get; set; }
 
         [Required]
+        [JsonIgnore]
         public Guid MedicalRecordId { get; set; } // Foreign Key to MedicalRecord
 
         [ForeignKey("MedicalRecordId")]
+        [JsonIgnore]
         public MedicalRecord? MedicalRecord { get; set; } // Navigation property
 
         [Required]

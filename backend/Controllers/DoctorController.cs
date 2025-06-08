@@ -3,7 +3,7 @@ using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace HanniApi.Controllers
+namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -31,7 +31,12 @@ namespace HanniApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}"); // <--- Look here!
+                // You might also log ex.StackTrace
+                return BadRequest(
+                    new { error = ex.Message, innerError = ex.InnerException?.Message }
+                );
             }
         }
 
