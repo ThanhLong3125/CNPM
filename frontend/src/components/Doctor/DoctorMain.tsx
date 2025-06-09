@@ -1,9 +1,7 @@
 import React, { useState } from "react"
-import { FaUser } from "react-icons/fa6";
 import type { patientAwait, patientExamined, } from "../../types/doctor.type";
 import { useNavigate } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
-
 
 const mockPatient: patientAwait[] = [
     {
@@ -70,13 +68,7 @@ const DoctorMain: React.FC = () => {
     );
     return (
         <div>
-            <nav className='flex items-center justify-between bg-[#133574] p-4 mb-10 shadow-md'>
-                <div className='ml-10 text-white justify-start text-3xl font-bold shadow-md'>AIDIMS</div>
-                <div className="mr-10">
-                    <FaUser className=" w-8 h-8 text-white" />
-                </div>
-            </nav >
-            <div className="bg-[#D3E2F9]p-4 rounded-xl m-10 text-center shadow-md ">
+            <div className="bg-[#D3E2F9] p-4 rounded-xl m-10 text-center shadow-md ">
 
                 <div className="flex justify-center items-center ">
                     <h2 className="bg-[#618FCA] w-fit p-2 rounded-xl ">Danh sách bệnh nhân chờ</h2>
