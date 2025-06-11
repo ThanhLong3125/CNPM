@@ -21,11 +21,11 @@ namespace backend.Models
         [Column("Gender")]
         public string Gender { get; set; } = string.Empty;
 
-        [Column("ContactInfo")]
-        public string? ContactInfo { get; set; }
+        [Column("Email")]
+        public string? Email { get; set; }
 
-        [Column("MedicalHistory")]
-        public string? MedicalHistory { get; set; }
+        [Column("Phone")]
+        public string? Phone { get; set; }
 
         // Navigation property
         public ICollection<MedicalRecord>? MedicalRecords { get; set; }

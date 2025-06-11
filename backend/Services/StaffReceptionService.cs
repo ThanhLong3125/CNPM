@@ -46,8 +46,8 @@ namespace backend.Services
                 FullName = createPatientDto.FullName.Trim(),
                 DateOfBirth = createPatientDto.DateOfBirth,
                 Gender = createPatientDto.Gender.Trim(),
-                ContactInfo = createPatientDto.ContactInfo?.Trim(),
-                MedicalHistory = createPatientDto.MedicalHistory?.Trim()
+                Email = createPatientDto.Email?.Trim(),
+                Phone = createPatientDto.Phone?.Trim()
             };
 
             await _context.Patients.AddAsync(patient);
@@ -79,11 +79,11 @@ namespace backend.Services
             if (!string.IsNullOrEmpty(updatePatientDto.Gender))
                 patient.Gender = updatePatientDto.Gender;
 
-            if (!string.IsNullOrEmpty(updatePatientDto.ContactInfo))
-                patient.ContactInfo = updatePatientDto.ContactInfo;
+            if (!string.IsNullOrEmpty(updatePatientDto.Email))
+                patient.Email = updatePatientDto.Email;
 
-            if (!string.IsNullOrEmpty(updatePatientDto.MedicalHistory))
-                patient.MedicalHistory = updatePatientDto.MedicalHistory;
+            if (!string.IsNullOrEmpty(updatePatientDto.Phone))
+                patient.Phone = updatePatientDto.Phone;
             await _context.SaveChangesAsync();
             await _auditService.WriteLogAsync(new WriteLogDto
             {
