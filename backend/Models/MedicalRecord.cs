@@ -30,5 +30,8 @@ namespace backend.Models
 
         [Column("IsPriority")]
         public bool IsPriority { get; set; } = false;
+
+        [Column("Status")]
+        public bool Status { get; set; } = false;
     }
 }

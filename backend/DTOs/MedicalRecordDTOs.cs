@@ -11,6 +11,8 @@ namespace backend.DTOs
         public string Symptoms { get; set; } = string.Empty;
         public Guid? AssignedPhysicianId { get; set; }
         public bool IsPriority { get; set; }
+
+        public bool Status { get; set; }
     }
 
     public class CreateMedicalRecordDto
@@ -33,15 +35,17 @@ namespace backend.DTOs
         public string? Symptoms { get; set; }
 
         public Guid? AssignedPhysicianId { get; set; }
-        
+
         public bool? IsPriority { get; set; }
+
+        public bool Status { get; set; } = false;
     }
 
     public class AssignPhysicianDto
     {
         [Required]
         public Guid PhysicianId { get; set; }
-        
+
         public string? Notes { get; set; }
     }
 }

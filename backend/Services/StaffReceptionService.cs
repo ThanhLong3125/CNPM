@@ -139,7 +139,8 @@ namespace backend.Services
                 CreatedDate = DateTime.UtcNow,
                 Symptoms = createMedicalRecordDto.Symptoms.Trim(),
                 IsPriority = createMedicalRecordDto.IsPriority,
-                AssignedPhysicianId = createMedicalRecordDto.AssignedPhysicianId
+                AssignedPhysicianId = createMedicalRecordDto.AssignedPhysicianId,
+                Status = false
             };
 
             await _context.MedicalRecords.AddAsync(medicalRecord);

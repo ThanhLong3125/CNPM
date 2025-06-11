@@ -1,6 +1,5 @@
 using backend.Data;
 using backend.Services;
-using backend.Services.BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -79,13 +78,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Register services
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IStaffReceptionService, StaffReceptionService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
-
-// Register background services
-builder.Services.AddSingleton<NotificationBackgroundService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<NotificationBackgroundService>());
 
 // Add CORS
 builder.Services.AddCors(options =>
