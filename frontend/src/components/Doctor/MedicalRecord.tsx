@@ -12,11 +12,11 @@ const MedicalRecord: React.FC = () => {
       </nav >
       
       <div className="bg-[#e0e7f9] p-9">
-        <div className="grid grid-cols-6 grid-rows-6 gap-4 ">
+        <div className="grid grid-cols-6 grid-rows-6 gap-6 ">
           
           {/* 1 */}
           <div className="col-span-3 row-span-3">
-            
+
             <div className="space-y-4 bg-[#a8c0f0] p-5 pt-0 rounded-md size-full shadow-md">
               
               <div className="flex justify-center">
