@@ -11,7 +11,7 @@ const mockPatient: patientAwait[] = [
         medicalRecord_id: 'R0001',
         name: 'Nguyen Van A',
         gender: 'Male',
-        timeIn: '10:30 01/06/2025',
+        timeIn: '10:30 01/07/2025',
     },
     {
         patient_id: 'B0001',
@@ -68,6 +68,7 @@ const DoctorMain: React.FC = () => {
         p.patient_id.toLowerCase().includes(filter.toLowerCase()) &&
         (dateFilter === '' || p.timeIn.includes(dateFilter))
     );
+    
     return (
         <div>
             <nav className='flex items-center justify-between bg-[#133574] p-4 mb-10 shadow-md'>
@@ -81,7 +82,9 @@ const DoctorMain: React.FC = () => {
                 <div className="flex justify-center items-center ">
                     <h2 className="bg-[#618FCA] w-fit p-2 rounded-xl ">Danh sách bệnh nhân chờ</h2>
                 </div>
+
                 <div className=" text-center rounded-t-xl  ">
+                    
                     <div className="grid grid-cols-5 font-semibold bg-[#A7C5EB] text-[#1F3C88] px-4 py-2 rounded-t-xl mt-4 shadow-md">
                         <div>Mã bệnh nhân</div>
                         <div>Mã bệnh án</div>
