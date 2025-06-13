@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class ChangedStaffService : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,7 +23,8 @@ namespace backend.Migrations
                     DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Gender = table.Column<string>(type: "text", nullable: false),
                     ContactInfo = table.Column<string>(type: "text", nullable: true),
-                    MedicalHistory = table.Column<string>(type: "text", nullable: true)
+                    MedicalHistory = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,7 +41,8 @@ namespace backend.Migrations
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
-                    Specialty = table.Column<string>(type: "text", nullable: true)
+                    Specialty = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +58,8 @@ namespace backend.Migrations
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AssignedPhysicianId = table.Column<Guid>(type: "uuid", nullable: false),
                     Symptoms = table.Column<string>(type: "text", nullable: false),
-                    IsPriority = table.Column<bool>(type: "boolean", nullable: false)
+                    IsPriority = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,6 +69,12 @@ namespace backend.Migrations
                         column: x => x.Patient_ID,
                         principalTable: "Patients",
                         principalColumn: "Patient_ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MedicalRecords_Users_AssignedPhysicianId",
+                        column: x => x.AssignedPhysicianId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -98,7 +107,9 @@ namespace backend.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     MedicalRecordId = table.Column<Guid>(type: "uuid", nullable: false),
                     DiagnosedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Notes = table.Column<string>(type: "text", nullable: true)
+                    Notes = table.Column<string>(type: "text", nullable: true),
+                    ImageId = table.Column<Guid>(type: "uuid", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -111,22 +122,56 @@ namespace backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Path = table.Column<string>(type: "text", nullable: false),
+                    DiagnosisId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AIAnalysis = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_Diagnoses_DiagnosisId",
+                        column: x => x.DiagnosisId,
+                        principalTable: "Diagnoses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "Full_name", "PasswordHash", "PhoneNumber", "Role", "Specialty" },
+                columns: new[] { "Id", "Email", "Full_name", "IsDeleted", "PasswordHash", "PhoneNumber", "Role", "Specialty" },
                 values: new object[,]
                 {
-                    { new Guid("2bb3186e-c9be-4289-a0ea-925b80625033"), "doctor2@aidims.com", "Hoang Thien", "$2a$11$7HloDhzXEvCYewLhAS5Yd.VloXTlBHnR1rF81ujEo.tTQgNZi18QK", "", 2, "Cardiology" },
-                    { new Guid("3ba675d4-3d54-4bd9-bfb7-6d5ee8c2971b"), "admin@aidims.com", "Admin", "$2a$11$mp6bkFZy7UKeLoidfIrIM.RcufdIwzXXeZbV8.U6zUp7Jti5GgZHe", "", 1, null },
-                    { new Guid("87249296-fa86-4ab2-807a-60ea32ecb2c8"), "staff@aidims.com", "Staff", "$2a$11$V0dvADwMR8uBFXct24HnBOhfk0F8KFhcJTALVrtDYcq08WYuC3qy.", "", 3, null },
-                    { new Guid("f096938c-2989-452d-9b47-6d59aa11e817"), "doctor1@aidims.com", "Thanh Long", "$2a$11$tVb1EZvpKqE.k2ln5IBve.M3oHJNr6B0TDmC7jzIsd6e25FJf2yaC", "", 2, "Radiology" },
-                    { new Guid("f8fea9c7-6b03-4604-9d6c-c0f8f4a615a0"), "doctor3@aidims.com", "Khang To", "$2a$11$onOkyVFnPkJt6v.ktRYUg.qzxtrZwFDliyIjg3UsDqgGPHbFGshsq", "", 2, "Neurology" }
+                    { new Guid("122ca3ef-4e58-46b7-bc12-22fdd33c7f62"), "doctor2@aidims.com", "Hoang Thien", false, "$2a$11$RYwmGx5BiLJqFOg5vugGdOzE1UcgHYCYq5aglit3z0m2WghYDfyha", "", 2, "Cardiology" },
+                    { new Guid("6321a22a-e35f-485e-863e-7cac7b6d42cb"), "admin@aidims.com", "Admin", false, "$2a$11$Vp3FgtGNy0UDmhQ/WfBcDuZgaPn88abEQUocXNAwAsg7MaynTaMai", "", 1, null },
+                    { new Guid("8b5e7437-70af-4a3e-b851-f2f46bb178ed"), "doctor3@aidims.com", "Khang To", false, "$2a$11$GNHgW15KLCHEasKWkI.yxeodhJt3WLUL/V/ZPWVEtA3fpHXrqWJae", "", 2, "Neurology" },
+                    { new Guid("98090d27-9579-4fc8-9734-f255d8d70a6a"), "doctor1@aidims.com", "Thanh Long", false, "$2a$11$K0Tf99dVIsHpiBjuvpR2lOQJlOG.bTAdmlvItY45PCYX2VSHjlnti", "", 2, "Radiology" },
+                    { new Guid("be3c6f96-5681-4237-b6a2-350b0b7dfe9b"), "staff@aidims.com", "Staff", false, "$2a$11$3pKu8mcvHc2pHJi1y77GyegBCpESZnB.0imiFyGsz2eLFVOt46yiq", "", 3, null }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Diagnoses_MedicalRecordId",
                 table: "Diagnoses",
-                column: "MedicalRecordId");
+                column: "MedicalRecordId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Images_DiagnosisId",
+                table: "Images",
+                column: "DiagnosisId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicalRecords_AssignedPhysicianId",
+                table: "MedicalRecords",
+                column: "AssignedPhysicianId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalRecords_Patient_ID",
@@ -143,19 +188,22 @@ namespace backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Diagnoses");
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
+                name: "Diagnoses");
+
+            migrationBuilder.DropTable(
                 name: "MedicalRecords");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Patients");
 
             migrationBuilder.DropTable(
-                name: "Patients");
+                name: "Users");
         }
     }
 }

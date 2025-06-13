@@ -7,7 +7,7 @@ namespace backend.DTOs
     {
         public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         public string Gender { get; set; } = string.Empty;
         public string? ContactInfo { get; set; }
         public string? MedicalHistory { get; set; }
@@ -22,8 +22,7 @@ namespace backend.DTOs
         public string FullName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Date of Birth is required.")]
-        [DataType(DataType.Date, ErrorMessage = "Invalid Date of Birth format.")]
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Gender is required.")]
         [StringLength(20, ErrorMessage = "Gender cannot exceed 20 characters.")]
@@ -41,9 +40,7 @@ namespace backend.DTOs
         [StringLength(100, ErrorMessage = "Full Name cannot exceed 100 characters.")]
         public string? FullName { get; set; } // Nullable if updates are partial
 
-        // For date, you might consider string and parse it, or nullable DateTime
-        [DataType(DataType.Date, ErrorMessage = "Invalid Date of Birth format.")]
-        public DateTime? DateOfBirth { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
 
         [StringLength(20, ErrorMessage = "Gender cannot exceed 20 characters.")]
         public string? Gender { get; set; }

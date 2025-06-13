@@ -26,7 +26,7 @@ namespace backend.Data
             modelBuilder.Entity<Image>().HasQueryFilter(i => !i.IsDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
 
-            modelBuilder.Entity<User>().Property(u => u.Role).HasConversion<string>(); // Stores the Role enum as a string in the database
+            // modelBuilder.Entity<User>().Property(u => u.Role).HasConversion<string>(); // Stores the Role enum as a string in the database
 
             modelBuilder
                 .Entity<MedicalRecord>()

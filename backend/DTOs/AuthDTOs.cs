@@ -60,11 +60,12 @@ namespace backend.DTOs
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public Role Role { get; set; }
+        public string? Specialty { get; set; }
     }
+
     public class ResetPasswordByEmailDto
     {
         public string Email { get; set; } = string.Empty;
         public string NewPassword { get; set; } = string.Empty;
     }
-
 }

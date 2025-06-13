@@ -16,7 +16,7 @@ namespace backend.Models
 
         [Required]
         [Column("DateOfBirth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         [Required]
         [Column("Gender")]

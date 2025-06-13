@@ -12,8 +12,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250608150926_NavigationPropertyForMR")]
-    partial class NavigationPropertyForMR
+    [Migration("20250613172225_ChangedStaffService")]
+    partial class ChangedStaffService
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,12 @@ namespace backend.Migrations
                     b.Property<DateTime>("DiagnosedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("MedicalRecordId")
                         .HasColumnType("uuid");
 
@@ -42,9 +48,40 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MedicalRecordId");
+                    b.HasIndex("MedicalRecordId")
+                        .IsUnique();
 
                     b.ToTable("Diagnoses");
+                });
+
+            modelBuilder.Entity("backend.Models.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AIAnalysis")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("DiagnosisId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiagnosisId")
+                        .IsUnique();
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("backend.Models.MedicalRecord", b =>
@@ -62,6 +99,9 @@ namespace backend.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("CreatedDate");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsPriority")
                         .HasColumnType("boolean")
                         .HasColumnName("IsPriority");
@@ -76,6 +116,8 @@ namespace backend.Migrations
                         .HasColumnName("Symptoms");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedPhysicianId");
 
                     b.HasIndex("PatientId");
 
@@ -140,6 +182,9 @@ namespace backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("Gender");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("MedicalHistory")
                         .HasColumnType("text")
                         .HasColumnName("MedicalHistory");
@@ -165,6 +210,9 @@ namespace backend.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -186,48 +234,53 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f16f94f0-b94d-49ff-a2ec-906e66ac7155"),
+                            Id = new Guid("6321a22a-e35f-485e-863e-7cac7b6d42cb"),
                             Email = "admin@aidims.com",
                             Full_name = "Admin",
-                            PasswordHash = "$2a$11$ufpej0042GCAWFcuD9Us7.ZpK/08TZgjruuT.x.lGW9NFwhsA4rmm",
+                            IsDeleted = false,
+                            PasswordHash = "$2a$11$Vp3FgtGNy0UDmhQ/WfBcDuZgaPn88abEQUocXNAwAsg7MaynTaMai",
                             PhoneNumber = "",
                             Role = 1
                         },
                         new
                         {
-                            Id = new Guid("02af350d-9dcf-4dfa-9100-d4e30773e255"),
+                            Id = new Guid("be3c6f96-5681-4237-b6a2-350b0b7dfe9b"),
                             Email = "staff@aidims.com",
                             Full_name = "Staff",
-                            PasswordHash = "$2a$11$qvTsigogqqi4.xlQC6VQmuaameIMcmPJcb3jDP.38RnzrXvHwEvsa",
+                            IsDeleted = false,
+                            PasswordHash = "$2a$11$3pKu8mcvHc2pHJi1y77GyegBCpESZnB.0imiFyGsz2eLFVOt46yiq",
                             PhoneNumber = "",
                             Role = 3
                         },
                         new
                         {
-                            Id = new Guid("4a016dc0-394a-4991-b2b1-28adf362c24c"),
+                            Id = new Guid("98090d27-9579-4fc8-9734-f255d8d70a6a"),
                             Email = "doctor1@aidims.com",
                             Full_name = "Thanh Long",
-                            PasswordHash = "$2a$11$2aT8OtV28i8XEbGKcGpm/ut2Z2D4hmm1PkuJkylC1khYz.ZcpIq9m",
+                            IsDeleted = false,
+                            PasswordHash = "$2a$11$K0Tf99dVIsHpiBjuvpR2lOQJlOG.bTAdmlvItY45PCYX2VSHjlnti",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Radiology"
                         },
                         new
                         {
-                            Id = new Guid("fed19b86-db91-4a69-b18b-0d4fe2967273"),
+                            Id = new Guid("122ca3ef-4e58-46b7-bc12-22fdd33c7f62"),
                             Email = "doctor2@aidims.com",
                             Full_name = "Hoang Thien",
-                            PasswordHash = "$2a$11$IwrTLyNoQV9jfWOxeaxeHeZocVtxSxFRwzVqz9hPn.08H7dVlIXdS",
+                            IsDeleted = false,
+                            PasswordHash = "$2a$11$RYwmGx5BiLJqFOg5vugGdOzE1UcgHYCYq5aglit3z0m2WghYDfyha",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Cardiology"
                         },
                         new
                         {
-                            Id = new Guid("0ae122e5-fa81-460b-9ac9-b863c95ffbc2"),
+                            Id = new Guid("8b5e7437-70af-4a3e-b851-f2f46bb178ed"),
                             Email = "doctor3@aidims.com",
                             Full_name = "Khang To",
-                            PasswordHash = "$2a$11$0J.c98Omw01SEkK/gcL.BuAT9EmUltHJCY5rF4kFfcf61wtXYe2X6",
+                            IsDeleted = false,
+                            PasswordHash = "$2a$11$GNHgW15KLCHEasKWkI.yxeodhJt3WLUL/V/ZPWVEtA3fpHXrqWJae",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Neurology"
@@ -237,16 +290,33 @@ namespace backend.Migrations
             modelBuilder.Entity("backend.Models.Diagnosis", b =>
                 {
                     b.HasOne("backend.Models.MedicalRecord", "MedicalRecord")
-                        .WithMany("Diagnoses")
-                        .HasForeignKey("MedicalRecordId")
+                        .WithOne("Diagnosis")
+                        .HasForeignKey("backend.Models.Diagnosis", "MedicalRecordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("MedicalRecord");
                 });
 
+            modelBuilder.Entity("backend.Models.Image", b =>
+                {
+                    b.HasOne("backend.Models.Diagnosis", "Diagnosis")
+                        .WithOne("Image")
+                        .HasForeignKey("backend.Models.Image", "DiagnosisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Diagnosis");
+                });
+
             modelBuilder.Entity("backend.Models.MedicalRecord", b =>
                 {
+                    b.HasOne("backend.Models.User", "User")
+                        .WithMany("MedicalRecords")
+                        .HasForeignKey("AssignedPhysicianId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("backend.Models.Patient", "Patient")
                         .WithMany("MedicalRecords")
                         .HasForeignKey("PatientId")
@@ -254,6 +324,8 @@ namespace backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Patient");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("backend.Models.Notification", b =>
@@ -267,12 +339,22 @@ namespace backend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("backend.Models.Diagnosis", b =>
+                {
+                    b.Navigation("Image");
+                });
+
             modelBuilder.Entity("backend.Models.MedicalRecord", b =>
                 {
-                    b.Navigation("Diagnoses");
+                    b.Navigation("Diagnosis");
                 });
 
             modelBuilder.Entity("backend.Models.Patient", b =>
+                {
+                    b.Navigation("MedicalRecords");
+                });
+
+            modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Navigation("MedicalRecords");
                 });

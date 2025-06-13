@@ -1,3 +1,4 @@
+// Controllers
 using backend.DTOs;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +58,7 @@ namespace backend.Controllers
         {
             try
             {
-                var patient = await _staffReceptionService.SearchPatientAsync(id);
+                var patient = await _staffReceptionService.GetPatientByIdAsync(id);
                 return Ok(patient);
             }
             catch (ApplicationException ex)
@@ -74,7 +75,7 @@ namespace backend.Controllers
         [SwaggerOperation(Summary = "Tìm kiếm tất cả bệnh nhân")]
         public async Task<IActionResult> GetAllPatients()
         {
-            var patients = await _staffReceptionService.ListPatientAsync();
+            var patients = await _staffReceptionService.ListAllPatientsAsync();
             return Ok(patients);
         }
 
@@ -87,7 +88,7 @@ namespace backend.Controllers
 
             try
             {
-                var recordId = await _staffReceptionService.CreateMediaRecordAsync(dto);
+                var recordId = await _staffReceptionService.CreateMedicalRecordAsync(dto);
                 return Ok(new { message = "Tạo bệnh án thành công", recordId });
             }
             catch (Exception ex)
@@ -108,7 +109,7 @@ namespace backend.Controllers
         [SwaggerOperation(Summary = "Tìm kiếm hồ sơ bệnh án")]
         public async Task<IActionResult> GetMedicalRecordsByPatientId(Guid id)
         {
-            var records = await _staffReceptionService.SearchlistMediaRecordbyId(id);
+            var records = await _staffReceptionService.ListMedicalRecordsByPatientIdAsync(id);
 
             if (records == null || !records.Any())
             {
