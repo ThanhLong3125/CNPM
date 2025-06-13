@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "G:\\CNPM\\libs\\libs.csproj": {}
   },
   "projects": {
@@ -12,14 +13,31 @@
         "projectPath": "G:\\CNPM\\libs\\libs.csproj",
         "packagesPath": "C:\\Users\\HI\\.nuget\\packages\\",
         "outputPath": "G:\\CNPM\\libs\\obj\\",
+=======
+    "D:\\CNPM\\libs\\libs.csproj": {}
+  },
+  "projects": {
+    "D:\\CNPM\\libs\\libs.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\CNPM\\libs\\libs.csproj",
+        "projectName": "libs",
+        "projectPath": "D:\\CNPM\\libs\\libs.csproj",
+        "packagesPath": "C:\\Users\\Hung Mai\\.nuget\\packages\\",
+        "outputPath": "D:\\CNPM\\libs\\obj\\",
+>>>>>>> origin/Hung1
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\HI\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+=======
+          "C:\\Users\\Hung Mai\\AppData\\Roaming\\NuGet\\NuGet.Config"
+>>>>>>> origin/Hung1
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -64,7 +82,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
+>>>>>>> origin/Hung1
         }
       }
     }

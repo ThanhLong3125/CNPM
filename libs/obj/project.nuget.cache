@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "Bs7Uhv+9vFg=",
   "success": true,
   "projectFilePath": "G:\\CNPM\\libs\\libs.csproj",
+=======
+  "dgSpecHash": "246Z06LuuVk=",
+  "success": true,
+  "projectFilePath": "D:\\CNPM\\libs\\libs.csproj",
+>>>>>>> origin/Hung1
   "expectedPackageFiles": [],
   "logs": []
 }
