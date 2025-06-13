@@ -42,7 +42,7 @@ const dataPatient: patientExamined[] = [
         gender: 'Male',
         timeIn: '10:30 01/06/2025',
         attendDoctor: 'Le Van Khuong'
-    }, 
+    },
     {
         patient_id: 'B0001',
         medicalRecord_id: 'R0001',
@@ -56,7 +56,7 @@ const DoctorMain: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
     const [dateFilter, setDateFilter] = useState<string>('');
     const [timeFilter, setTimeFilter] = useState<string>('');
-     const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleClick = (patient_id: string) => {
         navigate(`/detail/${patient_id}`);
@@ -86,7 +86,7 @@ const DoctorMain: React.FC = () => {
                         {mockPatient.map((patientAwait, index) => (
                             <div
                                 key={index}
-                                onClick={()=> handleClick(patientAwait.patient_id)}
+                                onClick={() => handleClick(patientAwait.patient_id)}
                                 className="grid grid-cols-5 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm"
                             >
                                 <div>{patientAwait.patient_id}</div>

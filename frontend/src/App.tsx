@@ -13,11 +13,11 @@ const App = () => {
     <BrowserRouter>
       <Navbar />
       <Routes>
-        {/* < Route path='/' element={<DoctorMain/>}/>
+        {/* 
         <Route path='/detail/:patient_id' element={< PatientAwaitDetail/>}/> 
-        
-         < Route path='/' element={<ReceptionProfile />} />*/}
         < Route path='/' element={<History_records />} />
+         < Route path='/' element={<ReceptionProfile />} />*/}
+        < Route path='/' element={<DoctorMain />} />
 
       </Routes>
     </BrowserRouter>

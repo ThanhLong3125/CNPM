@@ -52,7 +52,7 @@ const History_records: React.FC = () => {
                 </div>
 
                 {/* Table Header */}
-                <div className="grid grid-cols-5 font-semibold bg-[#A7C5EB] text-[#1F3C88] px-4 py-2 rounded-t-xl">
+                <div className="grid grid-cols-6 font-semibold bg-[#A7C5EB] text-[#1F3C88] px-4 py-2 rounded-t-xl mt-4 shadow-md">
                     <div>Mã bệnh nhân</div>
                     <div>Mã bệnh án</div>
                     <div>Thời gian vào</div>
