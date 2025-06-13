@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangedStaffService : Migration
+    public partial class RemoveForeignKeyInDiagnosis : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace backend.Migrations
                 {
                     Patient_ID = table.Column<Guid>(type: "uuid", nullable: false),
                     Full_name = table.Column<string>(type: "text", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     Gender = table.Column<string>(type: "text", nullable: false),
                     ContactInfo = table.Column<string>(type: "text", nullable: true),
                     MedicalHistory = table.Column<string>(type: "text", nullable: true),
@@ -41,8 +41,7 @@ namespace backend.Migrations
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
-                    Specialty = table.Column<string>(type: "text", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                    Specialty = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -108,7 +107,6 @@ namespace backend.Migrations
                     MedicalRecordId = table.Column<Guid>(type: "uuid", nullable: false),
                     DiagnosedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Notes = table.Column<string>(type: "text", nullable: true),
-                    ImageId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -146,14 +144,14 @@ namespace backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "Full_name", "IsDeleted", "PasswordHash", "PhoneNumber", "Role", "Specialty" },
+                columns: new[] { "Id", "Email", "Full_name", "PasswordHash", "PhoneNumber", "Role", "Specialty" },
                 values: new object[,]
                 {
-                    { new Guid("122ca3ef-4e58-46b7-bc12-22fdd33c7f62"), "doctor2@aidims.com", "Hoang Thien", false, "$2a$11$RYwmGx5BiLJqFOg5vugGdOzE1UcgHYCYq5aglit3z0m2WghYDfyha", "", 2, "Cardiology" },
-                    { new Guid("6321a22a-e35f-485e-863e-7cac7b6d42cb"), "admin@aidims.com", "Admin", false, "$2a$11$Vp3FgtGNy0UDmhQ/WfBcDuZgaPn88abEQUocXNAwAsg7MaynTaMai", "", 1, null },
-                    { new Guid("8b5e7437-70af-4a3e-b851-f2f46bb178ed"), "doctor3@aidims.com", "Khang To", false, "$2a$11$GNHgW15KLCHEasKWkI.yxeodhJt3WLUL/V/ZPWVEtA3fpHXrqWJae", "", 2, "Neurology" },
-                    { new Guid("98090d27-9579-4fc8-9734-f255d8d70a6a"), "doctor1@aidims.com", "Thanh Long", false, "$2a$11$K0Tf99dVIsHpiBjuvpR2lOQJlOG.bTAdmlvItY45PCYX2VSHjlnti", "", 2, "Radiology" },
-                    { new Guid("be3c6f96-5681-4237-b6a2-350b0b7dfe9b"), "staff@aidims.com", "Staff", false, "$2a$11$3pKu8mcvHc2pHJi1y77GyegBCpESZnB.0imiFyGsz2eLFVOt46yiq", "", 3, null }
+                    { new Guid("3c9fbe45-ba63-4b52-8bd6-f2455f0c553f"), "doctor3@aidims.com", "Khang To", "$2a$11$R.A6xskHY.R3tAIqV98la.yyt.oqlPQ3tQdTJzsmznN8gzus8WNp6", "", 2, "Neurology" },
+                    { new Guid("44b5c3aa-8504-4814-bfb6-1f45a6376553"), "doctor2@aidims.com", "Hoang Thien", "$2a$11$n.pT23MDIzUsNEhpinTXPOM7RQ567I7sNBiLEj798xslSKYc/tR.e", "", 2, "Cardiology" },
+                    { new Guid("4764155f-b479-4ea6-a336-97bdda760f3f"), "admin@aidims.com", "Admin", "$2a$11$INjZLHFaFw7dHReuEzq5zue1cv.6uSsk2ykw4F.LGHcHCULz4qieG", "", 1, null },
+                    { new Guid("d7b4a6e7-1a63-4fbb-9db9-3f772128262c"), "staff@aidims.com", "Staff", "$2a$11$zfqn80PIUmsVl2WxKICYnOZJQ4lpa4KMce/oq1B1lGlCEWFZCylLG", "", 3, null },
+                    { new Guid("f4dba8c6-b87b-4ead-9c28-e249756c65c1"), "doctor1@aidims.com", "Thanh Long", "$2a$11$vODdFqOvJ/BLI/zpjIEzSu0p/h1A0ZbkQ3W7PFqLunrZXhzsS6jFK", "", 2, "Radiology" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -30,7 +30,7 @@ namespace backend.Models
 
         public string? Specialty { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
+        // public bool IsDeleted { get; set; } = false;
 
         public ICollection<MedicalRecord> MedicalRecords = new HashSet<MedicalRecord>();
     }

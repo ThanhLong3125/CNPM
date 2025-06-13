@@ -31,9 +31,6 @@ namespace backend.Migrations
                     b.Property<DateTime>("DiagnosedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uuid");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -207,9 +204,6 @@ namespace backend.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -231,53 +225,48 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0bdd8731-0fbb-4c22-ac1a-32cd730f8c66"),
+                            Id = new Guid("4764155f-b479-4ea6-a336-97bdda760f3f"),
                             Email = "admin@aidims.com",
                             Full_name = "Admin",
-                            IsDeleted = false,
-                            PasswordHash = "$2a$11$wOzUTr.NfwPZZ.qP21alsecjF9UjxggHcic04RL8fzFzsnJujRAJW",
+                            PasswordHash = "$2a$11$INjZLHFaFw7dHReuEzq5zue1cv.6uSsk2ykw4F.LGHcHCULz4qieG",
                             PhoneNumber = "",
                             Role = 1
                         },
                         new
                         {
-                            Id = new Guid("c129ca4a-3d82-4896-8c07-789076d835d1"),
+                            Id = new Guid("d7b4a6e7-1a63-4fbb-9db9-3f772128262c"),
                             Email = "staff@aidims.com",
                             Full_name = "Staff",
-                            IsDeleted = false,
-                            PasswordHash = "$2a$11$4M5ScDgjlH/amS.cAXjjO.5SjGOclfR4VIs7YZ.PDsWa5.Q64nGWi",
+                            PasswordHash = "$2a$11$zfqn80PIUmsVl2WxKICYnOZJQ4lpa4KMce/oq1B1lGlCEWFZCylLG",
                             PhoneNumber = "",
                             Role = 3
                         },
                         new
                         {
-                            Id = new Guid("95943549-d45e-4cb1-851c-aced94dea0e7"),
+                            Id = new Guid("f4dba8c6-b87b-4ead-9c28-e249756c65c1"),
                             Email = "doctor1@aidims.com",
                             Full_name = "Thanh Long",
-                            IsDeleted = false,
-                            PasswordHash = "$2a$11$QUV1M4IlxmVqCn6IYtgS1OX161sNZQtFvPoys/uAhpTd8AatzPiA6",
+                            PasswordHash = "$2a$11$vODdFqOvJ/BLI/zpjIEzSu0p/h1A0ZbkQ3W7PFqLunrZXhzsS6jFK",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Radiology"
                         },
                         new
                         {
-                            Id = new Guid("d72f5bbc-0784-4d33-b884-6be322b7ecf8"),
+                            Id = new Guid("44b5c3aa-8504-4814-bfb6-1f45a6376553"),
                             Email = "doctor2@aidims.com",
                             Full_name = "Hoang Thien",
-                            IsDeleted = false,
-                            PasswordHash = "$2a$11$kXbXi3BiqmdZvuElQ28L9OQI9kWsIkg7PU.MhC6nYWm3JFVc1Z3F2",
+                            PasswordHash = "$2a$11$n.pT23MDIzUsNEhpinTXPOM7RQ567I7sNBiLEj798xslSKYc/tR.e",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Cardiology"
                         },
                         new
                         {
-                            Id = new Guid("92d981a6-2428-43f1-b795-df9491f91802"),
+                            Id = new Guid("3c9fbe45-ba63-4b52-8bd6-f2455f0c553f"),
                             Email = "doctor3@aidims.com",
                             Full_name = "Khang To",
-                            IsDeleted = false,
-                            PasswordHash = "$2a$11$1/tcweZRT1lsnohi.Yh0huqq.8x44QllsTQeh8qj.IsOMDSWWJ90u",
+                            PasswordHash = "$2a$11$R.A6xskHY.R3tAIqV98la.yyt.oqlPQ3tQdTJzsmznN8gzus8WNp6",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Neurology"

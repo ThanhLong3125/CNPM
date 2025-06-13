@@ -449,7 +449,7 @@ namespace backend.Services
         public async Task<List<UserDto>> ListDoctorAsync() // Changed return type
         {
             var doctors = await _context
-                .Users.Where(u => u.Role == backend.role.Role.Doctor && !u.IsDeleted)
+                .Users.Where(u => u.Role == backend.role.Role.Doctor)
                 .ToListAsync(); // Assuming IsDeleted for users
             await _auditService.WriteLogAsync(
                 new WriteLogDto

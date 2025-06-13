@@ -13,6 +13,8 @@ namespace backend.DTOs
         public Guid AssignedPhysicianId { get; set; }
         public string? AssignedPhysicianName { get; set; }
         public bool IsPriority { get; set; }
+
+        public int DiagnosisCount { get; set; }
     }
 
     public class CreateMedicalRecordDto
@@ -29,7 +31,6 @@ namespace backend.DTOs
         public Guid AssignedPhysicianId { get; set; }
 
         public bool IsPriority { get; set; } = false; // Default value for new records
-        public int DiagnosisCount { get; set; }
     }
 
     public class UpdateMedicalRecordDto
