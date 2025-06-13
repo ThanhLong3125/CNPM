@@ -37,5 +37,7 @@ namespace backend.Models
 
         // Navigation property
         public Diagnosis? Diagnosis { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

@@ -20,6 +20,38 @@ namespace backend.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Patient>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<MedicalRecord>().HasQueryFilter(mr => !mr.IsDeleted);
+            modelBuilder.Entity<Diagnosis>().HasQueryFilter(d => !d.IsDeleted);
+            modelBuilder.Entity<Image>().HasQueryFilter(i => !i.IsDeleted);
+            modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+
+            modelBuilder.Entity<User>().Property(u => u.Role).HasConversion<string>(); // Stores the Role enum as a string in the database
+
+            modelBuilder
+                .Entity<MedicalRecord>()
+                .HasOne(mr => mr.Patient) // A MedicalRecord has one Patient
+                .WithMany(p => p.MedicalRecords) // A Patient can have many MedicalRecords
+                .HasForeignKey(mr => mr.PatientId); // FK is PatientId on MedicalRecord
+
+            modelBuilder
+                .Entity<MedicalRecord>()
+                .HasOne(mr => mr.User) // A MedicalRecord has one Assigned User (Physician)
+                .WithMany(u => u.MedicalRecords) // A User can have many MedicalRecords assigned (no navigation property on User side)
+                .HasForeignKey(mr => mr.AssignedPhysicianId); // FK is AssignedPhysicianId on MedicalRecord
+
+            modelBuilder
+                .Entity<MedicalRecord>()
+                .HasOne(mr => mr.Diagnosis) // MedicalRecord has one Diagnosis
+                .WithOne(d => d.MedicalRecord) // Diagnosis has one MedicalRecord
+                .HasForeignKey<Diagnosis>(d => d.MedicalRecordId); // FK is on the Diagnosis entity
+
+            modelBuilder
+                .Entity<Diagnosis>()
+                .HasOne(d => d.Image) // Diagnosis has one Image
+                .WithOne(i => i.Diagnosis) // Image has one Diagnosis
+                .HasForeignKey<Image>(i => i.DiagnosisId); // FK is on the Image entity
+
             // Seed admin user
             var adminId = Guid.NewGuid();
             modelBuilder

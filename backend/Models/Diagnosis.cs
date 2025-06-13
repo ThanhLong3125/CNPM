@@ -24,5 +24,7 @@ namespace backend.Models
 
         [ForeignKey("ImageId")]
         public Image? Image { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

@@ -22,5 +22,7 @@ namespace backend.Models
         public DateTime UploadDate { get; set; }
 
         public string? AIAnalysis { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }
