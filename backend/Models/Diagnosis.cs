@@ -1,7 +1,6 @@
 // Models/Diagnosis.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -11,20 +10,19 @@ namespace backend.Models
         public Guid Id { get; set; }
 
         [Required]
-        public Guid MedicalRecordId { get; set; } // Foreign Key to MedicalRecord
+        public Guid MedicalRecordId { get; set; }
 
         [ForeignKey("MedicalRecordId")]
-        public MedicalRecord? MedicalRecord { get; set; } // Navigation property
+        public MedicalRecord? MedicalRecord { get; set; }
 
         [Required]
         public DateTime DiagnosedDate { get; set; }
 
-        public string? Notes { get; set; } // Doctor's specific notes for this diagnosis
+        public string? Notes { get; set; }
 
-        // Optional: Link to the specific Image that informed this diagnosis
-        // public Guid? ImageIdThatInformedDiagnosis { get; set; }
+        public Guid? ImageId { get; set; }
 
-        // [ForeignKey("Images")]
-        public Image? Images { get; set; }
+        [ForeignKey("ImageId")]
+        public Image? Image { get; set; }
     }
 }

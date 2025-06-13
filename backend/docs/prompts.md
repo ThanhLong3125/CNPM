@@ -1,20 +1,13 @@
 I'm writing the backend for a hospital website that lets staff and doctor do
 CRUD stuff on patients and medical records. And there'd be AI(gemini) anaylysis on images.
 
-
-There's be images involved, usually people would use something like firebase or
-azure to host there image(post it and it would spit and the link). But my friend
-has his own server and he's telling me to at first try to get the "save image"
-feature working, that is, moving the uploaded image to a folder in my computer,
-so when the back end is hosted on his server the "folder in my computer" would
-be the server's storage.
-
+I would store the image directly on the server.
 The reason for this is this is a college group project, so we'd only upload
 maybe 1 or 2 images for demonstration. 
 
 
 This is the context of the project:
-I'm not gonna give the Admin detail since It's not related to my part of the job.
+I'm not gonna give the Admin detail since It's not related to my part of the job. And my friend've already taked care of the auth, so you don't have to worry about that.
 enum:Role: Staff,Doctor,Admin
 Models : 
 Users: Full_name,Email,PasswordHash,PhoneNumber,Role(Role),Specialty
@@ -24,13 +17,17 @@ Diagnosis: ID,MedicalRecordId,MedicalRecord(Navigation property),DiagnosedDate,N
 Image:Id,Path,AIAnalysis,Diagnosis(navigation property)
 
 DTOs:
-PatientDTO: CreatePatientDto,UpdatePatientDto
-MedicalRecordDTO:CreateMedicalRecordDto,UpdateMedicalRecordDto
-DiagnosisDTO: CreateDiagnosisDto,UpdateDiagnosisDto
-Image: I don't know what to put here
+PatientDTO: CreatePatientDto,UpdatePatientDto,PatientDto
+MedicalRecordDTO:CreateMedicalRecordDto,UpdateMedicalRecordDto,MedicalRecordDto
+DiagnosisDTO: CreateDiagnosisDto,UpdateDiagnosisDto,DiagnosisDto
+Image: UploadImageDto, ChangeImageDto, DeleteImageDto, ImageDto
 
-Service: Just calling those DTOs
-Controller :Calling the Services
+Service: 
+ReceptionStaffService:
+CreatePatientAsync, UpdatePatientAsync, SearchPatientAsync, ListPatientAsync, ListDoctorAsync, CreateMediaRecordAsync, SearchlistMediaRecordbyId
+DoctorService:CreateDiagnosisAsync, UpdateDiagnosisAsync,SearchDiagnosisbyMRAsync, ListDoctorAsync,
+ImageService:UploadImageAsync, ChangeImageAsync, DeleteImageAsync, AIAnalyzingAsync
+Controller : Calling the service
 
 
 
@@ -106,3 +103,11 @@ namespace backend.DTOs
 
 What I want is to "upload" an image , Since I'm running locally, I simply want to copy that image to another directory in my computer. When I host it on the server, I'll change the directory to the server, but for now, implement the "upload" function for me in the Service and Controller
 
+# Redundant
+
+There's be images involved, usually people would use something like firebase or
+azure to host there image(post it and it would spit and the link). But my friend
+has his own server and he's telling me to at first try to get the "save image"
+feature working, that is, moving the uploaded image to a folder in my computer,
+so when the back end is hosted on his server the "folder in my computer" would
+be the server's storage.

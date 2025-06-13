@@ -9,6 +9,8 @@ namespace backend.DTOs
 
         [Required(ErrorMessage = "Diagnosis ID is required.")]
         public Guid DiagnosisId { get; set; }
+
+        public string? ImageName { get; set; }
     }
 
     public class ImageDto

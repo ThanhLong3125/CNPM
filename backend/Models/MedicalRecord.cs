@@ -1,6 +1,6 @@
+// Models/MedicalRecord.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -25,6 +25,9 @@ namespace backend.Models
         [Column("AssignedPhysicianId")]
         public Guid AssignedPhysicianId { get; set; }
 
+        [ForeignKey("AssignedPhysicianId")]
+        public User User { get; set; } = null!;
+
         [Required]
         [Column("Symptoms")]
         public string Symptoms { get; set; } = string.Empty;
@@ -33,6 +36,6 @@ namespace backend.Models
         public bool IsPriority { get; set; } = false;
 
         // Navigation property
-        public ICollection<Diagnosis> Diagnoses { get; set; } = new List<Diagnosis>();
+        public Diagnosis? Diagnosis { get; set; }
     }
 }

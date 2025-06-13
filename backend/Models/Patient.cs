@@ -1,6 +1,6 @@
+// Models/Patient.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -28,6 +28,9 @@ namespace backend.Models
         [Column("MedicalHistory")]
         public string? MedicalHistory { get; set; }
 
-        public ICollection<MedicalRecord>? MedicalRecords { get; set; }
+        public ICollection<MedicalRecord> MedicalRecords { get; set; } =
+            new HashSet<MedicalRecord>();
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

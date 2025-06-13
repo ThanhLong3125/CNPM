@@ -1,3 +1,4 @@
+// Models/Image.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,10 +13,10 @@ namespace backend.Models
         public string Path { get; set; } = string.Empty;
 
         [Required]
-        public Guid DiagnosisId { get; set; } // Foreign Key to Diagnosis
+        public Guid DiagnosisId { get; set; }
 
         [ForeignKey("DiagnosisId")]
-        public Diagnosis? Diagnosis { get; set; } // Navigation property
+        public Diagnosis Diagnosis { get; set; } = null!;
 
         [Required]
         public DateTime UploadDate { get; set; }
