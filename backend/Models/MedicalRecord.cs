@@ -12,11 +12,10 @@ namespace backend.Models
 
         [Required]
         [Column("Patient_ID")]
-        [JsonIgnore]
         public Guid PatientId { get; set; }
 
         [ForeignKey("PatientId")]
-        public Patient? Patient { get; set; }
+        public Patient Patient { get; set; } = null!;
 
         [Required]
         [Column("CreatedDate")]
@@ -34,6 +33,6 @@ namespace backend.Models
         public bool IsPriority { get; set; } = false;
 
         // Navigation property
-        public ICollection<Diagnosis>? Diagnoses { get; set; }
+        public ICollection<Diagnosis> Diagnoses { get; set; } = new List<Diagnosis>();
     }
 }

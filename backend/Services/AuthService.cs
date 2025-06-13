@@ -1,12 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using backend.Data;
 using backend.DTOs;
 using backend.Models;
 using backend.role;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace backend.Services
 {
@@ -27,7 +27,11 @@ namespace backend.Services
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public AuthService(AppDbContext context, IConfiguration configuration, IAuditService auditService)
+        public AuthService(
+            AppDbContext context,
+            IConfiguration configuration,
+            IAuditService auditService
+        )
         {
             _context = context;
             _configuration = configuration;
@@ -53,30 +57,33 @@ namespace backend.Services
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Register",
-                Details = registerDto
-            });
+            await _auditService.WriteLogAsync(
+                new WriteLogDto
+                {
+                    User = "Staff",
+                    Action = "Register",
+                    Details = registerDto,
+                }
+            );
             return GenerateJwtToken(user);
         }
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
             {
                 throw new ApplicationException("Invalid email or password");
             }
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Login",
-                Details = loginDto
-            });
+            await _auditService.WriteLogAsync(
+                new WriteLogDto
+                {
+                    User = "Staff",
+                    Action = "Login",
+                    Details = loginDto,
+                }
+            );
             return GenerateJwtToken(user);
         }
 
@@ -88,12 +95,14 @@ namespace backend.Services
             {
                 throw new ApplicationException("User not found");
             }
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "GetProfile",
-                Details = id
-            });
+            await _auditService.WriteLogAsync(
+                new WriteLogDto
+                {
+                    User = "Staff",
+                    Action = "GetProfile",
+                    Details = id,
+                }
+            );
             return MapToUserDto(user);
         }
 
@@ -124,20 +133,23 @@ namespace backend.Services
             {
                 if (updateDto.Password.Length < 6 || updateDto.Password.Length > 100)
                 {
-                    throw new ApplicationException("Password must be between 6 and 100 characters.");
+                    throw new ApplicationException(
+                        "Password must be between 6 and 100 characters."
+                    );
                 }
 
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updateDto.Password);
             }
 
-
             await _context.SaveChangesAsync();
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Update",
-                Details = updateDto
-            });
+            await _auditService.WriteLogAsync(
+                new WriteLogDto
+                {
+                    User = "Staff",
+                    Action = "Update",
+                    Details = updateDto,
+                }
+            );
             return true;
         }
 
@@ -152,30 +164,34 @@ namespace backend.Services
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Delete",
-                Details = id
-            });
+            await _auditService.WriteLogAsync(
+                new WriteLogDto
+                {
+                    User = "Staff",
+                    Action = "Delete",
+                    Details = id,
+                }
+            );
             return true;
         }
-
 
         private AuthResponseDto GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is not configured"));
+            var key = Encoding.ASCII.GetBytes(
+                _configuration["Jwt:Key"]
+                    ?? throw new InvalidOperationException("JWT key is not configured")
+            );
 
             string roleName = user.Role.ToString();
 
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Email, user.Email),
-        new Claim(ClaimTypes.Name, user.Full_name),
-        new Claim(ClaimTypes.Role, roleName)
-    };
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Full_name),
+                new Claim(ClaimTypes.Role, roleName),
+            };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -183,9 +199,10 @@ namespace backend.Services
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
                 Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"]
+                Audience = _configuration["Jwt:Audience"],
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -196,10 +213,9 @@ namespace backend.Services
                 Expiration = tokenDescriptor.Expires ?? DateTime.UtcNow.AddDays(7),
                 Full_name = user.Full_name,
                 Email = user.Email,
-                Role = user.Role
+                Role = user.Role,
             };
         }
-
 
         private UserDto MapToUserDto(User user)
         {

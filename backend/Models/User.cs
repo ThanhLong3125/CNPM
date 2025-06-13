@@ -26,7 +26,7 @@ namespace backend.Models
         public string PhoneNumber { get; set; } = string.Empty;
 
         public Role Role { get; set; }
-        
+
         public string? Specialty { get; set; }
     }
 }

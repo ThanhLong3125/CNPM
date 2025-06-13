@@ -11,11 +11,9 @@ namespace backend.Models
         public Guid Id { get; set; }
 
         [Required]
-        [JsonIgnore]
         public Guid MedicalRecordId { get; set; } // Foreign Key to MedicalRecord
 
         [ForeignKey("MedicalRecordId")]
-        [JsonIgnore]
         public MedicalRecord? MedicalRecord { get; set; } // Navigation property
 
         [Required]
@@ -26,7 +24,7 @@ namespace backend.Models
         // Optional: Link to the specific Image that informed this diagnosis
         // public Guid? ImageIdThatInformedDiagnosis { get; set; }
 
-        // [ForeignKey("ImageIdThatInformedDiagnosis")]
-        // public Image? ImageThatInformedDiagnosis { get; set; } // Navigation property
+        // [ForeignKey("Images")]
+        public Image? Images { get; set; }
     }
 }

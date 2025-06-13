@@ -51,7 +51,7 @@ builder.Services.AddSwaggerGen(c =>
             Name = "Authorization",
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer",
+            Scheme = "bearer",
         }
     );
 
@@ -107,6 +107,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IStaffReceptionService, StaffReceptionService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 // Register background services
 builder.Services.AddSingleton<NotificationBackgroundService>();

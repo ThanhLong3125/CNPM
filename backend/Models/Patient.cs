@@ -28,8 +28,6 @@ namespace backend.Models
         [Column("MedicalHistory")]
         public string? MedicalHistory { get; set; }
 
-        // Navigation property
-        [JsonIgnore]
         public ICollection<MedicalRecord>? MedicalRecords { get; set; }
     }
 }
