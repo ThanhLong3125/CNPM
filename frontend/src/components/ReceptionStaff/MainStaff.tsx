@@ -82,7 +82,7 @@ const MainStaff: React.FC = () => {
                     className="bg-[#618FCA] w-1/3  pl-9 rounded-4xl p-2 text-center"
                 />
                 <button className="bg-[#618FCA] w-fit rounded-xl py-3 px-10 text-center"
-                 onClick={handleCreateNew}
+                    onClick={handleCreateNew}
 
                 >
                     Tạo hồ sơ mới
@@ -90,9 +90,13 @@ const MainStaff: React.FC = () => {
                 <button className="bg-[#618FCA] w-fit rounded-xl py-3 px-10 text-center" >
                     Danh sách bệnh nhân
                 </button>
-                <button className="bg-[#D5DEEF] border border-primary w-fit rounded-xl py-3 px-10 text-center" >
+                <button
+                    className="bg-[#D5DEEF] border border-primary w-fit rounded-xl py-3 px-10 text-center"
+                    onClick={() => navigate('/CreatedRecord')}
+                >
                     Bệnh án đã tạo
                 </button>
+
 
             </div>
             <div className=" text-center rounded-t-xl px-2">

@@ -8,6 +8,7 @@ import Navbar from './components/layout/Navbar'
 import PatientAwaitDetail from './components/Doctor/PatientAwaitDetail'
 import MainStaff from "./components/ReceptionStaff/MainStaff"
 import CreatedRecord from "../src/components/ReceptionStaff/CreatedRecord"
+import NewRecord from "../src/components/ReceptionStaff/NewRecord"
 const App = () => {
   return (
     <BrowserRouter>
@@ -16,7 +17,9 @@ const App = () => {
         {/* < Route path='/' element={<DoctorMain/>}/>
         <Route path='/detail/:patient_id' element={< PatientAwaitDetail/>}/> */}
         <Route path='/' element={<MainStaff />} />
-        <Route path='/CreatedRecord/:patient_id' element={<  CreatedRecord/>} /> 
+        <Route path='/CreatedRecord/:patient_id' element={<  CreatedRecord />} />
+        <Route path='/create-profile' element={<  NewRecord />} />
+
 
 
 

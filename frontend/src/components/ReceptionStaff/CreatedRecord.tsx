@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import type { CreatedRecordDeclare } from "../../types/staff.types"
 import { useNavigate } from "react-router-dom";
 
-
+// Bệnh án đã tạo
 const mockPatient: CreatedRecordDeclare[] = [
     {
         patientID: "BN001",
@@ -54,6 +54,9 @@ const CreatedRecord: React.FC = () => {
     const handleClick = (patientId: string) => {
         navigate(`/CreatedRecord/${patientId}`);
     };
+    const handleCreateClick = () => {
+    navigate('/CreatedRecord'); // hoặc '/created-record' tùy bạn đặt route
+  };
     return (
         <div className="bg-[#D5DEEF] m-6 rounded-xl shadow-md">
             <div className="flex justify-center items-center ">
@@ -70,7 +73,10 @@ const CreatedRecord: React.FC = () => {
                 <button className="bg-[#618FCA] w-fit rounded-xl py-3 px-10 text-center" >
                     Danh sách bệnh nhân
                 </button>
-                <button className="bg-[#618FCA]  w-fit rounded-xl py-3 px-10 text-center" >
+                <button className="bg-[#618FCA]  w-fit rounded-xl py-3 px-10 text-center" 
+                      onClick={handleCreateClick}
+
+                >
                     Bệnh án đã tạo
                 </button>
 
