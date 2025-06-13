@@ -25,6 +25,14 @@ const mockPatient: patientAwait[] = [
         gender: 'Male',
         timeIn: '10:30 01/06/2025',
     },
+    {
+        patient_id: 'B0001',
+        medicalRecord_id: 'R0001',
+        name: 'Nguyen Van A',
+        gender: 'Male',
+        timeIn: '10:30 01/06/2025',
+    },
+    
 ]
 const dataPatient: patientExamined[] = [
     {
