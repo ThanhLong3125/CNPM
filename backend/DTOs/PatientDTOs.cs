@@ -1,3 +1,4 @@
+// DTOs/PatientDTOs.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace backend.DTOs
@@ -10,6 +11,7 @@ namespace backend.DTOs
         public string Gender { get; set; } = string.Empty;
         public string? ContactInfo { get; set; }
         public string? MedicalHistory { get; set; }
+        public int MedicalRecordCount { get; set; }
     }
 
     public class CreatePatientDto
