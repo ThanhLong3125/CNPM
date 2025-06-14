@@ -9,6 +9,7 @@ import DoctorMain from './components/Doctor/DoctorMain'
 import PatientAwaitDetail from './components/Doctor/PatientAwaitDetail'
 import History_records from "./components/Staff/History_records"
 import ReceptionProfile from "./components/Staff/ReceptionProfile"
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -21,8 +22,9 @@ const App = () => {
           < Route path='/detail/:patient_id' element={< PatientAwaitDetail/>}   /> 
           < Route path='/' element={<History_records />}                        />
           < Route path='/' element={<DoctorMain />}                             />
-          < Route path='/' element={<ReceptionProfile />}                       />
+          
           */
+          < Route path='/' element={<ReceptionProfile />} />
         }
 
 
