@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const ReceptionProfile: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#d8e0ef] flex flex-col">
