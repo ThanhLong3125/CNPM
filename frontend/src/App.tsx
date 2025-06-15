@@ -12,23 +12,15 @@ import ReceptionProfile from "./components/Staff/ReceptionProfile"
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <Routes>
 
-      <Navbar />
+      < Route path='/History_records' element={<History_records />} />
+      < Route path='/detail/:patient_id' element={< PatientAwaitDetail />} />
+      < Route path='/' element={<DoctorMain />} />
+      < Route path='/Thongtin' element={<ReceptionProfile />} />
 
-      <Routes>
-        {
-          /* 
-          < Route path='/detail/:patient_id' element={< PatientAwaitDetail/>}   /> 
-          < Route path='/' element={<History_records />}                        />
-          < Route path='/' element={<DoctorMain />}                             />
-          
-          */
-          < Route path='/' element={<ReceptionProfile />} />
-        }
+    </Routes>
 
-      </Routes>
-    </BrowserRouter>
 
   )
 }
