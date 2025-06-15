@@ -27,7 +27,6 @@ const App = () => {
           < Route path='/' element={<ReceptionProfile />} />
         }
 
-
       </Routes>
     </BrowserRouter>
 

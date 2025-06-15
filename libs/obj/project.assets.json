@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\THINKPAD\\.nuget\\packages\\": {}
+    "/home/hgneight/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\THINKPAD\\Desktop\\CNPM\\libs\\libs.csproj",
+      "projectUniqueName": "/home/hgneight/Downloads/CNPM/libs/libs.csproj",
       "projectName": "libs",
-      "projectPath": "C:\\Users\\THINKPAD\\Desktop\\CNPM\\libs\\libs.csproj",
-      "packagesPath": "C:\\Users\\THINKPAD\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\THINKPAD\\Desktop\\CNPM\\libs\\obj\\",
+      "projectPath": "/home/hgneight/Downloads/CNPM/libs/libs.csproj",
+      "packagesPath": "/home/hgneight/.nuget/packages/",
+      "outputPath": "/home/hgneight/Downloads/CNPM/libs/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\THINKPAD\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/hgneight/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -38,11 +38,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -64,7 +59,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.116/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
