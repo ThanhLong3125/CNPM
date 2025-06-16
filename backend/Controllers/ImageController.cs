@@ -1,5 +1,7 @@
 // Controllers/ImageController.cs
+using System.Net; // For HttpStatusCode
 using backend.DTOs;
+using backend.Exceptions; // Make sure to include your custom exceptions
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,34 +19,129 @@ namespace backend.Controllers
         }
 
         [HttpPost("upload")]
-        [Consumes("multipart/form-data")] // Important for file uploads
+        [Consumes("multipart/form-data")] // Essential for handling file uploads
+        [ProducesResponseType(typeof(ImageDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Upload([FromForm] UploadImageDto uploadImageDto)
         {
-            if (uploadImageDto == null || uploadImageDto.File == null)
+            // Basic validation for the incoming file
+            if (
+                uploadImageDto == null
+                || uploadImageDto.File == null
+                || uploadImageDto.File.Length == 0
+            )
             {
-                return BadRequest("No file provided.");
+                return BadRequest("No file or an empty file was provided.");
             }
 
             try
             {
                 var uploadedImage = await _imageService.UploadImageAsync(uploadImageDto);
-                return Ok(uploadedImage); // Return the saved image details
+                // Return 201 Created if you're returning the resource that was just created.
+                // For simplicity, sticking with Ok for now, but 201 is often semantically better for creation.
+                return Ok(uploadedImage);
+            }
+            catch (NotFoundException ex)
+            {
+                // Catches specific NotFoundException (e.g., if DiagnosisId is not found)
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Log the exception (e.g., using a logging framework like Serilog or NLog)
+                // Catch any other unexpected errors during the upload process
                 Console.WriteLine($"Error uploading image: {ex.Message}");
-                return StatusCode(500, "Internal server error during image upload.");
+                // In production, avoid exposing raw exception messages.
+                return StatusCode(
+                    (int)HttpStatusCode.InternalServerError,
+                    "An error occurred during image upload. Please try again."
+                );
             }
         }
 
-        // You might also want an endpoint to retrieve an image (e.g., by ID or path)
-        // For example:
-        // [HttpGet("{imageId}")]
-        // public IActionResult GetImage(Guid imageId)
-        // {
-        //     // Logic to retrieve the image path from DB and return the file
-        //     // ...
-        // }
+        [HttpGet("{imageId:guid}")] // Route constraint to ensure imageId is a GUID
+        [ProducesResponseType(typeof(ImageDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> GetImage(Guid imageId)
+        {
+            try
+            {
+                var imageDto = await _imageService.GetImageByIdAsync(imageId);
+                return Ok(imageDto);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving image {imageId}: {ex.Message}");
+                return StatusCode(
+                    (int)HttpStatusCode.InternalServerError,
+                    "An error occurred while retrieving image details."
+                );
+            }
+        }
+
+        [HttpPost("{imageId:guid}/analyze")] // Using POST as it performs an action (analysis)
+        [ProducesResponseType(typeof(ImageDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.ServiceUnavailable)] // Indicating external service issues
+        public async Task<IActionResult> AnalyzeImage(Guid imageId)
+        {
+            try
+            {
+                var analyzedImage = await _imageService.AnalyzeImageAsync(imageId);
+                return Ok(analyzedImage);
+            }
+            catch (NotFoundException ex)
+            {
+                // This could be if the image or its physical file is not found
+                return NotFound(ex.Message);
+            }
+            catch (ApplicationException ex)
+            {
+                // Catch ApplicationException for errors originating from the AI service itself (e.g., API key, connectivity)
+                Console.WriteLine($"AI analysis error for image {imageId}: {ex.Message}");
+                // Return 503 Service Unavailable if it's an external service issue
+                return StatusCode((int)HttpStatusCode.ServiceUnavailable, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Catch any other unexpected errors
+                Console.WriteLine($"Error analyzing image {imageId}: {ex.Message}");
+                return StatusCode(
+                    (int)HttpStatusCode.InternalServerError,
+                    "An unexpected error occurred during AI analysis."
+                );
+            }
+        }
+
+        [HttpDelete("{imageId:guid}")] // Using HTTP DELETE verb
+        [ProducesResponseType((int)HttpStatusCode.NoContent)] // Standard for successful deletion without content
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> DeleteImage(Guid imageId)
+        {
+            try
+            {
+                await _imageService.DeleteImageAsync(imageId);
+                return NoContent(); // 204 No Content for successful deletion
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting image {imageId}: {ex.Message}");
+                return StatusCode(
+                    (int)HttpStatusCode.InternalServerError,
+                    "An error occurred during image deletion."
+                );
+            }
+        }
     }
 }

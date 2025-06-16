@@ -24,5 +24,7 @@ namespace backend.Models
         public string? AIAnalysis { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public string? ImageName { get; set; }
     }
 }

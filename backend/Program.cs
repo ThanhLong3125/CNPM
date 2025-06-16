@@ -1,4 +1,6 @@
+using System.Net.Http.Headers;
 using System.Text;
+using backend.Configurations;
 using backend.Data;
 using backend.Services;
 using backend.Services.BackgroundServices;
@@ -109,11 +111,30 @@ builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
+builder.Services.AddHttpClient(
+    "GeminiApi",
+    client =>
+    {
+        client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json")
+        );
+
+        // Add any other default headers specific to Gemini here
+    }
+);
+
+// Program.cs
+builder.Services.Configure<GeminiApiSettings>(builder.Configuration.GetSection("GeminiApi"));
+builder.Services.Configure<FileStorageSettings>(builder.Configuration.GetSection("FileStorage"));
+
 // Register background services
 builder.Services.AddSingleton<NotificationBackgroundService>();
 builder.Services.AddHostedService(provider =>
     provider.GetRequiredService<NotificationBackgroundService>()
 );
+
+builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>(); // Assuming LocalFileStorageService is your implementation
+builder.Services.AddScoped<IAIAnalysisService, GeminiAnalysisService>(); // Assuming LocalFileStorageService is your implementation
 
 // Add CORS
 builder.Services.AddCors(options =>
@@ -136,6 +157,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
