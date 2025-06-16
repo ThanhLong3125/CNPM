@@ -15,6 +15,7 @@ _ReSharper.*
 # Build output
 bin/
 obj/
+appsettings.json
 
 # Package management
 packages/
