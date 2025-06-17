@@ -48,21 +48,18 @@ const mockPatient: CreatedRecordDeclare[] = [
     },
 ]
 
-const CreatedRecord: React.FC = () => {
+const CreatedRecordList: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
     const navigate = useNavigate();
     const handleClick = (patientId: string) => {
         navigate(`/CreatedRecord/${patientId}`);
     };
-    const handleCreateClick = () => {
-    navigate('/CreatedRecord'); // hoặc '/created-record' tùy bạn đặt route
-  };
     return (
-        <div className="bg-[#D5DEEF] m-6 rounded-xl shadow-md">
-            <div className="flex justify-center items-center ">
-                <h2 className="bg-[#618FCA] w-fit mt-5 py-2 px-10 text-semibold text-lg rounded-xl ">Bệnh án đã tạo</h2>
+        <div className="bg-[#D5DEEF] m-6 rounded-xl relative shadow-md">
+             <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-[#618FCA] mx-auto w-full max-w-xl px-6 py-2 rounded-xl shadow-md">
+                <h2 className="text-white text-center font-semibold text-lg">Bệnh án đã tạo</h2>
             </div>
-            <div className="flex flex-col-4 md:flex-row gap-16 my-6 mx-1 p-2">
+            <div className="flex flex-col-4 md:flex-row gap-16 pt-14 my-6 mx-1 p-2">
                 <input
                     type="text"
                     placeholder="Tìm mã bệnh nhân "
@@ -70,15 +67,6 @@ const CreatedRecord: React.FC = () => {
                     onChange={(e) => setFilter(e.target.value)}
                     className="bg-[#618FCA] w-1/3  pl-9 rounded-4xl p-2 text-center"
                 />
-                <button className="bg-[#618FCA] w-fit rounded-xl py-3 px-10 text-center" >
-                    Danh sách bệnh nhân
-                </button>
-                <button className="bg-[#618FCA]  w-fit rounded-xl py-3 px-10 text-center" 
-                      onClick={handleCreateClick}
-
-                >
-                    Bệnh án đã tạo
-                </button>
 
             </div>
             <div className=" text-center rounded-t-xl px-2">
@@ -87,6 +75,7 @@ const CreatedRecord: React.FC = () => {
                     <div>Họ tên</div>
                     <div>Giới tính</div>
                     <div>Số điện thoại</div>
+                    <div>Thời gian</div>
                 </div>
                 <div className="space-y-2 bg-[#D3E2F9] p-2 ">
                     {mockPatient.map((CreatedRecordDeclare, index) => (
@@ -111,4 +100,4 @@ const CreatedRecord: React.FC = () => {
         </div>
     )
 }
-export default CreatedRecord
+export default CreatedRecordList

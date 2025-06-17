@@ -1,14 +1,8 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "Bs7Uhv+9vFg=",
+  "dgSpecHash": "Vz7p6QhX610=",
   "success": true,
-  "projectFilePath": "G:\\CNPM\\libs\\libs.csproj",
-=======
-  "dgSpecHash": "246Z06LuuVk=",
-  "success": true,
-  "projectFilePath": "D:\\CNPM\\libs\\libs.csproj",
->>>>>>> origin/Hung1
+  "projectFilePath": "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

@@ -1,49 +1,25 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
-    "G:\\CNPM\\libs\\libs.csproj": {}
+    "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj": {}
   },
   "projects": {
-    "G:\\CNPM\\libs\\libs.csproj": {
+    "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\CNPM\\libs\\libs.csproj",
+        "projectUniqueName": "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj",
         "projectName": "libs",
-        "projectPath": "G:\\CNPM\\libs\\libs.csproj",
-        "packagesPath": "C:\\Users\\HI\\.nuget\\packages\\",
-        "outputPath": "G:\\CNPM\\libs\\obj\\",
-=======
-    "D:\\CNPM\\libs\\libs.csproj": {}
-  },
-  "projects": {
-    "D:\\CNPM\\libs\\libs.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "D:\\CNPM\\libs\\libs.csproj",
-        "projectName": "libs",
-        "projectPath": "D:\\CNPM\\libs\\libs.csproj",
-        "packagesPath": "C:\\Users\\Hung Mai\\.nuget\\packages\\",
-        "outputPath": "D:\\CNPM\\libs\\obj\\",
->>>>>>> origin/Hung1
+        "projectPath": "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj",
+        "packagesPath": "/Users/phuongthao/.nuget/packages/",
+        "outputPath": "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-<<<<<<< HEAD
-          "C:\\Users\\HI\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-=======
-          "C:\\Users\\Hung Mai\\AppData\\Roaming\\NuGet\\NuGet.Config"
->>>>>>> origin/Hung1
+          "/Users/phuongthao/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -82,11 +58,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
->>>>>>> origin/Hung1
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.410/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

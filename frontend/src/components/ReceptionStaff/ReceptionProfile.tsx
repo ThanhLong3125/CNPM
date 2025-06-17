@@ -2,19 +2,12 @@ import React from "react";
 
 const ReceptionProfile: React.FC = () => {
     return (
-        <div className="min-h-screen bg-[#d8e0ef] flex flex-col">
-            <header className="bg-[#3a5a89] px-6 py-3 text-white flex items-center justify-between">
-                <h1 className="text-2xl font-bold">AIDIMS</h1>
-                <div className="text-2xl">
-                    <i className="fas fa-user-circle"></i>
-                </div>
-            </header>
-
-            <main className="flex justify-center items-center flex-grow">
-                <div className="bg-[#83a8dd] rounded-2xl p-10 w-[600px] shadow-md">
-                    <h2 className="text-white text-xl font-semibold text-center mb-8 bg-[#5e8fc5] py-2 rounded-xl">
-                        Hồ sơ lễ tân
-                    </h2>
+        <div className="flex justify-center pt-10">
+            <div className="flex justify-center items-center flex-grow">
+                <div className="bg-[#83a8dd] rounded-2xl relative p-10 w-[600px] shadow-md">
+                    <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-[#618FCA] mx-auto w-full max-w-fit px-6 py-2 rounded-xl shadow-md">
+                        <h2 className="text-white text-center font-semibold text-lg">Hồ sơ người dùng</h2>
+                    </div>
 
                     <form className="space-y-5">
                         <div>
@@ -73,7 +66,7 @@ const ReceptionProfile: React.FC = () => {
                         </div>
                     </form>
                 </div>
-            </main>
+            </div>
         </div>
     )
 

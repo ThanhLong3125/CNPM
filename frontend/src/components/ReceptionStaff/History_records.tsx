@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const Htr_records = [
     {
@@ -32,15 +34,15 @@ const Htr_records = [
 ];
 
 const History_records: React.FC = () => {
+    const navigate = useNavigate();
+
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
+        <div className="min-h-screen text-white">
 
             {/* Content */}
-            <div className="bg-[#D3E2F9] rounded-xl m-10 p-6 text-black shadow-md">
-                <div className="flex justify-center">
-                    <h2 className="bg-[#618FCA] text-white px-4 py-2 rounded-xl text-xl font-semibold">
-                        Lịch sử bệnh án
-                    </h2>
+            <div className="bg-[#D3E2F9] rounded-xl m-10 p-6 relative text-black shadow-md">
+                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-[#618FCA] mx-auto w-full max-w-xl px-6 py-2 rounded-xl shadow-md mb-6">
+                    <h2 className="text-white text-center font-semibold text-lg">Lịch sử bệnh án</h2>
                 </div>
 
                 {/* Filters */}

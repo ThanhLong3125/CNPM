@@ -8,10 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = libs
-<<<<<<< HEAD
-build_property.ProjectDir = G:\CNPM\libs\
-=======
-build_property.ProjectDir = D:\CNPM\libs\
->>>>>>> origin/Hung1
+build_property.ProjectDir = /Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

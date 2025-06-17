@@ -8,9 +8,12 @@ export interface CreatedRecordDeclare extends MainStaffDeclare {
     timeIn: string;
 }
 export interface PatientForm {
-    name:string;
+    fullName:string;
     gender:string;
     birthDate:string;
     phoneOrEmail:string;
     medicalHistory: string;
+}
+export interface PatientRecordDeclare extends PatientForm {
+    patientID: string;
 }
