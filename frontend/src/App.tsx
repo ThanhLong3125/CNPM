@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.css'
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
+import DetailCreatedRecord from './components/ReceptionStaff/MedicalRecordForm';
 import LoginPage from './components/Page/LoginPage'
 import DoctorMain from './components/Doctor/DoctorMain'
 import PatientAwaitDetail from './components/Doctor/PatientAwaitDetail'
@@ -15,6 +15,7 @@ import CreateMedicalRecord from "./components/ReceptionStaff/CreateMedicalRecord
 import UpdatePatientRecord from './components/ReceptionStaff/UpdatePatientRecord'
 import ReceptionProfile from './components/ReceptionStaff/ReceptionProfile'
 import DoctorLayout from './components/layout/DoctorLayout';
+import EditMedicalRecord from "../src/components/ReceptionStaff/EditMedicalRecord"
 
 const App = () => {
   return (
@@ -32,6 +33,8 @@ const App = () => {
           <Route path="create-medical-record/:patientId" element={<CreateMedicalRecord />} />
           <Route path="update-patient/:patientId" element={<UpdatePatientRecord />} />
           <Route path="user-profile" element={<ReceptionProfile />} />
+          <Route path="DetailCreatedRecord/:patientId" element={<DetailCreatedRecord/>} />
+          <Route path="EditMedicalRecord" element={<EditMedicalRecord/>} />
         </Route>
 
         <Route path="/doctor" element={<DoctorLayout />}>

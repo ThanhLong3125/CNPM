@@ -19,7 +19,7 @@ const UpdatePatientRecord: React.FC = () => {
     const handleCancel = () => navigate(-1);
 
 
-    const handleUpdate = (patientId: string) => navigate(`/staff/update-patient/${patientId}`);
+    const handleUpdate = () =>navigate(-1);
 
     return (
         <div className=" flex items-center justify-center p-4">
@@ -94,6 +94,7 @@ const UpdatePatientRecord: React.FC = () => {
                             </button>
                             <button
                                 type="button"
+                                onClick={handleUpdate}
                                 className="flex-1 py-3 px-6 rounded-lg bg-[#618FCA] text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 shadow-lg"
                             >
                                 Xác nhận

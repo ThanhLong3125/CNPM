@@ -6,6 +6,7 @@ const CreateMedicalRecord: React.FC = () => {
   const handleCancel = () => {
     navigate(-1);
   }
+   const handleCreated = () => navigate('/staff/CreatedRecordList');
   return (
     <div className=" ">
 
@@ -91,7 +92,10 @@ const CreateMedicalRecord: React.FC = () => {
                 >
                   Hủy
                 </button>
-                <button className="bg-[#618FCA] hover:bg-blue-700 text-white px-10 py-2 rounded">Xác nhận</button>
+                <button className="bg-[#618FCA] hover:bg-blue-700 text-white px-10 py-2 rounded"
+                 onClick={handleCreated}
+
+                >Xác nhận</button>
               </div>
             </div>
           </div>
