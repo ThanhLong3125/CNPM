@@ -19,9 +19,9 @@ const PatientRecordView: React.FC = () => {
     const handleCancel = () => navigate(-1);
 
 
-    const handleUpdate = (patientId: string) => navigate(`/update-patient/${patientId}`);
-    const handleViewHistory = (patientId: string) => navigate(`/medical-history/${patientId}`);
-    const handleCreateMedicalRecord = (patientId: string) => navigate(`/create-medical-record/${patientId}`);
+    const handleUpdate = (patientId: string) => navigate(`/staff/update-patient/${patientId}`);
+    const handleViewHistory = (patientId: string) => navigate(`/staff/medical-history/${patientId}`);
+    const handleCreateMedicalRecord = (patientId: string) => navigate(`/staff/create-medical-record/${patientId}`);
 
     return (
         <div className=" flex items-center justify-center  p-4">

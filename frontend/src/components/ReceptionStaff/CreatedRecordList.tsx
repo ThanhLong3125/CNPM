@@ -52,7 +52,7 @@ const CreatedRecordList: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
     const navigate = useNavigate();
     const handleClick = (patientId: string) => {
-        navigate(`/CreatedRecord/${patientId}`);
+        navigate(`/staff/CreatedRecord/${patientId}`);
     };
     return (
         <div className="bg-[#D5DEEF] m-6 rounded-xl relative shadow-md">

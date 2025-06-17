@@ -112,10 +112,10 @@ const MainStaff: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
     const navigate = useNavigate();
     const handleClick = (patientId: string) => {
-        navigate(`/patientRecord/${patientId}`);
+        navigate(`/staff/patientRecord/${patientId}`);
     };
-    const handleCreateNew = () => navigate('/create-profile');
-    const handleCreated = () => navigate('/CreatedRecordList');
+    const handleCreateNew = () => navigate('/staff/create-profile');
+    const handleCreated = () => navigate('/staff/CreatedRecordList');
 
     return (
         <div className="bg-[#D5DEEF] relative m-6 rounded-xl shadow-md">

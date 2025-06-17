@@ -1,15 +1,46 @@
 import React, { useState } from 'react';
 import ẢnhLogin from '../../assets/Ảnh Login.png';
+import { useNavigate } from 'react-router-dom';
+import { authService } from "../../service/authService";
 
 const LoginPage: React.FC = () => {
-    const [emailOrUsername, setEmailOrUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [rememberMe, setRememberMe] = React.useState(false);
+    const [emailOrUsername, setEmailOrUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    const handeSubmit = (e: React.FormEvent) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('Email/Username:', emailOrUsername);
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await authService.login(emailOrUsername, password);
+            console.log("Login response:", response);
+            const { token, role } = response;
+            const normalizedRole = role.toLowerCase();
+
+            sessionStorage.setItem('accessToken', token);
+            sessionStorage.setItem('role', normalizedRole);
+
+
+            if (normalizedRole === 'doctor') {
+                navigate('/doctor');
+            } else if (normalizedRole === 'staff') {
+                navigate('/staff');
+            } else {
+                setError('Unknown role returned from server');
+            }
+
+        } catch (err: any) {
+            console.error(err);
+            setError('Invalid credentials or server error');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -27,29 +58,53 @@ const LoginPage: React.FC = () => {
                         </p>
                     </div>
 
-                    <form onSubmit={handeSubmit} className='w-full max-w-md space-y-6'>
-                        <input type="text" placeholder='Email or Username' value={emailOrUsername} onChange={(e) => setEmailOrUsername(e.target.value)}
-                            className='w-full  bg-white p-3 border border-stone-400/50 rounded-md justify-start text-stone-500 text-md font-normal' required />
-                        <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}
-                            className='w-full p-3 border border-stone-400/50 rounded-md justify-start text-stone-500 text-md font-normal' required />
+                    <form onSubmit={handleSubmit} className='w-full max-w-md space-y-6'>
+                        <input
+                            type="text"
+                            placeholder='Email or Username'
+                            value={emailOrUsername}
+                            onChange={(e) => setEmailOrUsername(e.target.value)}
+                            className='w-full bg-white p-3 border border-stone-400/50 rounded-md text-stone-500 text-md font-normal'
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder='Password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className='w-full p-3 border border-stone-400/50 rounded-md text-stone-500 text-md font-normal'
+                            required
+                        />
                         <div className='flex items-center justify-between'>
                             <label className='flex items-center'>
-                                <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}
-                                    className='mr-2' />
+                                <input
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                    className='mr-2'
+                                />
                                 Remember me
                             </label>
                             <a href="#" className='text-blue-500 hover:underline'>Forgot Password?</a>
                         </div>
-                        <button type="submit" className='w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-colors'>
-                            Login
+                        <button
+                            type="submit"
+                            className='w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-colors'
+                            disabled={loading}
+                        >
+                            {loading ? 'Logging in...' : 'Login'}
                         </button>
+
+                        {error && <p className="text-red-500 text-center">{error}</p>}
+
                         <p className='text-center text-sm'>
                             Don't have an account? <a href="#" className='text-blue-500 hover:underline'>Register</a>
                         </p>
                     </form>
                 </div>
             </div>
-        </div >
+        </div>
     );
-}
+};
+
 export default LoginPage;

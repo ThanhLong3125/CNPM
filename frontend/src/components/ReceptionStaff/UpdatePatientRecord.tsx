@@ -19,7 +19,7 @@ const UpdatePatientRecord: React.FC = () => {
     const handleCancel = () => navigate(-1);
 
 
-    const handleUpdate = (patientId: string) => navigate(`/update-patient/${patientId}`);
+    const handleUpdate = (patientId: string) => navigate(`/staff/update-patient/${patientId}`);
 
     return (
         <div className=" flex items-center justify-center p-4">

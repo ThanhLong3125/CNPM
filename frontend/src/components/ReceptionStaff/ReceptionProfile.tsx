@@ -1,6 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
+
 
 const ReceptionProfile: React.FC = () => {
+        const navigate = useNavigate();
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("accessToken"); 
+        sessionStorage.removeItem("role");      
+        navigate("/");
+    };
+
     return (
         <div className="flex justify-center pt-10">
             <div className="flex justify-center items-center flex-grow">
@@ -59,6 +70,7 @@ const ReceptionProfile: React.FC = () => {
                         <div className="flex justify-end pt-4">
                             <button
                                 type="button"
+                                onClick={handleLogout}
                                 className="bg-[#5e8fc5] text-white px-6 py-2 rounded-xl hover:bg-[#4b7bb3]"
                             >
                                 Đăng xuất
