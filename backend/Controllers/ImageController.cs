@@ -4,6 +4,7 @@ using backend.DTOs;
 using backend.Exceptions; // Make sure to include your custom exceptions
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace backend.Controllers
 {
@@ -18,6 +19,7 @@ namespace backend.Controllers
             _imageService = imageService;
         }
 
+        [SwaggerOperation(Summary = "upload ảnh")]
         [HttpPost("upload")]
         [Consumes("multipart/form-data")] // Essential for handling file uploads
         [ProducesResponseType(typeof(ImageDto), (int)HttpStatusCode.OK)]
@@ -59,6 +61,7 @@ namespace backend.Controllers
             }
         }
 
+        [SwaggerOperation(Summary = "Xem thông tin ảnh theo ID")]
         [HttpGet("{imageId:guid}")] // Route constraint to ensure imageId is a GUID
         [ProducesResponseType(typeof(ImageDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -84,6 +87,7 @@ namespace backend.Controllers
             }
         }
 
+        [SwaggerOperation(Summary = "phân tích ảnh bằng AI")]
         [HttpPost("{imageId:guid}/analyze")] // Using POST as it performs an action (analysis)
         [ProducesResponseType(typeof(ImageDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -119,6 +123,7 @@ namespace backend.Controllers
             }
         }
 
+        [SwaggerOperation(Summary = "Soft delete image")]
         [HttpDelete("{imageId:guid}")] // Using HTTP DELETE verb
         [ProducesResponseType((int)HttpStatusCode.NoContent)] // Standard for successful deletion without content
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
