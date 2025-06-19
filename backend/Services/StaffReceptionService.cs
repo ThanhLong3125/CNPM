@@ -15,6 +15,10 @@ namespace backend.Services
         Task<List<User>> ListDoctorAsync();
         Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto createMedicalRecordDto);
         Task<List<MedicalRecord>> SreachlistMediaRecordbyId(Guid id);
+
+        Task<MedicalRecord> DetailMediaRecordbyId(Guid id);
+
+        Task<MedicalRecord> UpdateMediaRecordbyId(Guid id, UpdateMedicalRecordDto dto);
     }
 
     public class StaffReceptionService : IStaffReceptionService
@@ -47,7 +51,8 @@ namespace backend.Services
                 DateOfBirth = createPatientDto.DateOfBirth,
                 Gender = createPatientDto.Gender.Trim(),
                 Email = createPatientDto.Email?.Trim(),
-                Phone = createPatientDto.Phone?.Trim()
+                Phone = createPatientDto.Phone?.Trim(),
+                Symptoms = createPatientDto.Symptoms?.Trim(),
             };
 
             await _context.Patients.AddAsync(patient);
@@ -84,6 +89,10 @@ namespace backend.Services
 
             if (!string.IsNullOrEmpty(updatePatientDto.Phone))
                 patient.Phone = updatePatientDto.Phone;
+
+            if (!string.IsNullOrEmpty(updatePatientDto.Symptoms))
+                patient.Symptoms = updatePatientDto.Symptoms;
+
             await _context.SaveChangesAsync();
             await _auditService.WriteLogAsync(new WriteLogDto
             {
@@ -182,5 +191,60 @@ namespace backend.Services
             });
             return records;
         }
+
+        public async Task<MedicalRecord> DetailMediaRecordbyId(Guid id)
+        {
+            var medicalRecord = await _context.MedicalRecords.FindAsync(id);
+            if (medicalRecord == null)
+            {
+                throw new Exception("Không tồn tại bệnh án với ID này.");
+            }
+
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Detail Medical Record",
+                Details = id
+            });
+
+            return medicalRecord;
+        }
+
+        public async Task<MedicalRecord> UpdateMediaRecordbyId(Guid id, UpdateMedicalRecordDto dto)
+        {
+            var medicalRecord = await _context.MedicalRecords.FindAsync(id);
+
+            if (medicalRecord == null)
+            {
+                throw new Exception("Medical record not found");
+            }
+
+            if (!string.IsNullOrEmpty(dto.Symptoms))
+                medicalRecord.Symptoms = dto.Symptoms;
+
+            if (dto.AssignedPhysicianId.HasValue)
+                medicalRecord.AssignedPhysicianId = dto.AssignedPhysicianId.Value;
+
+            if (dto.IsPriority.HasValue)
+                medicalRecord.IsPriority = dto.IsPriority.Value;
+
+            medicalRecord.Status = dto.Status;
+
+            await _context.SaveChangesAsync();
+
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Update Medical Record",
+                Details = new
+                {
+                    Id = id,
+                    UpdateData = dto
+                }
+            });
+
+            return medicalRecord;
+        }
+
     }
 }

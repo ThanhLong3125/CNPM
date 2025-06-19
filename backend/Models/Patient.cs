@@ -27,6 +27,10 @@ namespace backend.Models
         [Column("Phone")]
         public string? Phone { get; set; }
 
+        [Column("Symptoms")]
+
+        public string? Symptoms { get; set; } = string.Empty;
+
         // Navigation property
         public ICollection<MedicalRecord>? MedicalRecords { get; set; }
     }

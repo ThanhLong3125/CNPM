@@ -120,5 +120,18 @@ namespace backend.Controllers
             return Ok(records);
         }
 
+        [HttpGet("medical-records/{id}")]
+        public async Task<IActionResult> GetMedicalRecordDetail(Guid id)
+        {
+            var result = await _staffReceptionService.DetailMediaRecordbyId(id);
+            return Ok(result);
+        }
+
+        [HttpPut("medical-records/{id}")]
+        public async Task<IActionResult> UpdateMedicalRecord(Guid id, [FromBody] UpdateMedicalRecordDto dto)
+        {
+            var result = await _staffReceptionService.UpdateMediaRecordbyId(id, dto);
+            return Ok(result);
+        }
     }
 }

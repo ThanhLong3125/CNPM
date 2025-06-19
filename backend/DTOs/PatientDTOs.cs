@@ -31,6 +31,9 @@ namespace backend.DTOs
         [StringLength(200)]
         public string? Phone { get; set; }
 
+        [StringLength(200)]
+        public string? Symptoms { get; set; }
+
     }
 
     public class UpdatePatientDto
@@ -48,6 +51,9 @@ namespace backend.DTOs
 
         [StringLength(200)]
         public string? Phone { get; set; }
+
+        [StringLength(200)]
+        public string? Symptoms { get; set; }
 
     }
 
