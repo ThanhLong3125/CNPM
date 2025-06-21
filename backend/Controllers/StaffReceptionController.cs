@@ -133,5 +133,12 @@ namespace backend.Controllers
             var result = await _staffReceptionService.UpdateMediaRecordbyId(id, dto);
             return Ok(result);
         }
+
+        [HttpDelete("deleteMerdia-Record/{id}")]
+        public async Task<IActionResult> DeleteRecord(Guid id)
+        {
+            var result = await _staffReceptionService.DeleteMediaRecordbyId(id);
+            return Ok(result);
+        }
     }
 }

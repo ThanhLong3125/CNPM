@@ -19,6 +19,8 @@ namespace backend.Services
         Task<MedicalRecord> DetailMediaRecordbyId(Guid id);
 
         Task<MedicalRecord> UpdateMediaRecordbyId(Guid id, UpdateMedicalRecordDto dto);
+
+        Task<string> DeleteMediaRecordbyId(Guid id);
     }
 
     public class StaffReceptionService : IStaffReceptionService
@@ -244,6 +246,27 @@ namespace backend.Services
             });
 
             return medicalRecord;
+        }
+        public async Task<string> DeleteMediaRecordbyId(Guid id)
+        {
+            var medicalRecord = await _context.MedicalRecords.FindAsync(id);
+
+            if (medicalRecord == null)
+            {
+                throw new Exception("Medical record not found");
+            }
+
+            _context.MedicalRecords.Remove(medicalRecord);
+            await _context.SaveChangesAsync();
+
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Delete Medical Record",
+                Details = id
+            });
+
+            return "Xoá thành công";
         }
 
     }
