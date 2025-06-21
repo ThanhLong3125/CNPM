@@ -20,18 +20,18 @@ const MedicalRecord: React.FC = () => {
   
   return (
       <div>
-        <div className="grid grid-cols-6 grid-rows-6 gap-6 ">
+        <div className="grid grid-cols-6 grid-rows-6 gap-10 ">
           
           {/* 1 */}
           <div className="col-span-3 row-span-3">
 
-            <div className="space-y-4 bg-[#a8c0f0] p-5 pt-0 rounded-md size-full shadow-md">
+            <div className="space-y-4 bg-[#a8c0f0] p-5 pt-0 rounded-md size-full shadow-md relative">
               
-              <div className="flex justify-center">
-                <h2 className="text-lg font-bold text-white bg-[#264796] px-10 py-1 rounded-md inline-block shadow-md">Thông tin bệnh nhân</h2>
+              <div className="absolute -top-5 left-1/3 flex justify-center">
+                <h2 className="text-lg font-bold text-white bg-[#618FCA] px-10 py-1 rounded-md inline-block shadow-md">Thông tin bệnh nhân</h2>
               </div>
 
-              <div className="grid grid-cols-8 grid-rows-5 gap-3">
+              <div className="grid grid-cols-8 grid-rows-5 gap-3 pt-10">
                   <div className="col-span-4"><div className="text-[#133574] font-semibold">Mã bệnh nhân</div></div>
                   <div className="col-span-4 row-start-2"><input className="w-full bg-[#D5DEEF] rounded-md pl-2" disabled defaultValue="BN0001"/></div>
                   
@@ -57,13 +57,13 @@ const MedicalRecord: React.FC = () => {
           {/* 2 */}
           <div className="col-span-3 row-span-6 col-start-4">
             
-            <div className="space-y-4 bg-[#a8c0f0] p-5 pt-0 rounded-md size-full shadow-md">
+            <div className="space-y-4 bg-[#a8c0f0] p-5 pt-0 rounded-md size-full shadow-md relative">
               
-              <div className="flex justify-center">
-                <h2 className="text-lg font-bold text-white bg-[#264796] px-10 py-1 rounded-md inline-block shadow-md">Thông tin ảnh chụp</h2>
+              <div className="absolute -top-5 left-1/3 flex justify-center">
+                <h2 className="text-lg font-bold text-white bg-[#618FCA] px-10 py-1 rounded-md inline-block shadow-md">Thông tin ảnh chụp</h2>
               </div>
 
-              <div className="flex items-center justify-center relative">             
+              <div className="flex items-center justify-center relative pt-10">             
                 
                 <div className="grid grid-cols-3 grid-rows-3 gap-4">
                     <div className="col-span-2 row-span-3"><div className="w-65 h-65 bg-white rounded-md flex items-center justify-center relative"></div></div>
@@ -75,9 +75,9 @@ const MedicalRecord: React.FC = () => {
               </div>
 
               <div className="flex justify-start space-x-2 mt-2">
-                <button className="text-white font-bold bg-[#264796] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">Thêm</button>
-                <button className="text-white font-bold bg-[#264796] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">Xóa</button>
-                <button className="text-white font-bold bg-[#264796] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">AI</button>
+                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">Thêm</button>
+                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">Xóa</button>
+                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">AI</button>
               </div>
 
               <div className="grid grid-cols-2 grid-rows-1 gap-4">
@@ -88,9 +88,9 @@ const MedicalRecord: React.FC = () => {
               <input className="w-full h-30 bg-white rounded-md pl-2" placeholder ="Chuẩn đoán của AI"/>
       
               <div className="flex justify-end space-x-2 mt-2">
-                <button className="text-white font-bold bg-[#264796] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md" onClick={() => handleHistory(patientData.patientID)}>Xem lịch sử</button>
-                <button className="text-white font-bold bg-[#264796] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md" onClick={handleUnSave}>Tạm lưu</button>
-                <button className="text-white font-bold bg-[#264796] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md" onClick={handleSave}>Lưu</button>
+                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md" onClick={() => handleHistory(patientData.patientID)}>Xem lịch sử</button>
+                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md" onClick={handleUnSave}>Tạm lưu</button>
+                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md" onClick={handleSave}>Lưu</button>
               </div>
 
             </div>
@@ -100,13 +100,13 @@ const MedicalRecord: React.FC = () => {
           {/* 3 */}
           <div className="col-span-3 row-span-3 row-start-4">
             
-            <div className="space-y-4 bg-[#a8c0f0] p-5 pt-0 rounded-md size-full shadow-md">
+            <div className="space-y-4 bg-[#a8c0f0] p-5 pt-0 rounded-md size-full shadow-md relative">
               
-              <div className="flex justify-center">
-                <h2 className="text-lg font-bold text-white bg-[#264796] px-10 py-1 rounded-md inline-block shadow-md">Thông tin chẩn đoán</h2>
+              <div className="absolute -top-5 left-1/3 flex justify-center">
+                <h2 className="text-lg font-bold text-white bg-[#618FCA] px-10 py-1 rounded-md inline-block shadow-md">Thông tin chẩn đoán</h2>
               </div>
     
-              <div className="grid grid-cols-2 grid-rows-3 gap-2">
+              <div className="grid grid-cols-2 grid-rows-3 gap-2 pt-10">
                   <div ><div className="text-[#133574] font-semibold mb-1">Tên bác sĩ</div></div>
                   <div ><div className="text-[#133574] font-semibold mb-1">Mã bác sĩ</div></div>
                   <div ><input className="w-full bg-[#D5DEEF] rounded-md pl-2" disabled defaultValue="Nguyễn Văn B"/></div>
