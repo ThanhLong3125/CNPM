@@ -1,6 +1,4 @@
 import React from "react";
-
-
 const ReceptionProfile: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#d8e0ef] flex flex-col">
@@ -24,12 +22,11 @@ const ReceptionProfile: React.FC = () => {
                                 type="text"
                                 value="BN0001"
                                 className="w-full px-3 py-2 rounded bg-white text-black focus:outline-none"
-                                disabled
                             />
                         </div>
 
                         <div>
-                            <label className="block text-white mb-1">Họ Tên</label>
+                            <label className="block text-white mb-1">Họ và tên</label>
                             <input
                                 type="text"
                                 value="Nguyễn Văn A"

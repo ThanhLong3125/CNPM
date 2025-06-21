@@ -14,10 +14,13 @@ const App = () => {
   return (
     <Routes>
 
+
+      {/* 
       < Route path='/History_records' element={<History_records />} />
       < Route path='/detail/:patient_id' element={< PatientAwaitDetail />} />
-      < Route path='/' element={<DoctorMain />} />
-      < Route path='/Thongtin' element={<ReceptionProfile />} />
+      < Route path='/' element={<DoctorMain />} />  */}
+
+      < Route path='/' element={<ReceptionProfile />} />
 
     </Routes>
 
