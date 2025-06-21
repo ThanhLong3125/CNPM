@@ -31,16 +31,80 @@ const Htr_records = [
         department: "Mắt",
         doctor: "Bs Khanh",
     },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
+    {
+        patientId: "BN0001",
+        recordId: "BA00001",
+        timeIn: "03/06/2025 - 14:30",
+        department: "Mắt",
+        doctor: "Bs Khanh",
+    },
 ];
 
 const History_records: React.FC = () => {
     const navigate = useNavigate();
+    const handleClick= (patientId: string) => navigate(`/doctor/OldMedicalRecord/${patientId}`);
 
     return (
-        <div className="min-h-screen text-white">
+        <div className="min-screen text-white">
 
             {/* Content */}
-            <div className="bg-[#D3E2F9] rounded-xl m-10 p-6 relative text-black shadow-md">
+            <div className="bg-[#D3E2F9] rounded-xl p-6 relative text-black shadow-md">
                 <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-[#618FCA] mx-auto w-full max-w-xl px-6 py-2 rounded-xl shadow-md mb-6">
                     <h2 className="text-white text-center font-semibold text-lg">Lịch sử bệnh án</h2>
                 </div>
@@ -63,9 +127,11 @@ const History_records: React.FC = () => {
                 </div>
 
                 {/* Table Rows */}
-                {Htr_records.map((item, index) => (
+                <div className="max-h-[400px] overflow-y-auto space-y-2 bg-[#D3E2F9] p-2 ">
+                   {Htr_records.map((item, index) => (
                     <div
                         key={index}
+                        onClick={() => handleClick(item.patientId)}
                         className="grid grid-cols-5 px-4 py-2 bg-[#E6EEF8] text-sm rounded-xl mt-2"
                     >
                         <div>{item.patientId}</div>
@@ -74,7 +140,9 @@ const History_records: React.FC = () => {
                         <div>{item.department}</div>
                         <div>{item.doctor}</div>
                     </div>
-                ))}
+                    ))} 
+                </div>
+                
             </div>
         </div>
     );

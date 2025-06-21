@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj": {}
+    "D:\\CNPM\\libs\\libs.csproj": {}
   },
   "projects": {
-    "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj": {
+    "D:\\CNPM\\libs\\libs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj",
+        "projectUniqueName": "D:\\CNPM\\libs\\libs.csproj",
         "projectName": "libs",
-        "projectPath": "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/libs.csproj",
-        "packagesPath": "/Users/phuongthao/.nuget/packages/",
-        "outputPath": "/Users/phuongthao/Documents/DL23CLC/CNPM24/CNPM/libs/obj/",
+        "projectPath": "D:\\CNPM\\libs\\libs.csproj",
+        "packagesPath": "C:\\Users\\Hung Mai\\.nuget\\packages\\",
+        "outputPath": "D:\\CNPM\\libs\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/phuongthao/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Hung Mai\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -58,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.410/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
