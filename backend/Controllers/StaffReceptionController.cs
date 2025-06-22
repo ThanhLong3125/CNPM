@@ -140,5 +140,13 @@ namespace backend.Controllers
             var result = await _staffReceptionService.DeleteMediaRecordbyId(id);
             return Ok(result);
         }
+
+        [HttpGet("ListMediaRecord")]
+        public async Task<IActionResult> ShowMediaRecord()
+        {
+            var result = await _staffReceptionService.ShowAllMediaRecord();
+            return Ok(result);
+        }
+
     }
 }

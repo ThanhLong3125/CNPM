@@ -21,6 +21,7 @@ namespace backend.Services
         Task<MedicalRecord> UpdateMediaRecordbyId(Guid id, UpdateMedicalRecordDto dto);
 
         Task<string> DeleteMediaRecordbyId(Guid id);
+        Task<List<MedicalRecord>> ShowAllMediaRecord();
     }
 
     public class StaffReceptionService : IStaffReceptionService
@@ -267,6 +268,12 @@ namespace backend.Services
             });
 
             return "Xoá thành công";
+        }
+
+        public async Task<List<MedicalRecord>> ShowAllMediaRecord()
+        {
+            var listRecord = await _context.MedicalRecords.ToListAsync();
+            return listRecord;
         }
 
     }
