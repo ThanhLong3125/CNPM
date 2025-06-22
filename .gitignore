@@ -16,6 +16,7 @@ _ReSharper.*
 bin/
 obj/
 appsettings.json
+images/
 
 # Package management
 packages/

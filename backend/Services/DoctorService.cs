@@ -11,9 +11,6 @@ namespace backend.Services
         Task<string> CreateDiagnosisAsync(CreateDiagnosisDto createDiagnosisDto);
         Task<Diagnosis> UpdateDiagnosisAsync(Guid id, UpdateDiagnosisDto updateDiagnosisDto);
         Task<List<Diagnosis>> SearchDiagnosisbyMRAsync(Guid id);
-        // Task<List<User>> ListDoctorAsync();
-        // Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto createMedicalRecordDto);
-        // Task<List<MedicalRecord>> SearchlistMediaRecordbyId(Guid id);
     }
 
     public class DoctorService : IDoctorService
