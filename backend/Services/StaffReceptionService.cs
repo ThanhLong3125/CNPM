@@ -1,3 +1,4 @@
+// Services/StaffReceptionService.cs
 using backend.Data;
 using backend.DTOs;
 using backend.Models;
@@ -8,17 +9,17 @@ namespace backend.Services
 {
     public interface IStaffReceptionService
     {
-        Task<string> CreatePatientAsync(CreatePatientDto createPatientDto);
-        Task<Patient> UpdatePatientAsync(string idPatient, UpdatePatientDto updatePatientDto);
+        Task<PatientDto> CreatePatientAsync(CreatePatientDto dto);
+        Task<Patient> UpdatePatientAsync(string idPatient, UpdatePatientDto dto);
         Task<PatientDto> SreachPatientAsync(string idPatient);
         Task<List<Patient>> ListPatientAsync();
         Task<List<User>> ListDoctorAsync();
-        Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto createMedicalRecordDto);
+        Task<string> CreateMedicalRecordAsync(CreateMedicalRecordDto dto);
         Task<List<MedicalRecord>> SearchMedicalRecordsByPatientId(string idPatient);
         Task<MedicalRecord> DetailMediaRecordbyId(string medicalRecordId);
         Task<MedicalRecord> UpdateMediaRecordbyId(string medicalRecordId, UpdateMedicalRecordDto dto);
         Task<string> DeleteMediaRecordbyId(string medicalRecordId);
-        Task<List<MedicalRecord>> ShowAllMediaRecord();
+        Task<List<MedicalRecord>> ShowAllMedicalRecord();
     }
 
     public class StaffReceptionService : IStaffReceptionService
@@ -34,26 +35,26 @@ namespace backend.Services
             _auditService = auditService;
         }
 
-        public async Task<string> CreatePatientAsync(CreatePatientDto createPatientDto)
+        public async Task<PatientDto> CreatePatientAsync(CreatePatientDto dto)
         {
-            var existingPatient = await _context.Patients.FirstOrDefaultAsync(p =>
-                p.FullName.ToLower() == createPatientDto.FullName.ToLower().Trim() &&
-                p.DateOfBirth.Date == createPatientDto.DateOfBirth.Date &&
-                p.Gender.ToLower() == createPatientDto.Gender.ToLower().Trim());
+            var exists = await _context.Patients.FirstOrDefaultAsync(p =>
+                p.FullName.ToLower() == dto.FullName.ToLower().Trim() &&
+                p.DateOfBirth == dto.DateOfBirth &&
+                p.Gender.ToLower() == dto.Gender.ToLower().Trim());
 
-            if (existingPatient != null)
-                throw new Exception("Bệnh nhân đã tồn tại trong hệ thống.");
+            if (exists != null)
+                throw new Exception("Bệnh nhân đã tồn tại.");
 
             var patient = new Patient
             {
                 Id = Guid.NewGuid(),
-                IdPatient = $"BN{Guid.NewGuid().ToString("N")[..6].ToUpper()}",
-                FullName = createPatientDto.FullName.Trim(),
-                DateOfBirth = DateTime.SpecifyKind(createPatientDto.DateOfBirth, DateTimeKind.Utc),
-                Gender = createPatientDto.Gender.Trim(),
-                Email = createPatientDto.Email?.Trim(),
-                Phone = createPatientDto.Phone?.Trim(),
-                MedicalHistory = createPatientDto.MedicalHistory?.Trim(),
+                IdPatient = $"BN{Guid.NewGuid():N}".Substring(0, 6).ToUpper(),
+                FullName = dto.FullName.Trim(),
+                DateOfBirth = dto.DateOfBirth,
+                Gender = dto.Gender.Trim(),
+                Email = dto.Email?.Trim(),
+                Phone = dto.Phone?.Trim(),
+                MedicalHistory = dto.MedicalHistory?.Trim()
             };
 
             await _context.Patients.AddAsync(patient);
@@ -63,33 +64,31 @@ namespace backend.Services
             {
                 User = "Staff",
                 Action = "Create Patient",
-                Details = createPatientDto,
+                Details = dto
             });
 
-            return patient.IdPatient;
+            return new PatientDto
+            {
+                Id = patient.Id,
+                PatientID = patient.IdPatient,
+                FullName = patient.FullName,
+                DateOfBirth = patient.DateOfBirth,
+                Gender = patient.Gender,
+                Email = patient.Email,
+                Phone = patient.Phone
+            };
         }
 
-        public async Task<Patient> UpdatePatientAsync(string idPatient, UpdatePatientDto updatePatientDto)
+        public async Task<Patient> UpdatePatientAsync(string idPatient, UpdatePatientDto dto)
         {
             var patient = await FindPatientByIdPatientAsync(idPatient);
 
-            if (!string.IsNullOrEmpty(updatePatientDto.FullName))
-                patient.FullName = updatePatientDto.FullName;
-
-            if (updatePatientDto.DateOfBirth.HasValue)
-                patient.DateOfBirth = updatePatientDto.DateOfBirth.Value;
-
-            if (!string.IsNullOrEmpty(updatePatientDto.Gender))
-                patient.Gender = updatePatientDto.Gender;
-
-            if (!string.IsNullOrEmpty(updatePatientDto.Email))
-                patient.Email = updatePatientDto.Email;
-
-            if (!string.IsNullOrEmpty(updatePatientDto.Phone))
-                patient.Phone = updatePatientDto.Phone;
-
-            if (!string.IsNullOrEmpty(updatePatientDto.MedicalHistory))
-                patient.MedicalHistory = updatePatientDto.MedicalHistory;
+            if (!string.IsNullOrWhiteSpace(dto.FullName)) patient.FullName = dto.FullName;
+            if (dto.DateOfBirth.HasValue) patient.DateOfBirth = dto.DateOfBirth.Value;
+            if (!string.IsNullOrWhiteSpace(dto.Gender)) patient.Gender = dto.Gender;
+            if (!string.IsNullOrWhiteSpace(dto.Email)) patient.Email = dto.Email;
+            if (!string.IsNullOrWhiteSpace(dto.Phone)) patient.Phone = dto.Phone;
+            if (!string.IsNullOrWhiteSpace(dto.MedicalHistory)) patient.MedicalHistory = dto.MedicalHistory;
 
             await _context.SaveChangesAsync();
 
@@ -97,7 +96,7 @@ namespace backend.Services
             {
                 User = "Staff",
                 Action = "Update Patient",
-                Details = updatePatientDto,
+                Details = dto
             });
 
             return patient;
@@ -111,7 +110,7 @@ namespace backend.Services
             {
                 User = "Staff",
                 Action = "Search Patient by IdPatient",
-                Details = idPatient,
+                Details = idPatient
             });
 
             return new PatientDto
@@ -133,8 +132,8 @@ namespace backend.Services
             await _auditService.WriteLogAsync(new WriteLogDto
             {
                 User = "Staff",
-                Action = "Get list Patient",
-                Details = patients,
+                Action = "List Patients",
+                Details = patients
             });
 
             return patients;
@@ -142,162 +141,96 @@ namespace backend.Services
 
         public async Task<List<User>> ListDoctorAsync()
         {
-            var doctors = await _context.Users
-                .Where(u => u.Role == Role.Doctor)
-                .ToListAsync();
+            var doctors = await _context.Users.Where(u => u.Role == Role.Doctor).ToListAsync();
 
             await _auditService.WriteLogAsync(new WriteLogDto
             {
                 User = "Staff",
-                Action = "Get Doctor",
-                Details = doctors,
+                Action = "List Doctors",
+                Details = doctors
             });
 
             return doctors;
         }
 
-public async Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto dto)
-{
-    var patient = await _context.Patients
-        .FirstOrDefaultAsync(p => p.IdPatient == dto.PatientId);
-
-    if (patient == null)
-        throw new Exception("Bệnh nhân không tồn tại.");
-
-    var record = new MedicalRecord
-    {
-        Id = Guid.NewGuid(),
-        MedicalRecordId = $"BA{Guid.NewGuid().ToString("N")[..6].ToUpper()}",
-        PatientId = dto.PatientId,
-        CreatedDate = DateTime.UtcNow,
-        Symptoms = dto.Symptoms.Trim(),
-        IsPriority = dto.IsPriority,
-        AssignedPhysicianId = dto.AssignedPhysicianId,
-        Status = false
-    };
-
-    await _context.MedicalRecords.AddAsync(record);
-    await _context.SaveChangesAsync();
-
-    await _auditService.WriteLogAsync(new WriteLogDto
-    {
-        User = "Staff",
-        Action = "Create Medical Record",
-        Details = dto
-    });
-
-    return record.MedicalRecordId;
-}
-
-        public async Task<List<MedicalRecord>> SearchMedicalRecordsByPatientId(string idPatient)
+        public async Task<string> CreateMedicalRecordAsync(CreateMedicalRecordDto dto)
         {
-            var patient = await FindPatientByIdPatientAsync(idPatient);
-            var records = await _context.MedicalRecords
-                .Where(r => r.PatientId == idPatient)
-                .ToListAsync();
+            var patient = await FindPatientByIdPatientAsync(dto.PatientId);
+            var record = new MedicalRecord
+            {
+                Id = Guid.NewGuid(),
+                MedicalRecordId = $"BA{Guid.NewGuid():N}".Substring(0, 6).ToUpper(),
+                PatientId = dto.PatientId,
+                CreatedDate = DateTime.UtcNow,
+                Symptoms = dto.Symptoms.Trim(),
+                IsPriority = dto.IsPriority,
+                AssignedPhysicianId = dto.AssignedPhysicianId,
+                Status = false
+            };
+
+            await _context.MedicalRecords.AddAsync(record);
+            await _context.SaveChangesAsync();
 
             await _auditService.WriteLogAsync(new WriteLogDto
             {
                 User = "Staff",
-                Action = "Search Medical Records",
-                Details = idPatient
+                Action = "Create Medical Record",
+                Details = dto
             });
+
+            return record.MedicalRecordId;
+        }
+
+        public async Task<List<MedicalRecord>> SearchMedicalRecordsByPatientId(string idPatient)
+        {
+            await FindPatientByIdPatientAsync(idPatient);
+
+            var records = await _context.MedicalRecords
+                .Where(r => r.PatientId == idPatient)
+                .ToListAsync();
 
             return records;
         }
 
         public async Task<MedicalRecord> DetailMediaRecordbyId(string medicalRecordId)
         {
-            var record = await _context.MedicalRecords
-                .FirstOrDefaultAsync(r => r.MedicalRecordId == medicalRecordId);
-
-            if (record == null)
-                throw new Exception("Không tìm thấy bệnh án.");
-
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Detail Medical Record",
-                Details = medicalRecordId
-            });
-
+            var record = await _context.MedicalRecords.FirstOrDefaultAsync(r => r.MedicalRecordId == medicalRecordId);
+            if (record == null) throw new Exception("Không tìm thấy bệnh án.");
             return record;
         }
 
         public async Task<MedicalRecord> UpdateMediaRecordbyId(string medicalRecordId, UpdateMedicalRecordDto dto)
         {
-            var record = await _context.MedicalRecords
-                .FirstOrDefaultAsync(r => r.MedicalRecordId == medicalRecordId);
+            var record = await _context.MedicalRecords.FirstOrDefaultAsync(r => r.MedicalRecordId == medicalRecordId);
+            if (record == null) throw new Exception("Không tìm thấy bệnh án.");
 
-            if (record == null)
-                throw new Exception("Không tìm thấy bệnh án.");
-
-            if (!string.IsNullOrEmpty(dto.Symptoms))
-                record.Symptoms = dto.Symptoms;
-
-            if (!string.IsNullOrEmpty(dto.AssignedPhysicianId))
-                record.AssignedPhysicianId = dto.AssignedPhysicianId.ToString();
-
-            if (dto.IsPriority.HasValue)
-                record.IsPriority = dto.IsPriority.Value;
-
+            if (!string.IsNullOrWhiteSpace(dto.Symptoms)) record.Symptoms = dto.Symptoms;
+            if (!string.IsNullOrWhiteSpace(dto.AssignedPhysicianId)) record.AssignedPhysicianId = dto.AssignedPhysicianId;
+            if (dto.IsPriority.HasValue) record.IsPriority = dto.IsPriority.Value;
             record.Status = dto.Status;
 
             await _context.SaveChangesAsync();
-
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Update Medical Record",
-                Details = new { medicalRecordId, dto }
-            });
-
             return record;
         }
 
         public async Task<string> DeleteMediaRecordbyId(string medicalRecordId)
         {
-            var record = await _context.MedicalRecords
-                .FirstOrDefaultAsync(r => r.MedicalRecordId == medicalRecordId);
-
-            if (record == null)
-                throw new Exception("Không tìm thấy bệnh án.");
-
+            var record = await _context.MedicalRecords.FirstOrDefaultAsync(r => r.MedicalRecordId == medicalRecordId);
+            if (record == null) throw new Exception("Không tìm thấy bệnh án.");
             _context.MedicalRecords.Remove(record);
             await _context.SaveChangesAsync();
-
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Delete Medical Record",
-                Details = medicalRecordId
-            });
-
             return "Xoá thành công";
         }
 
-        public async Task<List<MedicalRecord>> ShowAllMediaRecord()
+        public async Task<List<MedicalRecord>> ShowAllMedicalRecord()
         {
-            var records = await _context.MedicalRecords.ToListAsync();
-
-            await _auditService.WriteLogAsync(new WriteLogDto
-            {
-                User = "Staff",
-                Action = "Show All Medical Records",
-                Details = "All Records"
-            });
-
-            return records;
+            return await _context.MedicalRecords.ToListAsync();
         }
 
         private async Task<Patient> FindPatientByIdPatientAsync(string idPatient)
         {
-            var patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.IdPatient.ToLower() == idPatient.ToLower().Trim());
-
-            if (patient == null)
-                throw new Exception("Không tìm thấy bệnh nhân.");
-
+            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == idPatient);
+            if (patient == null) throw new Exception("Không tìm thấy bệnh nhân.");
             return patient;
         }
     }

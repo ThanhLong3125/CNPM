@@ -1,3 +1,4 @@
+// Models/User.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using backend.role;
@@ -29,7 +30,11 @@ namespace backend.Models
         public string PhoneNumber { get; set; } = string.Empty;
 
         public Role Role { get; set; }
-        
+
         public string? Specialty { get; set; }
+
+        // public bool IsDeleted { get; set; } = false;
+
+        public ICollection<MedicalRecord> MedicalRecords = new HashSet<MedicalRecord>();
     }
 }

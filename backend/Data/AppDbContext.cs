@@ -10,6 +10,8 @@ namespace backend.Data
         public DbSet<User> Users { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Diagnosis> Diagnoses { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,10 +24,45 @@ namespace backend.Data
             // Configure foreign key từ MedicalRecord.PatientId (string) đến Patient.IdPatient (string)
             modelBuilder.Entity<MedicalRecord>()
                 .HasOne(mr => mr.Patient)
-                .WithMany(p => p.MedicalRecords)
+                .WithMany()
                 .HasForeignKey(mr => mr.PatientId)
                 .HasPrincipalKey(p => p.IdPatient)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MedicalRecord>()
+                .HasOne(mr => mr.Patient)
+                .WithMany()
+                .HasForeignKey(mr => mr.PatientId)
+                .HasPrincipalKey(p => p.IdPatient)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // Diagnosis: cấu hình FK Diagnosis.MedicalRecordId (string) tham chiếu MedicalRecord.MedicalRecordId (string)
+            modelBuilder.Entity<Diagnosis>()
+                .HasKey(d => d.DiagnosisId);
+
+            modelBuilder.Entity<Diagnosis>()
+                .HasOne(d => d.MedicalRecord)
+                .WithMany()  // hoặc .WithMany(mr => mr.Diagnoses) nếu bạn muốn thêm collection
+                .HasForeignKey(d => d.MedicalRecordId)
+                .HasPrincipalKey(mr => mr.MedicalRecordId);
+
+            // Image: cấu hình khóa chính và FK với Diagnosis
+            // Đặt Id (Guid) làm khóa chính
+            modelBuilder.Entity<Image>().HasKey(i => i.Id);
+
+            // Đặt ImageId là alternate key (unique constraint)
+            modelBuilder.Entity<Image>()
+                .HasAlternateKey(i => i.ImageId);
+
+            // Cấu hình quan hệ với Diagnosis
+            modelBuilder.Entity<Image>()
+                .HasOne(i => i.Diagnosis)
+                .WithMany()
+                .HasForeignKey(i => i.DiagnosisId)
+                .HasPrincipalKey(d => d.DiagnosisId);
+
 
             // Seed admin + staff + doctors
             var adminId = Guid.NewGuid();

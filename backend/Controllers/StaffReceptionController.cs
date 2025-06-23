@@ -1,5 +1,4 @@
 using backend.DTOs;
-using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,9 +16,11 @@ namespace backend.Controllers
             _staffReceptionService = staffReceptionService;
         }
 
-        // POST: api/StaffReception/patient
-        [HttpPost("patient")]
-        [SwaggerOperation(Summary = "Tạo hồ sơ bệnh nhân")]
+        // Tạo bệnh nhân mới
+        [HttpPost("patients")]
+        [SwaggerOperation(Summary = "Tạo hồ sơ bệnh nhân mới")]
+        [ProducesResponseType(typeof(PatientDto), 201)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> CreatePatient([FromBody] CreatePatientDto dto)
         {
             if (!ModelState.IsValid)
@@ -27,8 +28,8 @@ namespace backend.Controllers
 
             try
             {
-                var patientId = await _staffReceptionService.CreatePatientAsync(dto);
-                return Ok(new { message = "Tạo hồ sơ bệnh nhân thành công", patientId });
+                var createdPatient = await _staffReceptionService.CreatePatientAsync(dto);
+                return CreatedAtAction(nameof(GetPatientById), new { idPatient = createdPatient.PatientID }, createdPatient);
             }
             catch (Exception ex)
             {
@@ -36,9 +37,9 @@ namespace backend.Controllers
             }
         }
 
-        // PUT: api/StaffReception/patient/{idPatient}
-        [HttpPut("patient/{idPatient}")]
-        [SwaggerOperation(Summary = "Chỉnh sửa hồ sơ bệnh nhân")]
+        // Cập nhật bệnh nhân
+        [HttpPut("patients/{idPatient}")]
+        [SwaggerOperation(Summary = "Cập nhật hồ sơ bệnh nhân")]
         public async Task<IActionResult> UpdatePatient([FromRoute] string idPatient, [FromBody] UpdatePatientDto dto)
         {
             try
@@ -52,8 +53,8 @@ namespace backend.Controllers
             }
         }
 
-        // GET: api/StaffReception/patient/{idPatient}
-        [HttpGet("patient/{idPatient}")]
+        // Tìm bệnh nhân theo IdPatient
+        [HttpGet("patients/{idPatient}")]
         [SwaggerOperation(Summary = "Tìm kiếm bệnh nhân theo mã IdPatient")]
         public async Task<IActionResult> GetPatientById([FromRoute] string idPatient)
         {
@@ -62,45 +63,22 @@ namespace backend.Controllers
                 var patient = await _staffReceptionService.SreachPatientAsync(idPatient);
                 return Ok(patient);
             }
-            catch (ApplicationException ex)
+            catch (Exception ex)
             {
                 return NotFound(new { error = ex.Message });
             }
-            catch (Exception)
-            {
-                return StatusCode(500, new { error = "Lỗi máy chủ. Vui lòng thử lại sau." });
-            }
         }
 
-        // GET: api/StaffReception/patients
+        // Danh sách tất cả bệnh nhân
         [HttpGet("patients")]
         [SwaggerOperation(Summary = "Lấy danh sách tất cả bệnh nhân")]
         public async Task<IActionResult> GetAllPatients()
         {
-            var patients = await _staffReceptionService.ListPatientAsync();
-            return Ok(patients);
+            var allPatients = await _staffReceptionService.ListPatientAsync();
+            return Ok(allPatients);
         }
 
-        // POST: api/StaffReception/medicalrecords
-        [HttpPost("medicalrecords")]
-        [SwaggerOperation(Summary = "Tạo hồ sơ bệnh án")]
-        public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            try
-            {
-                var recordId = await _staffReceptionService.CreateMediaRecordAsync(dto);
-                return Ok(new { message = "Tạo bệnh án thành công", recordId });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
-
-        // GET: api/StaffReception/doctors
+        // Danh sách bác sĩ
         [HttpGet("doctors")]
         [SwaggerOperation(Summary = "Lấy danh sách bác sĩ")]
         public async Task<IActionResult> ListDoctors()
@@ -109,20 +87,20 @@ namespace backend.Controllers
             return Ok(doctors);
         }
 
-        // GET: api/StaffReception/medicalrecords/patient/{idPatient}
-        [HttpGet("medicalrecords/patient/{idPatient}")]
-        [SwaggerOperation(Summary = "Lấy danh sách hồ sơ bệnh án theo IdPatient")]
-        public async Task<IActionResult> GetMedicalRecordsByPatientId([FromRoute] string idPatient)
+        // Tạo bệnh án
+        [HttpPost("medicalrecords")]
+        [SwaggerOperation(Summary = "Tạo hồ sơ bệnh án")]
+        [ProducesResponseType(typeof(string), 201)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
-                var records = await _staffReceptionService.SearchMedicalRecordsByPatientId(idPatient);
-                if (records == null || !records.Any())
-                {
-                    return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
-                }
-
-                return Ok(records);
+                var createdId = await _staffReceptionService.CreateMedicalRecordAsync(dto);
+                return CreatedAtAction(nameof(GetMedicalRecordById), new { id = createdId }, new { MedicalRecordId = createdId });
             }
             catch (Exception ex)
             {
@@ -130,10 +108,10 @@ namespace backend.Controllers
             }
         }
 
-        // GET: api/StaffReception/medicalrecords/{id}
+        // Chi tiết bệnh án
         [HttpGet("medicalrecords/{id}")]
         [SwaggerOperation(Summary = "Xem chi tiết hồ sơ bệnh án")]
-        public async Task<IActionResult> GetMedicalRecordDetail([FromRoute] string id)
+        public async Task<IActionResult> GetMedicalRecordById([FromRoute] string id)
         {
             try
             {
@@ -146,7 +124,26 @@ namespace backend.Controllers
             }
         }
 
-        // PUT: api/StaffReception/medicalrecords/{id}
+        // Danh sách bệnh án theo bệnh nhân
+        [HttpGet("medicalrecords/patient/{idPatient}")]
+        [SwaggerOperation(Summary = "Lấy danh sách hồ sơ bệnh án theo IdPatient")]
+        public async Task<IActionResult> GetMedicalRecordsByPatientId([FromRoute] string idPatient)
+        {
+            try
+            {
+                var records = await _staffReceptionService.SearchMedicalRecordsByPatientId(idPatient);
+                if (records == null || !records.Any())
+                    return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
+
+                return Ok(records);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // Cập nhật hồ sơ bệnh án
         [HttpPut("medicalrecords/{id}")]
         [SwaggerOperation(Summary = "Cập nhật hồ sơ bệnh án")]
         public async Task<IActionResult> UpdateMedicalRecord([FromRoute] string id, [FromBody] UpdateMedicalRecordDto dto)
@@ -162,7 +159,7 @@ namespace backend.Controllers
             }
         }
 
-        // DELETE: api/StaffReception/medicalrecords/{id}
+        // Xoá bệnh án
         [HttpDelete("medicalrecords/{id}")]
         [SwaggerOperation(Summary = "Xoá hồ sơ bệnh án")]
         public async Task<IActionResult> DeleteRecord([FromRoute] string id)
@@ -178,12 +175,12 @@ namespace backend.Controllers
             }
         }
 
-        // GET: api/StaffReception/medicalrecords
+        // Hiển thị tất cả hồ sơ bệnh án
         [HttpGet("medicalrecords")]
         [SwaggerOperation(Summary = "Lấy tất cả hồ sơ bệnh án")]
-        public async Task<IActionResult> ShowMediaRecord()
+        public async Task<IActionResult> ShowAllMedicalRecords()
         {
-            var records = await _staffReceptionService.ShowAllMediaRecord();
+            var records = await _staffReceptionService.ShowAllMedicalRecord();
             return Ok(records);
         }
     }

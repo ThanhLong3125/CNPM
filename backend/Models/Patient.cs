@@ -1,3 +1,4 @@
+// Models/Patient.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,7 +20,7 @@ namespace backend.Models
 
         [Required]
         [Column("DateOfBirth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         [Required]
         [Column("Gender")]
@@ -34,6 +35,6 @@ namespace backend.Models
         [Column("MedicalHistory")]
         public string? MedicalHistory { get; set; }
 
-        public ICollection<MedicalRecord>? MedicalRecords { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

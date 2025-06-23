@@ -12,7 +12,7 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250623085201_InitialCreate")]
+    [Migration("20250623133428_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,10 +20,83 @@ namespace backend.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("backend.Models.Diagnosis", b =>
+                {
+                    b.Property<string>("DiagnosisId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DiagnosedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MedicalRecordId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.HasKey("DiagnosisId");
+
+                    b.HasIndex("MedicalRecordId");
+
+                    b.ToTable("Diagnoses");
+                });
+
+            modelBuilder.Entity("backend.Models.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AIAnalysis")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DiagnosisId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DiagnosisId1")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("ImageId");
+
+                    b.HasIndex("DiagnosisId");
+
+                    b.HasIndex("DiagnosisId1")
+                        .IsUnique();
+
+                    b.ToTable("Images");
+                });
 
             modelBuilder.Entity("backend.Models.MedicalRecord", b =>
                 {
@@ -78,8 +151,8 @@ namespace backend.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("Patient_GUID");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date")
                         .HasColumnName("DateOfBirth");
 
                     b.Property<string>("Email")
@@ -100,6 +173,9 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Patient_ID");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("MedicalHistory")
                         .HasColumnType("text")
@@ -155,63 +231,90 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eb860258-2620-450a-b193-cabc198a017f"),
+                            Id = new Guid("990a8d91-c438-40ae-bb8c-793370657ed9"),
                             Email = "admin@aidims.com",
                             Full_name = "Admin",
-                            PasswordHash = "$2a$11$bq3CCVKcbMmYKJ018/uD5.ImHhabTZ7bqgX/bahA0gWO0.ScrsMoa",
+                            PasswordHash = "$2a$11$zTEqAlxlMrPEiDmpRzgXBeUMnNncy650ihHnbxWa2.KWT2e6W7mou",
                             PhoneNumber = "",
-                            PhysicianId = "BSEB8602",
+                            PhysicianId = "BS990A8D",
                             Role = 1
                         },
                         new
                         {
-                            Id = new Guid("aa6e9b18-caee-4e3e-b8bf-4bf321f9e670"),
+                            Id = new Guid("84522cc8-a321-420c-b277-8ae30ec1c51a"),
                             Email = "staff@aidims.com",
                             Full_name = "Staff",
-                            PasswordHash = "$2a$11$aYrb575h.aYKaFhJpTIGMumTRAV2PcQxkp55WpAqAWovtukbpKJ1W",
+                            PasswordHash = "$2a$11$vzO7rmQ7jKW4JDp/RRqpbOgjKeEMgwmVsAoauwyyLnVWZuaqDrhom",
                             PhoneNumber = "",
-                            PhysicianId = "BSAA6E9B",
+                            PhysicianId = "BS84522C",
                             Role = 3
                         },
                         new
                         {
-                            Id = new Guid("f1545025-5fb4-40eb-8e4c-13b08d7ed2bd"),
+                            Id = new Guid("932dd0ad-7f28-4b37-b57e-0e8bc696184c"),
                             Email = "doctor1@aidims.com",
                             Full_name = "Thanh Long",
-                            PasswordHash = "$2a$11$LzLtj7RDkmaHErd72rK8f.0YM3pWHCObMdQ981pF4Q2pZIKnfzXpu",
+                            PasswordHash = "$2a$11$VBMHa0eyfADdTJftAg2gouDjrucFwsbJDEC2CkjiKC4xR.tHL6k6m",
                             PhoneNumber = "",
-                            PhysicianId = "BSF15450",
+                            PhysicianId = "BS932DD0",
                             Role = 2,
                             Specialty = "Radiology"
                         },
                         new
                         {
-                            Id = new Guid("ce06d159-2784-4304-ad2c-397162014514"),
+                            Id = new Guid("821c6152-fdce-4293-886c-f9e6dac9b11e"),
                             Email = "doctor2@aidims.com",
                             Full_name = "Hoang Thien",
-                            PasswordHash = "$2a$11$5fsaR5um6.XCm3eJHFEjbOWqkeohkeUChE13aBzNkoVPE/BelWqd6",
+                            PasswordHash = "$2a$11$.FNgzPe0eDj5Bw92GYA.fuXZ8.I6uuvi821utNtPbkivGSphBtqbe",
                             PhoneNumber = "",
-                            PhysicianId = "BSCE06D1",
+                            PhysicianId = "BS821C61",
                             Role = 2,
                             Specialty = "Cardiology"
                         },
                         new
                         {
-                            Id = new Guid("eec93066-89d3-4d17-b135-43742ee8090f"),
+                            Id = new Guid("c020ba1a-b3b3-4359-8314-3b20b89e71bd"),
                             Email = "doctor3@aidims.com",
                             Full_name = "Khang To",
-                            PasswordHash = "$2a$11$MJZ/KaNRPUANdQZ.B66jWOhcHAjsqhfM1V1qGtJRX0LYwEi9oDQzy",
+                            PasswordHash = "$2a$11$l4Y2g8gyQAJ6TrfZzsDFyOGy9DPMniggs0opGN2zjVlf9FZ5nP026",
                             PhoneNumber = "",
-                            PhysicianId = "BSEEC930",
+                            PhysicianId = "BSC020BA",
                             Role = 2,
                             Specialty = "Neurology"
                         });
                 });
 
+            modelBuilder.Entity("backend.Models.Diagnosis", b =>
+                {
+                    b.HasOne("backend.Models.MedicalRecord", "MedicalRecord")
+                        .WithMany()
+                        .HasForeignKey("MedicalRecordId")
+                        .HasPrincipalKey("MedicalRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedicalRecord");
+                });
+
+            modelBuilder.Entity("backend.Models.Image", b =>
+                {
+                    b.HasOne("backend.Models.Diagnosis", "Diagnosis")
+                        .WithMany()
+                        .HasForeignKey("DiagnosisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.Diagnosis", null)
+                        .WithOne("Image")
+                        .HasForeignKey("backend.Models.Image", "DiagnosisId1");
+
+                    b.Navigation("Diagnosis");
+                });
+
             modelBuilder.Entity("backend.Models.MedicalRecord", b =>
                 {
                     b.HasOne("backend.Models.Patient", "Patient")
-                        .WithMany("MedicalRecords")
+                        .WithMany()
                         .HasForeignKey("PatientId")
                         .HasPrincipalKey("IdPatient")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,9 +323,9 @@ namespace backend.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("backend.Models.Patient", b =>
+            modelBuilder.Entity("backend.Models.Diagnosis", b =>
                 {
-                    b.Navigation("MedicalRecords");
+                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }
