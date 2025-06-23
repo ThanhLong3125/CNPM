@@ -4,12 +4,15 @@ namespace backend.DTOs
 {
     public class PatientDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; } = string.Empty;
         public string? Email { get; set; }
         public string? Phone { get; set; }
+
+        public string PatientID { get; set; } = string.Empty;
+
     }
 
     public class CreatePatientDto
@@ -32,7 +35,7 @@ namespace backend.DTOs
         public string? Phone { get; set; }
 
         [StringLength(200)]
-        public string? Symptoms { get; set; }
+        public string? MedicalHistory { get; set; }
 
     }
 
@@ -53,7 +56,7 @@ namespace backend.DTOs
         public string? Phone { get; set; }
 
         [StringLength(200)]
-        public string? Symptoms { get; set; }
+        public string? MedicalHistory { get; set; }
 
     }
 

@@ -10,16 +10,13 @@ namespace backend.Services
     {
         Task<string> CreatePatientAsync(CreatePatientDto createPatientDto);
         Task<Patient> UpdatePatientAsync(Guid id, UpdatePatientDto updatePatientDto);
-        Task<Patient> SreachPatientAsync(Guid id);
+        Task<PatientDto> SreachPatientAsync(Guid id);
         Task<List<Patient>> ListPatientAsync();
         Task<List<User>> ListDoctorAsync();
         Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto createMedicalRecordDto);
         Task<List<MedicalRecord>> SreachlistMediaRecordbyId(Guid id);
-
         Task<MedicalRecord> DetailMediaRecordbyId(Guid id);
-
         Task<MedicalRecord> UpdateMediaRecordbyId(Guid id, UpdateMedicalRecordDto dto);
-
         Task<string> DeleteMediaRecordbyId(Guid id);
         Task<List<MedicalRecord>> ShowAllMediaRecord();
     }
@@ -43,19 +40,25 @@ namespace backend.Services
                 p.FullName.ToLower() == createPatientDto.FullName.ToLower().Trim() &&
                 p.DateOfBirth.Date == createPatientDto.DateOfBirth.Date &&
                 p.Gender.ToLower() == createPatientDto.Gender.ToLower().Trim());
+
             if (existingPatient != null)
             {
                 throw new Exception("Bệnh nhân đã tồn tại trong hệ thống.");
             }
+
+            string nextPatientID = await GenerateNextPatientID();
+
             var patient = new Patient
             {
                 Id = Guid.NewGuid(),
+                IdPatient = $"BN{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 3).ToUpper()}",
+                PatientID = nextPatientID,
                 FullName = createPatientDto.FullName.Trim(),
-                DateOfBirth = createPatientDto.DateOfBirth,
+                DateOfBirth = DateTime.SpecifyKind(createPatientDto.DateOfBirth, DateTimeKind.Utc),
                 Gender = createPatientDto.Gender.Trim(),
                 Email = createPatientDto.Email?.Trim(),
                 Phone = createPatientDto.Phone?.Trim(),
-                Symptoms = createPatientDto.Symptoms?.Trim(),
+                MedicalHistory = createPatientDto.MedicalHistory?.Trim(),
             };
 
             await _context.Patients.AddAsync(patient);
@@ -66,7 +69,25 @@ namespace backend.Services
                 Action = "Create Patient",
                 Details = createPatientDto,
             });
-            return patient.Id.ToString();
+            return patient.IdPatient.ToString();
+        }
+
+        private async Task<string> GenerateNextPatientID()
+        {
+            var lastPatient = await _context.Patients
+                .OrderByDescending(p => p.PatientID)
+                .FirstOrDefaultAsync();
+
+            if (lastPatient == null || string.IsNullOrEmpty(lastPatient.PatientID))
+                return "BN001";
+
+            var numberPart = lastPatient.PatientID.Substring(2);
+            if (int.TryParse(numberPart, out int lastNumber))
+            {
+                return $"BN{(lastNumber + 1).ToString("D3")}";
+            }
+
+            return "BN001";
         }
 
         public async Task<Patient> UpdatePatientAsync(Guid id, UpdatePatientDto updatePatientDto)
@@ -77,7 +98,6 @@ namespace backend.Services
                 throw new Exception("Không tồn tại bệnh nhân với ID này.");
             }
 
-            // Cập nhật các trường nếu có dữ liệu mới
             if (!string.IsNullOrEmpty(updatePatientDto.FullName))
                 patient.FullName = updatePatientDto.FullName;
 
@@ -93,8 +113,8 @@ namespace backend.Services
             if (!string.IsNullOrEmpty(updatePatientDto.Phone))
                 patient.Phone = updatePatientDto.Phone;
 
-            if (!string.IsNullOrEmpty(updatePatientDto.Symptoms))
-                patient.Symptoms = updatePatientDto.Symptoms;
+            if (!string.IsNullOrEmpty(updatePatientDto.MedicalHistory))
+                patient.MedicalHistory = updatePatientDto.MedicalHistory;
 
             await _context.SaveChangesAsync();
             await _auditService.WriteLogAsync(new WriteLogDto
@@ -106,10 +126,9 @@ namespace backend.Services
             return patient;
         }
 
-        public async Task<Patient> SreachPatientAsync(Guid id)
+        public async Task<PatientDto> SreachPatientAsync(Guid id)
         {
             var patient = await _context.Patients.FindAsync(id);
-
             if (patient == null)
             {
                 throw new ApplicationException("User not found");
@@ -120,7 +139,16 @@ namespace backend.Services
                 Action = "Sreach Patient",
                 Details = id,
             });
-            return patient;
+            return new PatientDto
+            {
+                Id = patient.Id,
+                PatientID = patient.PatientID,
+                FullName = patient.FullName,
+                DateOfBirth = patient.DateOfBirth,
+                Gender = patient.Gender,
+                Email = patient.Email,
+                Phone = patient.Phone
+            };
         }
 
         public async Task<List<Patient>> ListPatientAsync()
@@ -134,7 +162,6 @@ namespace backend.Services
             });
             return patients;
         }
-
 
         public async Task<string> CreateMediaRecordAsync(CreateMedicalRecordDto createMedicalRecordDto)
         {
@@ -248,6 +275,7 @@ namespace backend.Services
 
             return medicalRecord;
         }
+
         public async Task<string> DeleteMediaRecordbyId(Guid id)
         {
             var medicalRecord = await _context.MedicalRecords.FindAsync(id);

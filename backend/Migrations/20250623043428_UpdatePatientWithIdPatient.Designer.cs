@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Data;
@@ -11,9 +12,11 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250623043428_UpdatePatientWithIdPatient")]
+    partial class UpdatePatientWithIdPatient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,10 +93,6 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("MedicalHistory")
-                        .HasColumnType("text")
-                        .HasColumnName("MedicaHistory");
-
                     b.Property<string>("PatientID")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -103,6 +102,10 @@ namespace backend.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text")
                         .HasColumnName("Phone");
+
+                    b.Property<string>("Symptoms")
+                        .HasColumnType("text")
+                        .HasColumnName("Symptoms");
 
                     b.HasKey("Id");
 
@@ -146,48 +149,48 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d3605db7-877f-405f-90c7-399bc82644e0"),
+                            Id = new Guid("a85860eb-657c-4333-9a4b-933e27ad5c17"),
                             Email = "admin@aidims.com",
                             Full_name = "Admin",
-                            PasswordHash = "$2a$11$PfNY8KkSmsEqQ/gUKYN3iejzWPOvHrxBQc/6GJ7hXd2afrb37.vPK",
+                            PasswordHash = "$2a$11$d9QooNMaPGIvn/FNXw3yqOxOQmYZBQndZdLKEsfM7NPLzMq8Q0aK2",
                             PhoneNumber = "",
                             Role = 1
                         },
                         new
                         {
-                            Id = new Guid("c7949f9e-111a-40ca-927c-56d38c43dd63"),
+                            Id = new Guid("10d99979-800f-454b-8c6d-ccabf21ac1bc"),
                             Email = "staff@aidims.com",
                             Full_name = "Staff",
-                            PasswordHash = "$2a$11$SKsU.NmeZN9fpU/MKLKdq.UufGGUMXa2NWsfiOgL0JF9uyXgypcnm",
+                            PasswordHash = "$2a$11$g8Hq2yBGYSFb7.Nr.TM41unBadsy4RKxpo93299p8vmiK6mRoVwSK",
                             PhoneNumber = "",
                             Role = 3
                         },
                         new
                         {
-                            Id = new Guid("d23030bd-f284-44a4-8471-ea17c914bb1c"),
+                            Id = new Guid("00da2033-00aa-49b9-961b-0ef3f80f01bd"),
                             Email = "doctor1@aidims.com",
                             Full_name = "Thanh Long",
-                            PasswordHash = "$2a$11$BAMGPAiH9mAefMNfZ1WDQeu9kF1b6FLucEXJsnOt8zNKW4KjZTjfG",
+                            PasswordHash = "$2a$11$HxWcWUq5pGFKwlJKWD34AeGbERylRKT/bapb4M0InEAzGBKqRtys.",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Radiology"
                         },
                         new
                         {
-                            Id = new Guid("a4f465d9-7f43-4f20-b110-a5162eab9872"),
+                            Id = new Guid("288a867f-cab4-4dfd-95c7-6258886044a6"),
                             Email = "doctor2@aidims.com",
                             Full_name = "Hoang Thien",
-                            PasswordHash = "$2a$11$aPVYnW9ttemjgyCXPaYXnuCaaM5.wmeg3K.2fTwgy0EcqxvWzpVmW",
+                            PasswordHash = "$2a$11$bS80MQL7Emz12WBYmFuRqOHbY0gBVp0A6aRd/N813vSCIiN0jWTHS",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Cardiology"
                         },
                         new
                         {
-                            Id = new Guid("1cbfc3a4-7f78-4f90-8d0b-ffdc938d36e7"),
+                            Id = new Guid("c2364906-6f6f-4635-8eea-f423ec4693bc"),
                             Email = "doctor3@aidims.com",
                             Full_name = "Khang To",
-                            PasswordHash = "$2a$11$xUrcVp9KL5aXwnfSb8lrtergW5VterEI/Y1LzUxmirvcUhJufMMyy",
+                            PasswordHash = "$2a$11$UWxukqj7pAGbBN6/12e.CObYzBv/tE2iTK2F.NxLBIecQYCe5.Ndy",
                             PhoneNumber = "",
                             Role = 2,
                             Specialty = "Neurology"
