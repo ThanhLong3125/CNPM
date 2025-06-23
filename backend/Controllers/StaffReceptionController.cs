@@ -36,30 +36,30 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPut("patients")]
+        // PUT: api/StaffReception/patient/{idPatient}
+        [HttpPut("patient/{idPatient}")]
         [SwaggerOperation(Summary = "Chỉnh sửa hồ sơ bệnh nhân")]
-        public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientDto dto)
+        public async Task<IActionResult> UpdatePatient([FromRoute] string idPatient, [FromBody] UpdatePatientDto dto)
         {
             try
             {
-                var updatedPatient = await _staffReceptionService.UpdatePatientAsync(id, dto);
+                var updatedPatient = await _staffReceptionService.UpdatePatientAsync(idPatient, dto);
                 return Ok(updatedPatient);
             }
             catch (Exception ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new { error = ex.Message });
             }
         }
 
-
-        // GET: api/StaffReception/patient/{id}
-        [HttpGet("patient/{id}")]
-        [SwaggerOperation(Summary = "Tìm kiếm bệnh nhân theo id")]
-        public async Task<IActionResult> GetPatientById([FromRoute] Guid id)
+        // GET: api/StaffReception/patient/{idPatient}
+        [HttpGet("patient/{idPatient}")]
+        [SwaggerOperation(Summary = "Tìm kiếm bệnh nhân theo mã IdPatient")]
+        public async Task<IActionResult> GetPatientById([FromRoute] string idPatient)
         {
             try
             {
-                var patient = await _staffReceptionService.SreachPatientAsync(id);
+                var patient = await _staffReceptionService.SreachPatientAsync(idPatient);
                 return Ok(patient);
             }
             catch (ApplicationException ex)
@@ -72,14 +72,16 @@ namespace backend.Controllers
             }
         }
 
+        // GET: api/StaffReception/patients
         [HttpGet("patients")]
-        [SwaggerOperation(Summary = "Tìm kiếm tất cả bệnh nhân")]
+        [SwaggerOperation(Summary = "Lấy danh sách tất cả bệnh nhân")]
         public async Task<IActionResult> GetAllPatients()
         {
             var patients = await _staffReceptionService.ListPatientAsync();
             return Ok(patients);
         }
 
+        // POST: api/StaffReception/medicalrecords
         [HttpPost("medicalrecords")]
         [SwaggerOperation(Summary = "Tạo hồ sơ bệnh án")]
         public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto dto)
@@ -94,59 +96,95 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new { error = ex.Message });
             }
         }
 
-        [HttpGet("AllDoctors")]
-        [SwaggerOperation(Summary = "Xem các bác sĩ")]
+        // GET: api/StaffReception/doctors
+        [HttpGet("doctors")]
+        [SwaggerOperation(Summary = "Lấy danh sách bác sĩ")]
         public async Task<IActionResult> ListDoctors()
         {
             var doctors = await _staffReceptionService.ListDoctorAsync();
             return Ok(doctors);
         }
 
-        [HttpGet("medicalrecords/patient/{id}")]
-        [SwaggerOperation(Summary = "Tìm kiếm hồ sơ bệnh án")]
-        public async Task<IActionResult> GetMedicalRecordsByPatientId(Guid id)
+        // GET: api/StaffReception/medicalrecords/patient/{idPatient}
+        [HttpGet("medicalrecords/patient/{idPatient}")]
+        [SwaggerOperation(Summary = "Lấy danh sách hồ sơ bệnh án theo IdPatient")]
+        public async Task<IActionResult> GetMedicalRecordsByPatientId([FromRoute] string idPatient)
         {
-            var records = await _staffReceptionService.SreachlistMediaRecordbyId(id);
-
-            if (records == null || !records.Any())
+            try
             {
-                return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
+                var records = await _staffReceptionService.SearchMedicalRecordsByPatientId(idPatient);
+                if (records == null || !records.Any())
+                {
+                    return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
+                }
+
+                return Ok(records);
             }
-
-            return Ok(records);
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
-        [HttpGet("medical-records/{id}")]
-        public async Task<IActionResult> GetMedicalRecordDetail(Guid id)
+        // GET: api/StaffReception/medicalrecords/{id}
+        [HttpGet("medicalrecords/{id}")]
+        [SwaggerOperation(Summary = "Xem chi tiết hồ sơ bệnh án")]
+        public async Task<IActionResult> GetMedicalRecordDetail([FromRoute] string id)
         {
-            var result = await _staffReceptionService.DetailMediaRecordbyId(id);
-            return Ok(result);
+            try
+            {
+                var record = await _staffReceptionService.DetailMediaRecordbyId(id);
+                return Ok(record);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
         }
 
-        [HttpPut("medical-records/{id}")]
-        public async Task<IActionResult> UpdateMedicalRecord(Guid id, [FromBody] UpdateMedicalRecordDto dto)
+        // PUT: api/StaffReception/medicalrecords/{id}
+        [HttpPut("medicalrecords/{id}")]
+        [SwaggerOperation(Summary = "Cập nhật hồ sơ bệnh án")]
+        public async Task<IActionResult> UpdateMedicalRecord([FromRoute] string id, [FromBody] UpdateMedicalRecordDto dto)
         {
-            var result = await _staffReceptionService.UpdateMediaRecordbyId(id, dto);
-            return Ok(result);
+            try
+            {
+                var result = await _staffReceptionService.UpdateMediaRecordbyId(id, dto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
-        [HttpDelete("deleteMerdia-Record/{id}")]
-        public async Task<IActionResult> DeleteRecord(Guid id)
+        // DELETE: api/StaffReception/medicalrecords/{id}
+        [HttpDelete("medicalrecords/{id}")]
+        [SwaggerOperation(Summary = "Xoá hồ sơ bệnh án")]
+        public async Task<IActionResult> DeleteRecord([FromRoute] string id)
         {
-            var result = await _staffReceptionService.DeleteMediaRecordbyId(id);
-            return Ok(result);
+            try
+            {
+                var result = await _staffReceptionService.DeleteMediaRecordbyId(id);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
         }
 
-        [HttpGet("ListMediaRecord")]
+        // GET: api/StaffReception/medicalrecords
+        [HttpGet("medicalrecords")]
+        [SwaggerOperation(Summary = "Lấy tất cả hồ sơ bệnh án")]
         public async Task<IActionResult> ShowMediaRecord()
         {
-            var result = await _staffReceptionService.ShowAllMediaRecord();
-            return Ok(result);
+            var records = await _staffReceptionService.ShowAllMediaRecord();
+            return Ok(records);
         }
-
     }
 }

@@ -9,7 +9,7 @@ namespace backend.DTOs
         public string PatientName { get; set; } = string.Empty;
         public DateTime CreatedDate { get; set; }
         public string Symptoms { get; set; } = string.Empty;
-        public Guid? AssignedPhysicianId { get; set; }
+        public string? AssignedPhysicianId { get; set; }
         public bool IsPriority { get; set; }
 
         public bool Status { get; set; }
@@ -18,13 +18,13 @@ namespace backend.DTOs
     public class CreateMedicalRecordDto
     {
         [Required]
-        public Guid PatientId { get; set; }
+        public string PatientId { get; set; } = string.Empty;
 
         [Required]
         [StringLength(1000)]
         public string Symptoms { get; set; } = string.Empty;
 
-        public Guid AssignedPhysicianId { get; set; }
+        public string AssignedPhysicianId { get; set; } = string.Empty;
 
         public bool IsPriority { get; set; } = false;
     }
@@ -34,7 +34,7 @@ namespace backend.DTOs
         [StringLength(1000)]
         public string? Symptoms { get; set; }
 
-        public Guid? AssignedPhysicianId { get; set; }
+        public string? AssignedPhysicianId { get; set; } = string.Empty;
 
         public bool? IsPriority { get; set; }
 
@@ -44,7 +44,7 @@ namespace backend.DTOs
     public class AssignPhysicianDto
     {
         [Required]
-        public Guid PhysicianId { get; set; }
+        public string PhysicianId { get; set; } = string.Empty;
 
         public string? Notes { get; set; }
     }

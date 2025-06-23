@@ -11,6 +11,9 @@ namespace backend.Models
         public Guid Id { get; set; }
 
         [Required]
+        public string PhysicianId { get; set; } = string.Empty;
+
+        [Required]
         [StringLength(50)]
         public string Full_name { get; set; } = string.Empty;
 

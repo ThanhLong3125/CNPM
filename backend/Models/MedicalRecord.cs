@@ -10,10 +10,14 @@ namespace backend.Models
         public Guid Id { get; set; }
 
         [Required]
-        [Column("Patient_ID")]
-        public Guid PatientId { get; set; }
+        [Column("MedicalRecordId")]
+        public string MedicalRecordId { get; set; } = string.Empty;
 
-        [ForeignKey("PatientId")]
+        [Required]
+        [Column("Patient_ID")]
+        public string PatientId { get; set; } = string.Empty;
+
+        [ForeignKey(nameof(PatientId))]
         public Patient? Patient { get; set; }
 
         [Required]
@@ -22,7 +26,7 @@ namespace backend.Models
 
         [Required]
         [Column("AssignedPhysicianId")]
-        public Guid AssignedPhysicianId { get; set; }
+        public string AssignedPhysicianId { get; set; } = string.Empty;
 
         [Required]
         [Column("Symptoms")]

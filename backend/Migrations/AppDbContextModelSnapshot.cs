@@ -29,8 +29,9 @@ namespace backend.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("Record_ID");
 
-                    b.Property<Guid>("AssignedPhysicianId")
-                        .HasColumnType("uuid")
+                    b.Property<string>("AssignedPhysicianId")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("AssignedPhysicianId");
 
                     b.Property<DateTime>("CreatedDate")
@@ -41,8 +42,14 @@ namespace backend.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("IsPriority");
 
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uuid")
+                    b.Property<string>("MedicalRecordId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("MedicalRecordId");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("Patient_ID");
 
                     b.Property<bool>("Status")
@@ -66,7 +73,7 @@ namespace backend.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("Patient_ID");
+                        .HasColumnName("Patient_GUID");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("timestamp with time zone")
@@ -88,17 +95,12 @@ namespace backend.Migrations
 
                     b.Property<string>("IdPatient")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Patient_ID");
 
                     b.Property<string>("MedicalHistory")
                         .HasColumnType("text")
-                        .HasColumnName("MedicaHistory");
-
-                    b.Property<string>("PatientID")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("PatientID");
+                        .HasColumnName("MedicalHistory");
 
                     b.Property<string>("Phone")
                         .HasColumnType("text")
@@ -133,6 +135,10 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PhysicianId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
@@ -146,49 +152,54 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d3605db7-877f-405f-90c7-399bc82644e0"),
+                            Id = new Guid("eb860258-2620-450a-b193-cabc198a017f"),
                             Email = "admin@aidims.com",
                             Full_name = "Admin",
-                            PasswordHash = "$2a$11$PfNY8KkSmsEqQ/gUKYN3iejzWPOvHrxBQc/6GJ7hXd2afrb37.vPK",
+                            PasswordHash = "$2a$11$bq3CCVKcbMmYKJ018/uD5.ImHhabTZ7bqgX/bahA0gWO0.ScrsMoa",
                             PhoneNumber = "",
+                            PhysicianId = "BSEB8602",
                             Role = 1
                         },
                         new
                         {
-                            Id = new Guid("c7949f9e-111a-40ca-927c-56d38c43dd63"),
+                            Id = new Guid("aa6e9b18-caee-4e3e-b8bf-4bf321f9e670"),
                             Email = "staff@aidims.com",
                             Full_name = "Staff",
-                            PasswordHash = "$2a$11$SKsU.NmeZN9fpU/MKLKdq.UufGGUMXa2NWsfiOgL0JF9uyXgypcnm",
+                            PasswordHash = "$2a$11$aYrb575h.aYKaFhJpTIGMumTRAV2PcQxkp55WpAqAWovtukbpKJ1W",
                             PhoneNumber = "",
+                            PhysicianId = "BSAA6E9B",
                             Role = 3
                         },
                         new
                         {
-                            Id = new Guid("d23030bd-f284-44a4-8471-ea17c914bb1c"),
+                            Id = new Guid("f1545025-5fb4-40eb-8e4c-13b08d7ed2bd"),
                             Email = "doctor1@aidims.com",
                             Full_name = "Thanh Long",
-                            PasswordHash = "$2a$11$BAMGPAiH9mAefMNfZ1WDQeu9kF1b6FLucEXJsnOt8zNKW4KjZTjfG",
+                            PasswordHash = "$2a$11$LzLtj7RDkmaHErd72rK8f.0YM3pWHCObMdQ981pF4Q2pZIKnfzXpu",
                             PhoneNumber = "",
+                            PhysicianId = "BSF15450",
                             Role = 2,
                             Specialty = "Radiology"
                         },
                         new
                         {
-                            Id = new Guid("a4f465d9-7f43-4f20-b110-a5162eab9872"),
+                            Id = new Guid("ce06d159-2784-4304-ad2c-397162014514"),
                             Email = "doctor2@aidims.com",
                             Full_name = "Hoang Thien",
-                            PasswordHash = "$2a$11$aPVYnW9ttemjgyCXPaYXnuCaaM5.wmeg3K.2fTwgy0EcqxvWzpVmW",
+                            PasswordHash = "$2a$11$5fsaR5um6.XCm3eJHFEjbOWqkeohkeUChE13aBzNkoVPE/BelWqd6",
                             PhoneNumber = "",
+                            PhysicianId = "BSCE06D1",
                             Role = 2,
                             Specialty = "Cardiology"
                         },
                         new
                         {
-                            Id = new Guid("1cbfc3a4-7f78-4f90-8d0b-ffdc938d36e7"),
+                            Id = new Guid("eec93066-89d3-4d17-b135-43742ee8090f"),
                             Email = "doctor3@aidims.com",
                             Full_name = "Khang To",
-                            PasswordHash = "$2a$11$xUrcVp9KL5aXwnfSb8lrtergW5VterEI/Y1LzUxmirvcUhJufMMyy",
+                            PasswordHash = "$2a$11$MJZ/KaNRPUANdQZ.B66jWOhcHAjsqhfM1V1qGtJRX0LYwEi9oDQzy",
                             PhoneNumber = "",
+                            PhysicianId = "BSEEC930",
                             Role = 2,
                             Specialty = "Neurology"
                         });
@@ -199,6 +210,7 @@ namespace backend.Migrations
                     b.HasOne("backend.Models.Patient", "Patient")
                         .WithMany("MedicalRecords")
                         .HasForeignKey("PatientId")
+                        .HasPrincipalKey("IdPatient")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
