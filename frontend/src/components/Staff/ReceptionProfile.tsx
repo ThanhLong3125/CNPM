@@ -1,5 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
+
 const ReceptionProfile: React.FC = () => {
+
+    const navigate = useNavigate();
+    const handleClick = () => navigate('/HomePage');
+
     return (
         <div className="min-h-screen bg-[#d8e0ef] flex flex-col">
             <header className="bg-[#3a5a89] px-6 py-3 text-white flex items-center justify-between">
@@ -20,7 +27,6 @@ const ReceptionProfile: React.FC = () => {
                             <label className="block text-white mb-1">Mã lễ tân</label>
                             <input
                                 type="text"
-                                value="BN0001"
                                 className="w-full px-3 py-2 rounded bg-white text-black focus:outline-none"
                             />
                         </div>
@@ -29,7 +35,6 @@ const ReceptionProfile: React.FC = () => {
                             <label className="block text-white mb-1">Họ và tên</label>
                             <input
                                 type="text"
-                                value="Nguyễn Văn A"
                                 className="w-full px-3 py-2 rounded bg-white text-black focus:outline-none"
                             />
                         </div>
@@ -38,15 +43,15 @@ const ReceptionProfile: React.FC = () => {
                             <div className="w-1/2">
                                 <label className="block text-white mb-1">Giới tính</label>
                                 <select className="w-full px-3 py-2 rounded bg-white text-black">
-                                    <option>Nam</option>
-                                    <option>Nữ</option>
+                                    <option value="">-- Chọn --</option>
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
                                 </select>
                             </div>
                             <div className="w-1/2">
                                 <label className="block text-white mb-1">Ngày sinh</label>
                                 <input
                                     type="date"
-                                    value="1970-03-15"
                                     className="w-full px-3 py-2 rounded bg-white text-black"
                                 />
                             </div>
@@ -56,25 +61,29 @@ const ReceptionProfile: React.FC = () => {
                             <label className="block text-white mb-1">SDT</label>
                             <input
                                 type="text"
-                                value="0908439908"
+                                maxLength={10}
                                 className="w-full px-3 py-2 rounded bg-white text-black focus:outline-none"
                             />
                         </div>
 
                         <div className="flex justify-end pt-4">
+
                             <button
                                 type="button"
                                 className="bg-[#5e8fc5] text-white px-6 py-2 rounded-xl hover:bg-[#4b7bb3]"
+
+
+                                onClick={handleClick}
                             >
                                 Đăng xuất
                             </button>
+
                         </div>
                     </form>
                 </div>
             </main>
         </div>
-    )
-
-}
+    );
+};
 
 export default ReceptionProfile;
