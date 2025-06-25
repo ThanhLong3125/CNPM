@@ -11,7 +11,7 @@ namespace backend.Services
     {
         Task<PatientDto> CreatePatientAsync(CreatePatientDto dto);
         Task<Patient> UpdatePatientAsync(string idPatient, UpdatePatientDto dto);
-        Task<PatientDto> SreachPatientAsync(string idPatient);
+        Task<Patient> SreachPatientAsync(string idPatient);
         Task<List<Patient>> ListPatientAsync();
         Task<List<User>> ListDoctorAsync();
         Task<string> CreateMedicalRecordAsync(CreateMedicalRecordDto dto);
@@ -19,7 +19,7 @@ namespace backend.Services
         Task<MedicalRecord> DetailMediaRecordbyId(string medicalRecordId);
         Task<MedicalRecord> UpdateMediaRecordbyId(string medicalRecordId, UpdateMedicalRecordDto dto);
         Task<string> DeleteMediaRecordbyId(string medicalRecordId);
-        Task<List<MedicalRecord>> ShowAllMedicalRecord();
+        Task<List<MedicalRecordWithPatientDto>> ShowAllMedicalRecord();
     }
 
     public class StaffReceptionService : IStaffReceptionService
@@ -102,7 +102,7 @@ namespace backend.Services
             return patient;
         }
 
-        public async Task<PatientDto> SreachPatientAsync(string idPatient)
+        public async Task<Patient> SreachPatientAsync(string idPatient)
         {
             var patient = await FindPatientByIdPatientAsync(idPatient);
 
@@ -113,22 +113,12 @@ namespace backend.Services
                 Details = idPatient
             });
 
-            return new PatientDto
-            {
-                Id = patient.Id,
-                PatientID = patient.IdPatient,
-                FullName = patient.FullName,
-                DateOfBirth = patient.DateOfBirth,
-                Gender = patient.Gender,
-                Email = patient.Email,
-                Phone = patient.Phone
-            };
+            return patient;
         }
 
         public async Task<List<Patient>> ListPatientAsync()
         {
             var patients = await _context.Patients.ToListAsync();
-
             await _auditService.WriteLogAsync(new WriteLogDto
             {
                 User = "Staff",
@@ -195,6 +185,7 @@ namespace backend.Services
         public async Task<MedicalRecord> DetailMediaRecordbyId(string medicalRecordId)
         {
             var record = await _context.MedicalRecords.FirstOrDefaultAsync(r => r.MedicalRecordId == medicalRecordId);
+            
             if (record == null) throw new Exception("Không tìm thấy bệnh án.");
             return record;
         }
@@ -222,10 +213,37 @@ namespace backend.Services
             return "Xoá thành công";
         }
 
-        public async Task<List<MedicalRecord>> ShowAllMedicalRecord()
+        public async Task<List<MedicalRecordWithPatientDto>> ShowAllMedicalRecord()
+{
+    var records = await _context.MedicalRecords.ToListAsync();
+
+    var result = new List<MedicalRecordWithPatientDto>();
+
+    foreach (var record in records)
+    {
+        var patient = await _context.Patients
+            .FirstOrDefaultAsync(p => p.IdPatient == record.PatientId);
+
+        if (patient != null)
         {
-            return await _context.MedicalRecords.ToListAsync();
+            result.Add(new MedicalRecordWithPatientDto
+            {
+                Id = record.Id.ToString(),
+                PatientId = record.PatientId,
+                MedicalRecordId = record.MedicalRecordId,
+                PhysicicanId = record.AssignedPhysicianId,
+                CreatedAt = record.CreatedDate,
+                FullName = patient.FullName,
+                DateOfBirth = patient.DateOfBirth,
+                Gender = patient.Gender,
+                Phone = patient.Phone,
+            });
         }
+    }
+
+    return result;
+}
+
 
         private async Task<Patient> FindPatientByIdPatientAsync(string idPatient)
         {

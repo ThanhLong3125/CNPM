@@ -49,4 +49,25 @@ namespace backend.DTOs
 
         public string? Notes { get; set; }
     }
+    public class MedicalRecordWithPatientDto
+    {
+        public string Id { get; set; }
+        public string PatientId { get; set; }
+        public string MedicalRecordId { get; set; }
+
+
+        public string PhysicicanId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string Gender
+        {
+            get; set;
+        }
+        public string Phone { get; set; }
+
+
+        // Thông tin bệnh nhân đi kèm
+        public string FullName { get; set; }
+        public DateOnly DateOfBirth { get; set; }
+    }
+
 }

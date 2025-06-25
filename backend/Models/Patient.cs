@@ -12,6 +12,7 @@ namespace backend.Models
 
         [Required]
         [Column("Patient_ID")]
+        
         public string IdPatient { get; set; } = string.Empty;
 
         [Required]
