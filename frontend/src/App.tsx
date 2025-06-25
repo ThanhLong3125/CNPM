@@ -1,6 +1,5 @@
-import React from 'react'
 import './index.css'
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route} from "react-router-dom";
 import DetailCreatedRecord from './components/ReceptionStaff/MedicalRecordForm';
 import LoginPage from './components/Page/LoginPage'
 import DoctorMain from './components/Doctor/DoctorMain'
@@ -16,12 +15,14 @@ import UpdatePatientRecord from './components/ReceptionStaff/UpdatePatientRecord
 import ReceptionProfile from './components/ReceptionStaff/ReceptionProfile'
 import DoctorLayout from './components/layout/DoctorLayout';
 import EditMedicalRecord from "../src/components/ReceptionStaff/EditMedicalRecord"
+import HomePage from './components/Page/HomePage';
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={< HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
 
         <Route path="/staff" element={<StaffLayout />}>
           <Route index element={<MainStaff />} />
@@ -33,8 +34,8 @@ const App = () => {
           <Route path="create-medical-record/:patientId" element={<CreateMedicalRecord />} />
           <Route path="update-patient/:patientId" element={<UpdatePatientRecord />} />
           <Route path="user-profile" element={<ReceptionProfile />} />
-          <Route path="DetailCreatedRecord/:patientId" element={<DetailCreatedRecord/>} />
-          <Route path="EditMedicalRecord" element={<EditMedicalRecord/>} />
+          <Route path="DetailCreatedRecord/:medicalRecordId" element={<DetailCreatedRecord/>} />
+          <Route path="EditMedicalRecord/:medicalRecordId" element={<EditMedicalRecord/>} />
         </Route>
 
         <Route path="/doctor" element={<DoctorLayout />}>

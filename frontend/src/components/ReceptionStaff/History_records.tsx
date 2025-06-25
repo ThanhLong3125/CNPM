@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import type { PatientHistory} from "../../types/staff.types"
 
 
 const Htr_records = [
@@ -48,21 +49,17 @@ const History_records: React.FC = () => {
                 {/* Filters */}
                 <div className="flex justify-around mt-6 mb-4">
                     <button className="bg-[#82A9DC] px-4 py-2 rounded-xl">Nguyễn Văn A</button>
-                    <button className="bg-[#82A9DC] px-4 py-2 rounded-xl">Bác sĩ phụ trách</button>
-                    <button className="bg-[#82A9DC] px-4 py-2 rounded-xl">20/05/2025 - 01/06/2005</button>
-                    <button className="bg-[#82A9DC] px-4 py-2 rounded-xl">05:49 - 11:00</button>
                 </div>
 
                 {/* Table Header */}
                 <div className="grid grid-cols-5 font-semibold bg-[#A7C5EB] text-[#1F3C88] px-4 py-2 rounded-t-xl">
                     <div>Mã bệnh nhân</div>
                     <div>Mã bệnh án</div>
-                    <div>Thời gian vào</div>
-                    <div>Khoa khám</div>
+                    <div>Mã bác sĩ</div>
                     <div>Bác sĩ phụ trách</div>
+                    <div>Thời gian vào</div>
                 </div>
 
-                {/* Table Rows */}
                 {Htr_records.map((item, index) => (
                     <div
                         key={index}
@@ -70,9 +67,9 @@ const History_records: React.FC = () => {
                     >
                         <div>{item.patientId}</div>
                         <div>{item.recordId}</div>
-                        <div>{item.timeIn}</div>
                         <div>{item.department}</div>
                         <div>{item.doctor}</div>
+                        <div>{item.timeIn}</div>
                     </div>
                 ))}
             </div>

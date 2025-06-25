@@ -1,16 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import type { PatientRecordDeclare } from "../../types/staff.types";
 import { useParams } from "react-router-dom";
+import { fetchPatientsDetail } from "../../service/staffService";
+
 const PatientRecordView: React.FC = () => {
-    const [patientData] = useState<PatientRecordDeclare>({
-        patientID: "BN0001",
-        fullName: "Nguyễn Văn A",
-        gender: "Nam",
-        birthDate: "09/05/1980",
-        phoneOrEmail: "0931490350",
-        medicalHistory: "Tiểu đường",
-    })
 
     const navigate = useNavigate();
     const { patientId } = useParams<{ patientId: string }>();
@@ -23,6 +17,41 @@ const PatientRecordView: React.FC = () => {
     const handleViewHistory = (patientId: string) => navigate(`/staff/medical-history/${patientId}`);
     const handleCreateMedicalRecord = (patientId: string) => navigate(`/staff/create-medical-record/${patientId}`);
 
+    const [patient, setPatient] = useState<PatientRecordDeclare | null>(null);
+
+
+    useEffect(() => {
+        const load = async () => {
+            const allPatients = await fetchPatientsDetail();
+            let found = null;
+            let foundIndex = -1;
+
+            for (let i = 0; i < allPatients.length; i++) {
+                if (allPatients[i].idPatient === patientId) {
+                    found = allPatients[i];
+                    break;
+                }
+            }
+
+            if (found) {
+                setPatient({
+                    id: found.id,
+                    patientID: found.idPatient,
+                    fullName: found.fullName ?? 'Không rõ',
+                    gender: found.gender?.toLowerCase() === 'male' ? 'Nam' : 'Nữ',
+                    dateOfBirth: found.dateOfBirth ? new Date(found.dateOfBirth).toLocaleDateString('vi-VN') : 'Chưa rõ',
+                    phone: found.phone ?? '',
+                    email: found.email ?? '',
+                    medicalHistory: found.medicalHistory ?? '',
+                });
+
+            }
+        };
+
+        load();
+    }, [patientId]);
+
+
     return (
         <div className=" flex items-center justify-center  p-4">
             <div className="bg-[#89AFE0] backdrop-blur-sm rounded-3xl py-8 px-20 w-full max-w-5xl shadow-2xl">
@@ -34,12 +63,12 @@ const PatientRecordView: React.FC = () => {
                 <div className="space-y-6">
                     <div>
                         <label className="block text-white font-medium mb-2">Mã bệnh nhân</label>
-                        <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800">{patientData.patientID}</div>
+                        <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800">{patient?.patientID}</div>
                     </div>
 
                     <div>
                         <label className="block text-white font-medium mb-2">Họ Tên</label>
-                        <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800">{patientData.fullName}</div>
+                        <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800">{patient?.fullName}</div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -47,7 +76,7 @@ const PatientRecordView: React.FC = () => {
                             <label className="block text-white font-medium mb-2">Giới tính</label>
                             <div className="relative">
                                 <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800 flex justify-between items-center">
-                                    {patientData.gender}
+                                    {patient?.gender}
                                 </div>
                             </div>
                         </div>
@@ -56,21 +85,27 @@ const PatientRecordView: React.FC = () => {
                             <label className="block text-white font-medium mb-2">Ngày sinh</label>
                             <div className="relative">
                                 <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800 flex justify-between items-center">
-                                    {patientData.birthDate}
+                                    {patient?.dateOfBirth}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-white font-medium mb-2">SĐT hoặc Email</label>
-                        <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800">{patientData.phoneOrEmail}</div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className=" text-white font-medium mb-2">SĐT</label>
+                            <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800">{patient?.phone}</div>
+                        </div>
+                        <div>
+                            <label className=" text-white font-medium mb-2">Email</label>
+                            <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800">{patient?.email}</div>
+                        </div>
                     </div>
 
                     <div>
                         <label className="block text-white font-medium mb-2">Bệnh sử</label>
                         <div className="w-full px-4 py-3 rounded-lg bg-white/90 text-gray-800 min-h-[150px]">
-                            {patientData.medicalHistory}
+                            {patient?.medicalHistory}
                         </div>
                     </div>
 
@@ -85,7 +120,8 @@ const PatientRecordView: React.FC = () => {
                         <button
                             type="button"
 
-                            onClick={() => handleUpdate(patientData.patientID)}
+                            onClick={() => patient && handleUpdate(patient.patientID)}
+
 
                             className="py-3 px-4 rounded-lg bg-[#618FCA] text-white font-medium hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 shadow-lg"
                         >
@@ -93,14 +129,14 @@ const PatientRecordView: React.FC = () => {
                         </button>
                         <button
                             type="button"
-                            onClick={() => handleViewHistory(patientData.patientID)}
+                            onClick={() => patient && handleViewHistory(patient.patientID)}
                             className="py-3 px-4 rounded-lg bg-[#618FCA] text-white font-medium hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 shadow-lg"
                         >
                             Lịch sử bệnh án
                         </button>
                         <button
                             type="button"
-                            onClick={() => handleCreateMedicalRecord(patientData.patientID)}
+                            onClick={() => patient && handleCreateMedicalRecord(patient.patientID)}
                             className="py-3 px-4 rounded-lg bg-[#618FCA] text-white font-medium hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200 shadow-lg"
                         >
                             Tạo bệnh án

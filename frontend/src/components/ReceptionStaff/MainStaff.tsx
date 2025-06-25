@@ -1,112 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import type { MainStaffDeclare } from "../../types/staff.types"
 import { useNavigate } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
-const mockPatient: MainStaffDeclare[] = [
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
+import { fetchPatients } from "../../service/staffService"
 
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-
-    {
-        patientID: "BN001",
-        name: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "093873292",
-    },
-
-
-]
 
 const MainStaff: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
@@ -116,6 +13,17 @@ const MainStaff: React.FC = () => {
     };
     const handleCreateNew = () => navigate('/staff/create-profile');
     const handleCreated = () => navigate('/staff/CreatedRecordList');
+
+
+    const [patients, setPatients] = useState<MainStaffDeclare[]>([]);
+
+    useEffect(() => {
+        const load = async () => {
+            const data = await fetchPatients();
+            setPatients(data);
+        };
+        load();
+    }, []);
 
     return (
         <div className="bg-[#D5DEEF] relative m-6 rounded-xl shadow-md">
@@ -165,19 +73,20 @@ const MainStaff: React.FC = () => {
                 </div>
 
                 <div className="max-h-[400px] overflow-y-auto space-y-2 bg-[#D3E2F9] p-2">
-                    {mockPatient.map((patient, index) => (
+                    {patients.map((patient, index) => (
                         <div
                             key={index}
                             onClick={() => handleClick(patient.patientID)}
                             className="grid grid-cols-4 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm"
                         >
                             <div>{patient.patientID}</div>
-                            <div>{patient.name}</div>
+                            <div>{patient.fullName}</div>
                             <div>{patient.gender}</div>
                             <div>{patient.phone}</div>
                         </div>
                     ))}
                 </div>
+
 
                 <div className="sticky bottom-0 bg-[#A7C5EB] px-4 py-4 mt-2 rounded-b-xl shadow-md z-10">
                 </div>

@@ -1,19 +1,36 @@
 export interface MainStaffDeclare {
     patientID: string;
-    name:string;
-    gender:string;
-    phone:string;
+    fullName: string;
+    gender: string;
+    phone: string;
 }
 export interface CreatedRecordDeclare extends MainStaffDeclare {
-    timeIn: string;
+    createdDate: string;
+    medicalRecordId:string;
 }
 export interface PatientForm {
-    fullName:string;
-    gender:string;
-    birthDate:string;
-    phoneOrEmail:string;
+    fullName: string;
+    gender: string;
+    dateOfBirth: string;
+    phone: string;
+    email: string;
     medicalHistory: string;
 }
 export interface PatientRecordDeclare extends PatientForm {
+    id: string;
     patientID: string;
 }
+export interface CreateRecord {
+  patientID: string;
+  symptoms: string;
+  assignedPhysicianId: string;
+  isPriority: boolean;
+}
+export interface PatientHistory {
+    patientID: string;
+    medicalRecordId:string;
+     assignedPhysicianId: string;
+     doctorName: string;
+     createdDate:string;
+}
+
