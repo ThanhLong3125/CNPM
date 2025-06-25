@@ -8,7 +8,7 @@ namespace backend.DTOs
     {
         [Required]
         [StringLength(50)]
-        public string Full_name { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
@@ -29,9 +29,9 @@ namespace backend.DTOs
 
     public class UpdateUserDto
     {
-        public string? Full_name { get; set; } = string.Empty;
-        public string? PhoneNumber { get; set; } = string.Empty;
-        public string? Password { get; set; } = string.Empty;
+        public string? FullName { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Password { get; set; }
     }
 
     public class LoginDto
@@ -48,7 +48,7 @@ namespace backend.DTOs
     {
         public string Token { get; set; } = string.Empty;
         public DateTime Expiration { get; set; }
-        public string Full_name { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public Role Role { get; set; }
     }
@@ -56,7 +56,7 @@ namespace backend.DTOs
     public class UserDto
     {
         public Guid Id { get; set; }
-        public string Full_name { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public Role Role { get; set; }
@@ -65,7 +65,12 @@ namespace backend.DTOs
 
     public class ResetPasswordByEmailDto
     {
+        [Required]
+        [EmailAddress]
         public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(100, MinimumLength = 6)]
         public string NewPassword { get; set; } = string.Empty;
     }
 }
