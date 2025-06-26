@@ -6,7 +6,7 @@ export interface MainStaffDeclare {
 }
 export interface CreatedRecordDeclare extends MainStaffDeclare {
     createdDate: string;
-    medicalRecordId:string;
+    medicalRecordId: string;
 }
 export interface PatientForm {
     fullName: string;
@@ -21,16 +21,16 @@ export interface PatientRecordDeclare extends PatientForm {
     patientID: string;
 }
 export interface CreateRecord {
-  patientID: string;
-  symptoms: string;
-  assignedPhysicianId: string;
-  isPriority: boolean;
+    patientID: string;
+    symptoms: string;
+    assignedPhysicianId: string;
+    isPriority: boolean;
 }
 export interface PatientHistory {
-    patientID: string;
-    medicalRecordId:string;
-     assignedPhysicianId: string;
-     doctorName: string;
-     createdDate:string;
+    patientId: string;
+    medicalRecordId: string;
+    physicianId: string;
+    doctorName: string;
+    createdAt: string;
 }
 

@@ -2,11 +2,25 @@ import React, { useState, useEffect } from "react"
 import type { MainStaffDeclare } from "../../types/staff.types"
 import { useNavigate } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
-import { fetchPatients } from "../../service/staffService"
+import { fetchPatientById, fetchPatients } from "../../service/staffService"
 
 
 const MainStaff: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
+    const [searchInput, setSearchInput] = useState('');
+
+    const handleSearch = async () => {
+        if (!filter.trim()) return;
+
+        const result = await fetchPatientById(filter.trim());
+        if (result && result.idPatient) {
+            navigate(`/staff/patientRecord/${result.idPatient}`);
+        } else {
+            alert("Không tìm thấy bệnh nhân!");
+        }
+    };
+
+
     const navigate = useNavigate();
     const handleClick = (patientId: string) => {
         navigate(`/staff/patientRecord/${patientId}`);
@@ -24,6 +38,9 @@ const MainStaff: React.FC = () => {
         };
         load();
     }, []);
+    const filteredPatients = patients.filter((patient) =>
+        patient.patientID.toLowerCase().includes(filter.toLowerCase())
+    );
 
     return (
         <div className="bg-[#D5DEEF] relative m-6 rounded-xl shadow-md">
@@ -38,10 +55,17 @@ const MainStaff: React.FC = () => {
                         <input
                             type="text"
                             placeholder="Tìm kiếm mã bệnh nhân"
-                            value={filter}
-                            onChange={(e) => setFilter(e.target.value)}
-                            className="bg-[#618FCA] w-full max-w-2xl pl-14 pr-3 rounded-4xl p-2 text-white placeholder-white "
+                            value={searchInput}
+                            onChange={(e) => {
+                                setSearchInput(e.target.value);
+                                setFilter(e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSearch();
+                            }}
+                            className="bg-[#618FCA] w-full max-w-2xl pl-14 pr-3 rounded-4xl p-2 text-white placeholder-white"
                         />
+
                     </div>
 
                 </div>
@@ -73,11 +97,11 @@ const MainStaff: React.FC = () => {
                 </div>
 
                 <div className="max-h-[400px] overflow-y-auto space-y-2 bg-[#D3E2F9] p-2">
-                    {patients.map((patient, index) => (
+                    {filteredPatients.map((patient, index) => (
                         <div
                             key={index}
                             onClick={() => handleClick(patient.patientID)}
-                            className="grid grid-cols-4 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm"
+                            className="grid grid-cols-4 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm cursor-pointer hover:bg-[#c9dcf2]"
                         >
                             <div>{patient.patientID}</div>
                             <div>{patient.fullName}</div>

@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { CreatedRecordDeclare } from "../../types/staff.types";
-import { fetchAllHistoryRecord } from "../../service/staffService";
+import { fetchAllHistoryRecord, fetchMedicalRecordById } from "../../service/staffService";
+import { IoIosSearch } from "react-icons/io";
 
 const CreatedRecordList: React.FC = () => {
-  const [filter, setFilter] = useState<string>('');
+  const [searchInput, setSearchInput] = useState('');
+  const [filter, setFilter] = useState('');
+
   const [history, setHistory] = useState<CreatedRecordDeclare[]>([]);
   const navigate = useNavigate();
+
+  const handleSearch = async () => {
+    if (!searchInput.trim()) return;
+
+    const result = await fetchMedicalRecordById(searchInput.trim());
+    if (result && result.medicalRecordId) {
+      navigate(`/staff/DetailCreatedRecord/${result.medicalRecordId}`);
+    } else {
+      alert("Không tìm thấy bệnh án!");
+    }
+  };
+
 
   const handleClick = (medicalRecordId: string) => {
     navigate(`/staff/DetailCreatedRecord/${medicalRecordId}`);
@@ -21,9 +36,9 @@ const CreatedRecordList: React.FC = () => {
     load();
   }, []);
 
- const filtered = history.filter(record =>
-  record.patientID?.toLowerCase().includes(filter.toLowerCase())
-);
+  const filtered = history.filter(record =>
+    record.medicalRecordId?.toLowerCase().includes(filter.toLowerCase())
+  );
 
 
   return (
@@ -33,13 +48,24 @@ const CreatedRecordList: React.FC = () => {
       </div>
 
       <div className="flex flex-col-4 md:flex-row gap-16 pt-14 my-6 mx-1 p-2">
-        <input
-          type="text"
-          placeholder="Tìm mã bệnh nhân"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="bg-[#618FCA] w-1/3 pl-9 rounded-4xl p-2 text-center"
-        />
+        <div className="relative w-full">
+          < IoIosSearch className="absolute left-6 top-1/2 transform -translate-y-1/2 w-6 h-6 text-white" />
+          <input
+            type="text"
+            placeholder="Tìm kiếm mã bệnh án"
+            value={searchInput}
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+              setFilter(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
+            className="bg-[#618FCA] w-full max-w-2xl pl-14 pr-3 rounded-4xl p-2 text-white placeholder-white"
+          />
+
+
+        </div>
       </div>
 
       <div className="text-center rounded-t-xl px-2">

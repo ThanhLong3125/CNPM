@@ -40,7 +40,7 @@ const DetailCreatedRecord = () => {
 
   useEffect(() => {
     const load = async () => {
-      console.log("🔍 medicalRecordId param:", medicalRecordId);
+      console.log("  medicalRecordId param:", medicalRecordId);
 
       if (!medicalRecordId) {
         console.error(" medicalRecordId không tồn tại.");
@@ -51,16 +51,16 @@ const DetailCreatedRecord = () => {
       try {
         setLoading(true);
         const medicalRecord = await fetchMedicalRecordById(medicalRecordId);
-        console.log("📄 Medical Record:", medicalRecord);
+        console.log(" Medical Record:", medicalRecord);
 
         setRecord(medicalRecord);
 
         if (medicalRecord?.patientId) {
           const patientData = await fetchPatientById(medicalRecord.patientId);
-          console.log("🧍‍♂️ Patient Data:", patientData);
+          console.log(" Patient Data:", patientData);
           setPatient(patientData);
         } else {
-          console.warn("⚠️ Medical record không có patientId");
+          console.warn("Medical record không có patientId");
         }
 
       } catch (error) {

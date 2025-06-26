@@ -32,7 +32,7 @@ const UpdatePatientRecord: React.FC = () => {
           medicalHistory: found.medicalHistory || "",
         });
 
-        setPatientCode(found.patientID || ""); // để hiển thị
+        setPatientCode(found.idPatient || ""); // để hiển thị
         setRealId(found.id || ""); // Lưu ID gốc cho update
       }
     };

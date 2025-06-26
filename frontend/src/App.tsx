@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route} from "react-router-dom";
 import DetailCreatedRecord from './components/ReceptionStaff/MedicalRecordForm';
 import LoginPage from './components/Page/LoginPage'
 import DoctorMain from './components/Doctor/DoctorMain'
-import PatientAwaitDetail from './components/Doctor/PatientAwaitDetail'
 import StaffLayout from './components/layout/StaffLayout'
 import MainStaff from "./components/ReceptionStaff/MainStaff"
 import CreatedRecord from "./components/ReceptionStaff/CreatedRecordList"
@@ -16,6 +15,9 @@ import ReceptionProfile from './components/ReceptionStaff/ReceptionProfile'
 import DoctorLayout from './components/layout/DoctorLayout';
 import EditMedicalRecord from "../src/components/ReceptionStaff/EditMedicalRecord"
 import HomePage from './components/Page/HomePage';
+import MedicalRecord from './components/Doctor/MedicalRecord';
+import History_records from './components/ReceptionStaff/History_records';
+import OldMedicalRecord from './components/Doctor/OldMedicalRecord';
 
 const App = () => {
   return (
@@ -41,9 +43,11 @@ const App = () => {
         <Route path="/doctor" element={<DoctorLayout />}>
           <Route index element={<DoctorMain />} />
           <Route path="doctormain" element={<DoctorMain/>} />
-
-          <Route path="detail/:patient_id" element={<PatientAwaitDetail />} />
+          <Route path="MedicalRecord/:patient_id" element={<MedicalRecord />} />
+          <Route path="medical-history/:patientId" element={<History_records/>} />
+          <Route path="OldMedicalRecord/:patientId" element={<OldMedicalRecord/>} />
         </Route>
+
       </Routes>
     </BrowserRouter>
   )

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchUser } from "../../service/staffService";
+import { fetchUser } from "../../service/authService";
 
 const ReceptionProfile: React.FC = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const ReceptionProfile: React.FC = () => {
               <label className="block text-white mb-1">Mã lễ tân</label>
               <input
                 type="text"
-                value={user?.receptionistId || ""}
+                value={user?.physicianId || ""}
                 className="w-full px-3 py-2 rounded bg-white text-black"
                 disabled
               />
@@ -43,40 +43,27 @@ const ReceptionProfile: React.FC = () => {
               <label className="block text-white mb-1">Họ Tên</label>
               <input
                 type="text"
-                value={user?.fullName || ""}
+                value={user?.full_name || ""}
                 className="w-full px-3 py-2 rounded bg-white text-black"
                 disabled
               />
-            </div>
-
-            <div className="flex space-x-4">
-              <div className="w-1/2">
-                <label className="block text-white mb-1">Giới tính</label>
-                <select
-                  value={user?.gender || ""}
-                  disabled
-                  className="w-full px-3 py-2 rounded bg-white text-black"
-                >
-                  <option value="Nam">Nam</option>
-                  <option value="Nữ">Nữ</option>
-                </select>
-              </div>
-              <div className="w-1/2">
-                <label className="block text-white mb-1">Ngày sinh</label>
-                <input
-                  type="date"
-                  value={user?.dateOfBirth?.slice(0, 10) || ""}
-                  disabled
-                  className="w-full px-3 py-2 rounded bg-white text-black"
-                />
-              </div>
             </div>
 
             <div>
               <label className="block text-white mb-1">SDT</label>
               <input
                 type="text"
-                value={user?.phone || ""}
+                value={user?.phoneNumber || ""}
+                className="w-full px-3 py-2 rounded bg-white text-black"
+                disabled
+              />
+            </div>
+
+            <div>
+              <label className="block text-white mb-1">Role</label>
+              <input
+                type="text"
+                value={user?.role || ""}
                 className="w-full px-3 py-2 rounded bg-white text-black"
                 disabled
               />

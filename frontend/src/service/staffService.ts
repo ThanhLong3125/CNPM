@@ -151,24 +151,22 @@ export const updateMedicalRecord = async (
   }
 };
 //Lịch sử bệnh án của một bệnh nhân.
-
-
-
-
-//Thông tin cá nhân
-export const fetchUser = async () => {
-  const token = sessionStorage.getItem("accessToken");
-
+export const fetchMedicalRecordsByPatientId = async (idPatient: string) => {
   try {
-    const response = await api.get("/Auth/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
+    const response = await api.get(`/StaffReception/medicalrecords/patient/${idPatient}`);
     return response.data;
-  } catch (error) {
-    console.error("Fetchh user error:", error);
+  } catch (error: any) {
+    console.error(" Lỗi khi lấy lịch sử bệnh án:", error.response?.status, error.response?.data);
     return null;
+  }
+};
+//Lấy danh sách bác sĩ.
+export const fetchDoctor = async (): Promise<any[]> => {
+  try {
+    const res = await api.get("/StaffReception/doctors");
+    return res.data || [];
+  } catch (error) {
+    console.error("Lỗi khi gọi API fetchDoctor:", error);
+    return [];
   }
 };

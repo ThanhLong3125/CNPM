@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createMedicalRecord, fetchPatientById } from "../../service/staffService";
+import { createMedicalRecord, fetchPatientById, fetchDoctor } from "../../service/staffService";
 import type { CreateRecord, PatientRecordDeclare } from "../../types/staff.types";
 
 const CreateMedicalRecord: React.FC = () => {
@@ -11,18 +11,18 @@ const CreateMedicalRecord: React.FC = () => {
   const [assignedPhysicianId, setAssignedPhysicianId] = useState("");
   const [symptoms, setSymptoms] = useState("");
   const [isPriority, setIsPriority] = useState(false);
+  const [doctors, setDoctors] = useState<{ physicianId: string, full_name: string }[]>([]);
+  const [isSelecting, setIsSelecting] = useState(false);
 
   useEffect(() => {
-    console.log("patientId param:", patientId);
     const load = async () => {
       if (!patientId) return;
 
       const found = await fetchPatientById(patientId);
-      console.log("Dữ liệu nhận được từ API:", found);
       if (found) {
         setPatient({
           id: found.id,
-          patientID: found.idPatient ?? "", 
+          patientID: found.idPatient ?? "",
           fullName: found.fullName || "",
           gender: found.gender || "",
           dateOfBirth: found.dateOfBirth?.slice(0, 10) || "",
@@ -30,11 +30,16 @@ const CreateMedicalRecord: React.FC = () => {
           email: found.email || "",
           medicalHistory: found.medicalHistory || "",
         });
-
       }
+
+      // Gọi danh sách bác sĩ
+      const doctorList = await fetchDoctor();
+      setDoctors(doctorList);
     };
+
     load();
   }, [patientId]);
+
 
 
 
@@ -45,7 +50,7 @@ const CreateMedicalRecord: React.FC = () => {
     if (!patient) return;
 
     const payload: CreateRecord = {
-      patientID:patient.patientID,
+      patientID: patient.patientID,
       symptoms,
       assignedPhysicianId,
       isPriority,
@@ -116,12 +121,37 @@ const CreateMedicalRecord: React.FC = () => {
           <div>
             <div className="mb-4">
               <label className="block mb-1 text-sm">Mã bác sĩ</label>
-              <input
-                type="text"
-                value={assignedPhysicianId}
-                onChange={(e) => setAssignedPhysicianId(e.target.value)}
-                className="w-full px-3 py-1.5 bg-white rounded"
-              />
+
+              {isSelecting ? (
+                // Dropdown chọn lại
+                <select
+                  value={assignedPhysicianId}
+                  onChange={(e) => {
+                    setAssignedPhysicianId(e.target.value);
+                    setIsSelecting(false); // Sau khi chọn xong thì ẩn dropdown
+                  }}
+                  onBlur={() => setIsSelecting(false)} // Nếu click ra ngoài cũng đóng lại
+                  autoFocus
+                  className="w-full px-3 py-2 bg-white rounded"
+                >
+                  <option value="">-- Chọn bác sĩ phụ trách --</option>
+                  {doctors.map((doctor) => (
+                    <option key={doctor.physicianId} value={doctor.physicianId}>
+                      {doctor.physicianId} - {doctor.full_name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                // Ô chỉ hiển thị mã bác sĩ
+                <input
+                  type="text"
+                  value={assignedPhysicianId}
+                  readOnly
+                  onClick={() => setIsSelecting(true)} // Khi bấm vào thì hiện dropdown
+                  className="w-full px-3 py-2 bg-[#f0f0f0] rounded cursor-pointer"
+                  placeholder="-- Chọn bác sĩ --"
+                />
+              )}
             </div>
 
             <div className="mb-4">
@@ -163,7 +193,7 @@ const CreateMedicalRecord: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

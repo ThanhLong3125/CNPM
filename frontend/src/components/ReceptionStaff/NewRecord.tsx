@@ -135,7 +135,7 @@ const PatientRecordForm: React.FC = () => {
           <div>
             <label className="block text-[#133574] font-medium mb-2">Bệnh sử</label>
             <textarea
-              name="symptoms"
+              name="medicalHistory"
               value={formData.medicalHistory}
               onChange={handleInputChange}
               rows={6}

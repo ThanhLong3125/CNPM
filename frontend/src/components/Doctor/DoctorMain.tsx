@@ -105,7 +105,7 @@ const DoctorMain: React.FC = () => {
     const navigate = useNavigate();
 
     const handleClick = (patient_id: string) => {
-        navigate(`/detail/${patient_id}`);
+        navigate(`/doctor/MedicalRecord/${patient_id}`);
     };
 
     const filteredPatients: patientAwait[] = mockPatient.filter((p) =>
@@ -124,7 +124,7 @@ const DoctorMain: React.FC = () => {
 
                 <div className=" text-center relative  rounded-t-xl mt-10  ">
 
-                    <div className="grid grid-cols-5 sticky top-24 z-10 font-semibold bg-[#A7C5EB] text-[#1F3C88] px-4 py-2 rounded-t-xl mt-4 shadow-md">
+                    <div className="grid grid-cols-5 top-24 z-10 font-semibold bg-[#A7C5EB] text-[#1F3C88] px-4 py-2 rounded-t-xl mt-4 shadow-md">
                         <div>Mã bệnh nhân</div>
                         <div>Mã bệnh án</div>
                         <div>Họ tên</div>
@@ -137,7 +137,7 @@ const DoctorMain: React.FC = () => {
                             <div
                                 key={index}
                                 onClick={() => handleClick(patientAwait.patient_id)}
-                                className="grid grid-cols-5 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm"
+                                className="grid grid-cols-5 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm cursor-pointer hover:bg-[#c9dcf2]"
                             >
                                 <div>{patientAwait.patient_id}</div>
                                 <div>{patientAwait.medicalRecord_id}</div>
@@ -189,7 +189,7 @@ const DoctorMain: React.FC = () => {
                     </div>
                     <div className="md:col-span-2">
                         <button
-                            onClick={() => {/* handle xem chi tiết */ }}
+                            onClick={() => {}}
                             className="bg-[#618FCA] w-full rounded-xl py-2 px-4 text-white text-center hover:bg-[#4b7bb3] transition-colors"
                         >
                             Xem chi tiết
@@ -209,7 +209,8 @@ const DoctorMain: React.FC = () => {
                         {dataPatient.map((patientExamined, index) => (
                             <div
                                 key={index}
-                                className="grid grid-cols-6 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm"
+                                onClick={() => handleClick(patientExamined.patient_id)}
+                                className="grid grid-cols-6 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm cursor-pointer hover:bg-[#c9dcf2]"
                             >
                                 <div>{patientExamined.patient_id}</div>
                                 <div>{patientExamined.medicalRecord_id}</div>
@@ -220,7 +221,7 @@ const DoctorMain: React.FC = () => {
                             </div>
                         ))}
                     </div>
-                    <div className=" bg-[#A7C5EB] sticky bottom-0 px-4 py-4 rounded-b-xl shadow-md">
+                    <div className=" bg-[#A7C5EB] bottom-0 px-4 py-4 rounded-b-xl shadow-md">
                     </div>
                 </div>
 
