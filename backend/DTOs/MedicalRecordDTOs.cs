@@ -60,6 +60,7 @@ namespace backend.DTOs
         public string Phone { get; set; }
         public string FullName { get; set; }
         public DateOnly DateOfBirth { get; set; }
+        public string? DiagnosisNotes { get; set; }
     }
 
     public class MedicalRecordWithDoctorDto

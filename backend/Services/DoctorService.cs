@@ -146,6 +146,7 @@ namespace backend.Services
                 var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
                 if (p != null)
                 {
+                    var diagnosis = await _context.Diagnoses.FirstOrDefaultAsync(d => d.MedicalRecordId == r.MedicalRecordId);
                     results.Add(new MedicalRecordWithPatientDto
                     {
                         Id = r.Id.ToString(),
@@ -156,7 +157,8 @@ namespace backend.Services
                         FullName = p.FullName,
                         DateOfBirth = p.DateOfBirth,
                         Gender = p.Gender,
-                        Phone = p.Phone
+                        Phone = p.Phone,
+                        DiagnosisNotes = diagnosis?.Notes
                     });
                 }
             }
