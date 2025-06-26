@@ -43,11 +43,13 @@ public class StaffReceptionService : IStaffReceptionService
     public async Task<PatientDto> CreatePatientAsync(CreatePatientDto dto)
     {
         var exists = await _context.Patients.AnyAsync(p =>
-            p.FullName.ToLower() == dto.FullName.ToLower().Trim() &&
-            p.DateOfBirth == dto.DateOfBirth &&
-            p.Gender.ToLower() == dto.Gender.ToLower().Trim());
+            p.FullName.ToLower() == dto.FullName.ToLower().Trim()
+            && p.DateOfBirth == dto.DateOfBirth
+            && p.Gender.ToLower() == dto.Gender.ToLower().Trim()
+        );
 
-        if (exists) throw new Exception("Bệnh nhân đã tồn tại.");
+        if (exists)
+            throw new Exception("Bệnh nhân đã tồn tại.");
 
         var patient = new Patient
         {
@@ -58,18 +60,20 @@ public class StaffReceptionService : IStaffReceptionService
             Gender = dto.Gender.Trim(),
             Email = dto.Email?.Trim(),
             Phone = dto.Phone?.Trim(),
-            MedicalHistory = dto.MedicalHistory?.Trim()
+            MedicalHistory = dto.MedicalHistory?.Trim(),
         };
 
         _context.Patients.Add(patient);
         await _context.SaveChangesAsync();
 
-        await _audit.WriteLogAsync(new WriteLogDto
-        {
-            User = "Staff",
-            Action = "Create Patient",
-            Details = dto
-        });
+        await _audit.WriteLogAsync(
+            new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Create Patient",
+                Details = dto,
+            }
+        );
 
         return new PatientDto
         {
@@ -79,7 +83,7 @@ public class StaffReceptionService : IStaffReceptionService
             DateOfBirth = patient.DateOfBirth,
             Gender = patient.Gender,
             Email = patient.Email,
-            Phone = patient.Phone
+            Phone = patient.Phone,
         };
     }
 
@@ -96,12 +100,14 @@ public class StaffReceptionService : IStaffReceptionService
 
         await _context.SaveChangesAsync();
 
-        await _audit.WriteLogAsync(new WriteLogDto
-        {
-            User = "Staff",
-            Action = "Update Patient",
-            Details = dto
-        });
+        await _audit.WriteLogAsync(
+            new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Update Patient",
+                Details = dto,
+            }
+        );
 
         return patient;
     }
@@ -110,12 +116,14 @@ public class StaffReceptionService : IStaffReceptionService
     {
         var patient = await FindPatientByIdPatientAsync(idPatient);
 
-        await _audit.WriteLogAsync(new WriteLogDto
-        {
-            User = "Staff",
-            Action = "Search Patient by IdPatient",
-            Details = idPatient
-        });
+        await _audit.WriteLogAsync(
+            new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Search Patient by IdPatient",
+                Details = idPatient,
+            }
+        );
 
         return patient;
     }
@@ -124,28 +132,30 @@ public class StaffReceptionService : IStaffReceptionService
     {
         var patients = await _context.Patients.ToListAsync();
 
-        await _audit.WriteLogAsync(new WriteLogDto
-        {
-            User = "Staff",
-            Action = "List Patients",
-            Details = patients
-        });
+        await _audit.WriteLogAsync(
+            new WriteLogDto
+            {
+                User = "Staff",
+                Action = "List Patients",
+                Details = patients,
+            }
+        );
 
         return patients;
     }
 
     public async Task<List<User>> ListDoctorAsync()
     {
-        var doctors = await _context.Users
-            .Where(u => u.Role == Role.Doctor)
-            .ToListAsync();
+        var doctors = await _context.Users.Where(u => u.Role == Role.Doctor).ToListAsync();
 
-        await _audit.WriteLogAsync(new WriteLogDto
-        {
-            User = "Staff",
-            Action = "List Doctors",
-            Details = doctors
-        });
+        await _audit.WriteLogAsync(
+            new WriteLogDto
+            {
+                User = "Staff",
+                Action = "List Doctors",
+                Details = doctors,
+            }
+        );
 
         return doctors;
     }
@@ -163,18 +173,20 @@ public class StaffReceptionService : IStaffReceptionService
             Symptoms = dto.Symptoms.Trim(),
             AssignedPhysicianId = dto.AssignedPhysicianId,
             IsPriority = dto.IsPriority,
-            Status = false
+            Status = false,
         };
 
         _context.MedicalRecords.Add(record);
         await _context.SaveChangesAsync();
 
-        await _audit.WriteLogAsync(new WriteLogDto
-        {
-            User = "Staff",
-            Action = "Create Medical Record",
-            Details = dto
-        });
+        await _audit.WriteLogAsync(
+            new WriteLogDto
+            {
+                User = "Staff",
+                Action = "Create Medical Record",
+                Details = dto,
+            }
+        );
 
         return record.MedicalRecordId;
     }
@@ -206,12 +218,14 @@ public class StaffReceptionService : IStaffReceptionService
         return "Xoá thành công";
     }
 
-    public async Task<List<MedicalRecordWithDoctorDto>> SearchMedicalRecordsByPatientId(string idPatient)
+    public async Task<List<MedicalRecordWithDoctorDto>> SearchMedicalRecordsByPatientId(
+        string idPatient
+    )
     {
         var patient = await FindPatientByIdPatientAsync(idPatient);
 
-        var records = await _context.MedicalRecords
-            .Where(r => r.PatientId == idPatient)
+        var records = await _context
+            .MedicalRecords.Where(r => r.PatientId == idPatient)
             .ToListAsync();
 
         var physicianIds = records
@@ -220,19 +234,23 @@ public class StaffReceptionService : IStaffReceptionService
             .Distinct()
             .ToList();
 
-        var doctors = await _context.Users
-            .Where(u => physicianIds.Contains(u.PhysicianId))
+        var doctors = await _context
+            .Users.Where(u => physicianIds.Contains(u.PhysicianId))
             .ToDictionaryAsync(u => u.PhysicianId);
 
-        return records.Select(r => new MedicalRecordWithDoctorDto
-        {
-            MedicalRecordId = r.MedicalRecordId,
-            PatientId = r.PatientId,
-            NamePatient = patient.FullName,
-            PhysicianId = r.AssignedPhysicianId,
-            DoctorName = doctors.TryGetValue(r.AssignedPhysicianId, out var doc) ? doc.Full_name : null,
-            CreatedAt = DateOnly.FromDateTime(r.CreatedDate)
-        }).ToList();
+        return records
+            .Select(r => new MedicalRecordWithDoctorDto
+            {
+                MedicalRecordId = r.MedicalRecordId,
+                PatientId = r.PatientId,
+                NamePatient = patient.FullName,
+                PhysicianId = r.AssignedPhysicianId,
+                DoctorName = doctors.TryGetValue(r.AssignedPhysicianId, out var doc)
+                    ? doc.Full_name
+                    : null,
+                CreatedAt = DateOnly.FromDateTime(r.CreatedDate),
+            })
+            .ToList();
     }
 
     public async Task<List<MedicalRecordWithPatientDto>> ShowAllMedicalRecord()
@@ -245,19 +263,20 @@ public class StaffReceptionService : IStaffReceptionService
             var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
             if (p != null)
             {
-                results.Add(new MedicalRecordWithPatientDto
-                {
-                    Id = r.Id.ToString(),
-                    PatientId = r.PatientId,
-                    MedicalRecordId = r.MedicalRecordId,
-                    PhysicicanId = r.AssignedPhysicianId,
-                    CreatedAt = r.CreatedDate,
-                    FullName = p.FullName,
-                    DateOfBirth = p.DateOfBirth,
-                    Gender = p.Gender,
-                    Phone = p.Phone,
-                    status = r.Status,
-                });
+                results.Add(
+                    new MedicalRecordWithPatientDto
+                    {
+                        Id = r.Id.ToString(),
+                        PatientId = r.PatientId,
+                        MedicalRecordId = r.MedicalRecordId,
+                        PhysicicanId = r.AssignedPhysicianId,
+                        CreatedAt = r.CreatedDate,
+                        FullName = p.FullName,
+                        DateOfBirth = p.DateOfBirth,
+                        Gender = p.Gender,
+                        Phone = p.Phone,
+                    }
+                );
             }
         }
 
@@ -274,18 +293,20 @@ public class StaffReceptionService : IStaffReceptionService
             var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
             if (p != null)
             {
-                results.Add(new MedicalRecordWithPatientDto
-                {
-                    Id = r.Id.ToString(),
-                    PatientId = r.PatientId,
-                    MedicalRecordId = r.MedicalRecordId,
-                    PhysicicanId = r.AssignedPhysicianId,
-                    CreatedAt = r.CreatedDate,
-                    FullName = p.FullName,
-                    DateOfBirth = p.DateOfBirth,
-                    Gender = p.Gender,
-                    Phone = p.Phone
-                });
+                results.Add(
+                    new MedicalRecordWithPatientDto
+                    {
+                        Id = r.Id.ToString(),
+                        PatientId = r.PatientId,
+                        MedicalRecordId = r.MedicalRecordId,
+                        PhysicicanId = r.AssignedPhysicianId,
+                        CreatedAt = r.CreatedDate,
+                        FullName = p.FullName,
+                        DateOfBirth = p.DateOfBirth,
+                        Gender = p.Gender,
+                        Phone = p.Phone,
+                    }
+                );
             }
         }
 
@@ -302,20 +323,24 @@ public class StaffReceptionService : IStaffReceptionService
             var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
             if (p != null)
             {
-                var diagnosis = await _context.Diagnoses.FirstOrDefaultAsync(d => d.MedicalRecordId == r.MedicalRecordId);
-                results.Add(new MedicalRecordWithPatientDto
-                {
-                    Id = r.Id.ToString(),
-                    PatientId = r.PatientId,
-                    MedicalRecordId = r.MedicalRecordId,
-                    PhysicicanId = r.AssignedPhysicianId,
-                    CreatedAt = r.CreatedDate,
-                    FullName = p.FullName,
-                    DateOfBirth = p.DateOfBirth,
-                    Gender = p.Gender,
-                    Phone = p.Phone,
-                    DiagnosisNotes = diagnosis?.Notes
-                });
+                var diagnosis = await _context.Diagnoses.FirstOrDefaultAsync(d =>
+                    d.MedicalRecordId == r.MedicalRecordId
+                );
+                results.Add(
+                    new MedicalRecordWithPatientDto
+                    {
+                        Id = r.Id.ToString(),
+                        PatientId = r.PatientId,
+                        MedicalRecordId = r.MedicalRecordId,
+                        PhysicicanId = r.AssignedPhysicianId,
+                        CreatedAt = r.CreatedDate,
+                        FullName = p.FullName,
+                        DateOfBirth = p.DateOfBirth,
+                        Gender = p.Gender,
+                        Phone = p.Phone,
+                        DiagnosisNotes = diagnosis?.Notes,
+                    }
+                );
             }
         }
 

@@ -29,7 +29,11 @@ namespace backend.Controllers
             try
             {
                 var createdPatient = await _staffReceptionService.CreatePatientAsync(dto);
-                return CreatedAtAction(nameof(GetPatientById), new { idPatient = createdPatient.PatientID }, createdPatient);
+                return CreatedAtAction(
+                    nameof(GetPatientById),
+                    new { idPatient = createdPatient.PatientID },
+                    createdPatient
+                );
             }
             catch (Exception ex)
             {
@@ -40,11 +44,17 @@ namespace backend.Controllers
         // Cập nhật bệnh nhân
         [HttpPut("patients/{idPatient}")]
         [SwaggerOperation(Summary = "Cập nhật hồ sơ bệnh nhân")]
-        public async Task<IActionResult> UpdatePatient([FromRoute] string idPatient, [FromBody] UpdatePatientDto dto)
+        public async Task<IActionResult> UpdatePatient(
+            [FromRoute] string idPatient,
+            [FromBody] UpdatePatientDto dto
+        )
         {
             try
             {
-                var updatedPatient = await _staffReceptionService.UpdatePatientAsync(idPatient, dto);
+                var updatedPatient = await _staffReceptionService.UpdatePatientAsync(
+                    idPatient,
+                    dto
+                );
                 return Ok(updatedPatient);
             }
             catch (Exception ex)
@@ -100,7 +110,11 @@ namespace backend.Controllers
             try
             {
                 var createdId = await _staffReceptionService.CreateMedicalRecordAsync(dto);
-                return CreatedAtAction(nameof(GetMedicalRecordById), new { id = createdId }, new { MedicalRecordId = createdId });
+                return CreatedAtAction(
+                    nameof(GetMedicalRecordById),
+                    new { id = createdId },
+                    new { MedicalRecordId = createdId }
+                );
             }
             catch (Exception ex)
             {
@@ -131,9 +145,13 @@ namespace backend.Controllers
         {
             try
             {
-                var records = await _staffReceptionService.SearchMedicalRecordsByPatientId(idPatient);
+                var records = await _staffReceptionService.SearchMedicalRecordsByPatientId(
+                    idPatient
+                );
                 if (records == null || !records.Any())
-                    return NotFound(new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." });
+                    return NotFound(
+                        new { message = "Không tìm thấy hồ sơ bệnh án nào cho bệnh nhân này." }
+                    );
 
                 return Ok(records);
             }
@@ -146,7 +164,10 @@ namespace backend.Controllers
         // Cập nhật hồ sơ bệnh án
         [HttpPut("medicalrecords/{id}")]
         [SwaggerOperation(Summary = "Cập nhật hồ sơ bệnh án")]
-        public async Task<IActionResult> UpdateMedicalRecord([FromRoute] string id, [FromBody] UpdateMedicalRecordDto dto)
+        public async Task<IActionResult> UpdateMedicalRecord(
+            [FromRoute] string id,
+            [FromBody] UpdateMedicalRecordDto dto
+        )
         {
             try
             {
@@ -181,23 +202,23 @@ namespace backend.Controllers
         public async Task<IActionResult> ShowAllMedicalRecords()
         {
             var records = await _staffReceptionService.ShowAllMedicalRecord();
-        return Ok(records);
-    }
+            return Ok(records);
+        }
 
-    [HttpGet("waiting-patients")]
-    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đang chờ khám")]
-    public async Task<IActionResult> GetWaitingPatients()
-    {
-        var records = await _staffReceptionService.ListWaitingPatientAsync();
-        return Ok(records);
-    }
+        [HttpGet("waiting-patients")]
+        [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đang chờ khám")]
+        public async Task<IActionResult> GetWaitingPatients()
+        {
+            var records = await _staffReceptionService.ListWaitingPatientAsync();
+            return Ok(records);
+        }
 
-    [HttpGet("treated-patients")]
-    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đã được khám")]
-    public async Task<IActionResult> GetTreatedPatients()
-    {
-        var records = await _staffReceptionService.ListTreatedPatientAsync();
-        return Ok(records);
+        [HttpGet("treated-patients")]
+        [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đã được khám")]
+        public async Task<IActionResult> GetTreatedPatients()
+        {
+            var records = await _staffReceptionService.ListTreatedPatientAsync();
+            return Ok(records);
+        }
     }
-}
 }
