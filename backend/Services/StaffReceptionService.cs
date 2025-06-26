@@ -19,6 +19,8 @@ public interface IStaffReceptionService
     Task<MedicalRecord> UpdateMediaRecordbyId(string medicalRecordId, UpdateMedicalRecordDto dto);
     Task<string> DeleteMediaRecordbyId(string medicalRecordId);
     Task<List<MedicalRecordWithPatientDto>> ShowAllMedicalRecord();
+    Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync();
+    Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync();
 }
 
 public class StaffReceptionService : IStaffReceptionService
@@ -236,6 +238,62 @@ public class StaffReceptionService : IStaffReceptionService
     public async Task<List<MedicalRecordWithPatientDto>> ShowAllMedicalRecord()
     {
         var records = await _context.MedicalRecords.ToListAsync();
+        var results = new List<MedicalRecordWithPatientDto>();
+
+        foreach (var r in records)
+        {
+            var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
+            if (p != null)
+            {
+                results.Add(new MedicalRecordWithPatientDto
+                {
+                    Id = r.Id.ToString(),
+                    PatientId = r.PatientId,
+                    MedicalRecordId = r.MedicalRecordId,
+                    PhysicicanId = r.AssignedPhysicianId,
+                    CreatedAt = r.CreatedDate,
+                    FullName = p.FullName,
+                    DateOfBirth = p.DateOfBirth,
+                    Gender = p.Gender,
+                    Phone = p.Phone
+                });
+            }
+        }
+
+        return results;
+    }
+
+    public async Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync()
+    {
+        var records = await _context.MedicalRecords.Where(r => r.Status == false).ToListAsync();
+        var results = new List<MedicalRecordWithPatientDto>();
+
+        foreach (var r in records)
+        {
+            var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
+            if (p != null)
+            {
+                results.Add(new MedicalRecordWithPatientDto
+                {
+                    Id = r.Id.ToString(),
+                    PatientId = r.PatientId,
+                    MedicalRecordId = r.MedicalRecordId,
+                    PhysicicanId = r.AssignedPhysicianId,
+                    CreatedAt = r.CreatedDate,
+                    FullName = p.FullName,
+                    DateOfBirth = p.DateOfBirth,
+                    Gender = p.Gender,
+                    Phone = p.Phone
+                });
+            }
+        }
+
+        return results;
+    }
+
+    public async Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync()
+    {
+        var records = await _context.MedicalRecords.Where(r => r.Status == true).ToListAsync();
         var results = new List<MedicalRecordWithPatientDto>();
 
         foreach (var r in records)

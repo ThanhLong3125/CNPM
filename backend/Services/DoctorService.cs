@@ -11,6 +11,8 @@ namespace backend.Services
         Task<string> CreateDiagnosisAsync(CreateDiagnosisDto createDiagnosisDto);
         Task<Diagnosis> UpdateDiagnosisAsync(string id, UpdateDiagnosisDto updateDiagnosisDto);
         Task<List<Diagnosis>> SearchDiagnosisbyMRAsync(string id);
+        Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync();
+        Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync();
     }
 
     public class DoctorService : IDoctorService
@@ -98,6 +100,62 @@ namespace backend.Services
             );
 
             return diagnoses;
+        }
+
+        public async Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync()
+        {
+            var records = await _context.MedicalRecords.Where(r => r.Status == false).ToListAsync();
+            var results = new List<MedicalRecordWithPatientDto>();
+
+            foreach (var r in records)
+            {
+                var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
+                if (p != null)
+                {
+                    results.Add(new MedicalRecordWithPatientDto
+                    {
+                        Id = r.Id.ToString(),
+                        PatientId = r.PatientId,
+                        MedicalRecordId = r.MedicalRecordId,
+                        PhysicicanId = r.AssignedPhysicianId,
+                        CreatedAt = r.CreatedDate,
+                        FullName = p.FullName,
+                        DateOfBirth = p.DateOfBirth,
+                        Gender = p.Gender,
+                        Phone = p.Phone
+                    });
+                }
+            }
+
+            return results;
+        }
+
+        public async Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync()
+        {
+            var records = await _context.MedicalRecords.Where(r => r.Status == true).ToListAsync();
+            var results = new List<MedicalRecordWithPatientDto>();
+
+            foreach (var r in records)
+            {
+                var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
+                if (p != null)
+                {
+                    results.Add(new MedicalRecordWithPatientDto
+                    {
+                        Id = r.Id.ToString(),
+                        PatientId = r.PatientId,
+                        MedicalRecordId = r.MedicalRecordId,
+                        PhysicicanId = r.AssignedPhysicianId,
+                        CreatedAt = r.CreatedDate,
+                        FullName = p.FullName,
+                        DateOfBirth = p.DateOfBirth,
+                        Gender = p.Gender,
+                        Phone = p.Phone
+                    });
+                }
+            }
+
+            return results;
         }
     }
 }

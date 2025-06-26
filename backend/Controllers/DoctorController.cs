@@ -62,17 +62,29 @@ namespace backend.Controllers
         {
             try
             {
-                var diagnosis = await _doctorService.SearchDiagnosisbyMRAsync(medicalRecordId);
-                return Ok(diagnosis);
-            }
-            catch (ApplicationException ex)
-            {
-                return NotFound(new { error = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { error = "Lỗi máy chủ. Vui lòng thử lại sau." });
-            }
+                var diagnoses = await _doctorService.SearchDiagnosisbyMRAsync(medicalRecordId);
+            return Ok(diagnoses);
         }
+        catch (Exception ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("waiting-patients")]
+    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đang chờ khám")]
+    public async Task<IActionResult> GetWaitingPatients()
+    {
+        var records = await _doctorService.ListWaitingPatientAsync();
+        return Ok(records);
+    }
+
+    [HttpGet("treated-patients")]
+    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đã được khám")]
+    public async Task<IActionResult> GetTreatedPatients()
+    {
+        var records = await _doctorService.ListTreatedPatientAsync();
+        return Ok(records);
+    }
     }
 }

@@ -181,7 +181,23 @@ namespace backend.Controllers
         public async Task<IActionResult> ShowAllMedicalRecords()
         {
             var records = await _staffReceptionService.ShowAllMedicalRecord();
-            return Ok(records);
-        }
+        return Ok(records);
     }
+
+    [HttpGet("waiting-patients")]
+    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đang chờ khám")]
+    public async Task<IActionResult> GetWaitingPatients()
+    {
+        var records = await _staffReceptionService.ListWaitingPatientAsync();
+        return Ok(records);
+    }
+
+    [HttpGet("treated-patients")]
+    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đã được khám")]
+    public async Task<IActionResult> GetTreatedPatients()
+    {
+        var records = await _staffReceptionService.ListTreatedPatientAsync();
+        return Ok(records);
+    }
+}
 }
