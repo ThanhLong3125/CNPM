@@ -26,7 +26,6 @@ export async function createDiagnosis(newDiagnosis: PaientForm): Promise<boolean
     }
 }
 // Tìm kiếm Diagnosis theo MedicalRecordId
-
 export const fetchPatientsDetail = async (medicalRecordId: String): Promise<any[]> => {
     try {
         const res = await api.get(`/Doctor/doctor/medicalRecord/${medicalRecordId}`);
