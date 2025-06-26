@@ -1,4 +1,4 @@
-import api from "../service/apiSerive";
+import api from "./apiSerive";
 import type {
   PatientForm,
   MainStaffDeclare,

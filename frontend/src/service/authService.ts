@@ -1,4 +1,4 @@
-import api from "../service/apiSerive"
+import api from "./apiSerive"
 
 export const authService = {
   login: async (email: string, password: string) => {
@@ -6,6 +6,6 @@ export const authService = {
       email,
       password,
     });
-    return response.data; 
+    return response.data;
   },
 };
