@@ -43,6 +43,12 @@ namespace backend.Services
                 Notes = createDiagnosisDto.Notes?.Trim(),
             };
 
+            var medicalRecord = await _context.MedicalRecords.FirstOrDefaultAsync(r => r.MedicalRecordId == createDiagnosisDto.MedicalRecordId);
+            if (medicalRecord != null)
+            {
+                medicalRecord.Status = true;
+            }
+
             await _context.Diagnoses.AddAsync(diagnosis);
             await _context.SaveChangesAsync();
             await _auditService.WriteLogAsync(
