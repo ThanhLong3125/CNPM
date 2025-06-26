@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState,useRef } from "react"
 import { useNavigate } from "react-router-dom";
 import type { PatientRecordDeclare } from "../../types/staff.types";
 
@@ -17,6 +17,22 @@ const MedicalRecord: React.FC = () => {
   const handleHistory= (patientId: string) => navigate(`/doctor/medical-history/${patientId}`);
   const handleSave= () => navigate(`/doctor`);
   const handleUnSave= () => navigate(`/doctor`);
+
+  // THÊM
+   const anhRef = useRef<HTMLInputElement | null>(null);
+
+  const xuLyBamNut = (): void => {
+    anhRef.current?.click(); // mở hộp thoại chọn file
+  };
+
+  const xuLyChonAnh = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const tepAnh: File | undefined = e.target.files?.[0];
+    if (tepAnh) {
+      console.log("Ảnh được chọn:", tepAnh.name);
+      // TODO: preview hoặc upload ảnh ở đây
+    }
+  };
+  // THÊM
   
   return (
       <div>
@@ -75,7 +91,8 @@ const MedicalRecord: React.FC = () => {
               </div>
 
               <div className="flex justify-start space-x-2 mt-2">
-                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">Thêm</button>
+                <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md" onClick={xuLyBamNut} type="button">Thêm</button> <input type="file" accept="image/*" ref={anhRef} onChange={xuLyChonAnh} className="hidden" />
+
                 <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">Xóa</button>
                 <button className="text-white font-bold bg-[#618FCA] hover:bg-blue-900 focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 active:bg-blue-700 px-7 py-2 rounded-xl shadow-md">AI</button>
               </div>
