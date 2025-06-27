@@ -16,6 +16,7 @@ import ReceptionProfile from './components/ReceptionStaff/ReceptionProfile'
 import DoctorLayout from './components/layout/DoctorLayout';
 import EditMedicalRecord from "../src/components/ReceptionStaff/EditMedicalRecord"
 import HomePage from './components/Page/HomePage';
+import MedicalRecord from './components/Doctor/MedicalRecord';
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
 
         <Route path="/doctor" element={<DoctorLayout />}>
           <Route index element={<DoctorMain />} />
+          <Route path='/MedicalRecord/:patient_id' element={< MedicalRecord />} />
           <Route path="doctormain" element={<DoctorMain />} />
           <Route path="detail/:patient_id" element={<PatientAwaitDetail />} />
         </Route>
