@@ -164,7 +164,7 @@ export const fetchMedicalRecordsByPatientId = async (idPatient: string) => {
 export const fetchDoctor = async (): Promise<any[]> => {
   try {
     const res = await api.get("/StaffReception/doctors");
-    return res.data || [];
+    return res.data || [];``
   } catch (error) {
     console.error("Lỗi khi gọi API fetchDoctor:", error);
     return [];

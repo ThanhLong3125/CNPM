@@ -21,8 +21,6 @@ const CreatedRecordList: React.FC = () => {
       alert("Không tìm thấy bệnh án!");
     }
   };
-
-
   const handleClick = (medicalRecordId: string) => {
     navigate(`/staff/DetailCreatedRecord/${medicalRecordId}`);
   };
@@ -39,8 +37,6 @@ const CreatedRecordList: React.FC = () => {
   const filtered = history.filter(record =>
     record.medicalRecordId?.toLowerCase().includes(filter.toLowerCase())
   );
-
-
   return (
     <div className="bg-[#D5DEEF] m-6 rounded-xl relative shadow-md">
       <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-[#618FCA] mx-auto w-full max-w-xl px-6 py-2 rounded-xl shadow-md">

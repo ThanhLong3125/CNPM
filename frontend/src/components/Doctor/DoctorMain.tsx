@@ -1,116 +1,38 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import type { patientAwait, patientExamined, } from "../../types/doctor.type";
 import { useNavigate } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
+import { fetchWaitingPatients } from "../../service/doctorService";
 
-const mockPatient: patientAwait[] = [
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/07/2025',
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/07/2025',
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/07/2025',
-    },
-
-]
-const dataPatient: patientExamined[] = [
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-        attendDoctor: 'Le Van Khuong'
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-        attendDoctor: 'Le Van Khuong'
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-        attendDoctor: 'Le Van Khuong'
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-        attendDoctor: 'Le Van Khuong'
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-        attendDoctor: 'Le Van Khuong'
-    },
-    {
-        patient_id: 'B0001',
-        medicalRecord_id: 'R0001',
-        name: 'Nguyen Van A',
-        gender: 'Male',
-        timeIn: '10:30 01/06/2025',
-        attendDoctor: 'Le Van Khuong'
-    },
-]
 const DoctorMain: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
     const [dateFilter, setDateFilter] = useState<string>('');
     const [timeFilter, setTimeFilter] = useState<string>('');
     const navigate = useNavigate();
+    const [waitingPatients, setWaitingPatients] = useState<patientAwait[]>([]);
+    const [loadingPatients, setLoadingPatients] = useState(true);
+
+useEffect(() => {
+  const loadPatients = async () => {
+    try {
+      const data = await fetchWaitingPatients();
+      setWaitingPatients(data);
+    } catch (err) {
+      console.error("Không thể tải danh sách bệnh nhân:", err);
+    } finally {
+      setLoadingPatients(false);
+    }
+  };
+  loadPatients();
+}, []);
 
     const handleClick = (patient_id: string) => {
         navigate(`/doctor/MedicalRecord/${patient_id}`);
     };
 
-    const filteredPatients: patientAwait[] = mockPatient.filter((p) =>
-        p.patient_id.toLowerCase().includes(filter.toLowerCase()) &&
-        (dateFilter === '' || p.timeIn.includes(dateFilter))
+    const filteredPatients: patientAwait[] =waitingPatients.filter((p) =>
+        p.patientId.toLowerCase().includes(filter.toLowerCase()) &&
+        (dateFilter === '' || p.createdAt.includes(dateFilter))
     );
 
     return (
@@ -133,17 +55,17 @@ const DoctorMain: React.FC = () => {
                     </div>
 
                     <div className="max-h-[200px] overflow-y-auto space-y-2 bg-[#D3E2F9] p-2 ">
-                        {mockPatient.map((patientAwait, index) => (
+                        {waitingPatients.map((patientAwait, index) => (
                             <div
                                 key={index}
-                                onClick={() => handleClick(patientAwait.patient_id)}
+                                onClick={() => handleClick(patientAwait.patientId)}
                                 className="grid grid-cols-5 bg-[#E3ECFA] text-sm px-4 py-2 rounded-xl shadow-sm cursor-pointer hover:bg-[#c9dcf2]"
                             >
-                                <div>{patientAwait.patient_id}</div>
-                                <div>{patientAwait.medicalRecord_id}</div>
-                                <div>{patientAwait.name}</div>
+                                <div>{patientAwait.patientId}</div>
+                                <div>{patientAwait.medicalRecordId}</div>
+                                <div>{patientAwait.fullName}</div>
                                 <div>{patientAwait.gender}</div>
-                                <div>{patientAwait.timeIn}</div>
+                                <div>{patientAwait.createdAt}</div>
                             </div>
                         ))}
                     </div>
@@ -189,7 +111,7 @@ const DoctorMain: React.FC = () => {
                     </div>
                     <div className="md:col-span-2">
                         <button
-                            onClick={() => {}}
+                            onClick={() => { }}
                             className="bg-[#618FCA] w-full rounded-xl py-2 px-4 text-white text-center hover:bg-[#4b7bb3] transition-colors"
                         >
                             Xem chi tiết
@@ -205,7 +127,7 @@ const DoctorMain: React.FC = () => {
                         <div>Thời gian vào</div>
                         <div>Bác sĩ phụ trách</div>
                     </div>
-                    <div className="max-h-[200px] overflow-y-auto space-y-2 bg-[#D3E2F9] p-2 ">
+                    {/* <div className="max-h-[200px] overflow-y-auto space-y-2 bg-[#D3E2F9] p-2 ">
                         {dataPatient.map((patientExamined, index) => (
                             <div
                                 key={index}
@@ -220,7 +142,7 @@ const DoctorMain: React.FC = () => {
                                 <div>{patientExamined.attendDoctor}</div>
                             </div>
                         ))}
-                    </div>
+                    </div> */}
                     <div className=" bg-[#A7C5EB] bottom-0 px-4 py-4 rounded-b-xl shadow-md">
                     </div>
                 </div>

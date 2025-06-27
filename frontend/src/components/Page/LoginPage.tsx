@@ -43,6 +43,8 @@ const LoginPage: React.FC = () => {
         }
     };
 
+    const handleReset = () => navigate('/resetPassword');
+
     return (
         <div className='flex h-screen relative bg-white overflow-hidden'>
             <div className='w-1/2 bg-black'>
@@ -77,19 +79,15 @@ const LoginPage: React.FC = () => {
                         />
                         <div className='flex items-center justify-between'>
                             <label className='flex items-center'>
-                                <input
-                                    type="checkbox"
-                                    checked={rememberMe}
-                                    onChange={(e) => setRememberMe(e.target.checked)}
-                                    className='mr-2'
-                                />
-                                Remember me
+                               
                             </label>
-                            <a href="#" className='text-blue-500 hover:underline'>Forgot Password?</a>
+                            <a href="#" className='text-blue-500 hover:underline'
+                            onClick ={handleReset}
+                            >Forgot Password?</a>
                         </div>
                         <button
                             type="submit"
-                            className='w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-colors'
+                            className='w-full bg-[#506F9C] text-white p-3 rounded-md hover:bg-blue-700 transition-colors'
                             disabled={loading}
                         >
                             {loading ? 'Logging in...' : 'Login'}
@@ -97,9 +95,6 @@ const LoginPage: React.FC = () => {
 
                         {error && <p className="text-red-500 text-center">{error}</p>}
 
-                        <p className='text-center text-sm'>
-                            Don't have an account? <a href="#" className='text-blue-500 hover:underline'>Register</a>
-                        </p>
                     </form>
                 </div>
             </div>

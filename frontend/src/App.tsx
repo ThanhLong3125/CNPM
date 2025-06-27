@@ -18,6 +18,7 @@ import HomePage from './components/Page/HomePage';
 import MedicalRecord from './components/Doctor/MedicalRecord';
 import History_records from './components/ReceptionStaff/History_records';
 import OldMedicalRecord from './components/Doctor/OldMedicalRecord';
+import ResetPasswordPage from './components/Page/ResetPasswordPage';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={< HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/resetPassword" element={< ResetPasswordPage/>} />
 
         <Route path="/staff" element={<StaffLayout />}>
           <Route index element={<MainStaff />} />

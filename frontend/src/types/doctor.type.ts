@@ -1,9 +1,9 @@
 export interface patientAwait {
-    patient_id: string;
-    medicalRecord_id: string; // mã bệnh án
-    name: string;
-    gender: string;
-    timeIn: string;
+    patientId:string;
+    medicalRecordId:string;
+    fullName:string;
+    gender:string;
+    createdAt:string;
 }
 export interface patientExamined extends patientAwait {
     attendDoctor: string;
