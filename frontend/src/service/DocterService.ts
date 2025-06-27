@@ -14,17 +14,17 @@ export async function editdiagnosisId(
 }
 
 // Tao chan doan
-export async function createDiagnosis(newDiagnosis: ): Promise<boolean> {
-    try {
-        const response = await api.post("/Doctor/doctor", newDiagnosis);
+// export async function createDiagnosis(newDiagnosis: ): Promise<boolean> {
+//     try {
+//         const response = await api.post("/Doctor/doctor", newDiagnosis);
 
-        return response.status >= 200 && response.status < 300;
-    } catch (error: any) {
-        const errors = error?.response?.data?.errors;
-        console.error(" Tạo chẩn đoán thất bại: ", errors || error.message || error);
-        return false;
-    }
-}
+//         return response.status >= 200 && response.status < 300;
+//     } catch (error: any) {
+//         const errors = error?.response?.data?.errors;
+//         console.error(" Tạo chẩn đoán thất bại: ", errors || error.message || error);
+//         return false;
+//     }
+// }
 // Tìm kiếm Diagnosis theo MedicalRecordId
 export const fetchPatientsDetail = async (medicalRecordId: String): Promise<any[]> => {
     try {
@@ -37,3 +37,13 @@ export const fetchPatientsDetail = async (medicalRecordId: String): Promise<any[
 };
 
 
+// Lấy danh sách bệnh nhân đang chờ khám
+export const getWaitingPatients = async (): Promise<any[]> => {
+    try {
+        const res = await api.get('/Doctor/waiting-patients');
+        return res.data || [];
+    } catch (error) {
+        console.error("Lỗi khi lấy danh sách bệnh nhân đang chờ khám: ", error);
+        return [];
+    }
+};

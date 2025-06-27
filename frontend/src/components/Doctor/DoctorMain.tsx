@@ -1,7 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import type { patientAwait, patientExamined, } from "../../types/doctor.type";
 import { useNavigate } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
+
+import { getWaitingPatients } from "../../service/DocterService";
+
 
 const mockPatient: patientAwait[] = [
     {
@@ -54,6 +57,7 @@ const dataPatient: patientExamined[] = [
 ]
 const DoctorMain: React.FC = () => {
     const [filter, setFilter] = useState<string>('');
+    const [waitingPatients, setWaitingPatients] = useState<patientAwait[]>([]);
     const [dateFilter, setDateFilter] = useState<string>('');
     const [timeFilter, setTimeFilter] = useState<string>('');
     const navigate = useNavigate();
@@ -66,6 +70,15 @@ const DoctorMain: React.FC = () => {
         p.patient_id.toLowerCase().includes(filter.toLowerCase()) &&
         (dateFilter === '' || p.timeIn.includes(dateFilter))
     );
+
+    useEffect(() => {
+        const fetchPatients = async () => {
+            const data = await getWaitingPatients();
+            setWaitingPatients(data);
+        };
+        fetchPatients();
+    }, []);
+
     return (
         <div>
             <div className="bg-[#D3E2F9] p-4 rounded-xl m-10 text-center shadow-md ">
@@ -83,7 +96,7 @@ const DoctorMain: React.FC = () => {
                     </div>
 
                     <div className="space-y-2 bg-[#D3E2F9] p-2 ">
-                        {mockPatient.map((patientAwait, index) => (
+                        {waitingPatients.map((patientAwait, index) => (
                             <div
                                 key={index}
                                 onClick={() => handleClick(patientAwait.patient_id)}
