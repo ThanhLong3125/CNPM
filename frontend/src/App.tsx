@@ -1,9 +1,9 @@
+import React from 'react'
 import './index.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import DetailCreatedRecord from './components/ReceptionStaff/MedicalRecordForm';
 import LoginPage from './components/Page/LoginPage'
 import DoctorMain from './components/Doctor/DoctorMain'
-import PatientAwaitDetail from './components/Doctor/PatientAwaitDetail'
 import StaffLayout from './components/layout/StaffLayout'
 import MainStaff from "./components/ReceptionStaff/MainStaff"
 import CreatedRecord from "./components/ReceptionStaff/CreatedRecordList"
@@ -15,15 +15,14 @@ import UpdatePatientRecord from './components/ReceptionStaff/UpdatePatientRecord
 import ReceptionProfile from './components/ReceptionStaff/ReceptionProfile'
 import DoctorLayout from './components/layout/DoctorLayout';
 import EditMedicalRecord from "../src/components/ReceptionStaff/EditMedicalRecord"
-import HomePage from './components/Page/HomePage';
 import MedicalRecord from './components/Doctor/MedicalRecord';
+import History_records from './components/ReceptionStaff/History_records';
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={< HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
 
         <Route path="/staff" element={<StaffLayout />}>
           <Route index element={<MainStaff />} />
@@ -35,15 +34,16 @@ const App = () => {
           <Route path="create-medical-record/:patientId" element={<CreateMedicalRecord />} />
           <Route path="update-patient/:patientId" element={<UpdatePatientRecord />} />
           <Route path="user-profile" element={<ReceptionProfile />} />
-          <Route path="DetailCreatedRecord/:medicalRecordId" element={<DetailCreatedRecord />} />
-          <Route path="EditMedicalRecord/:medicalRecordId" element={<EditMedicalRecord />} />
+          <Route path="DetailCreatedRecord/:patientId" element={<DetailCreatedRecord />} />
+          <Route path="EditMedicalRecord" element={<EditMedicalRecord />} />
         </Route>
 
         <Route path="/doctor" element={<DoctorLayout />}>
           <Route index element={<DoctorMain />} />
-          <Route path='/MedicalRecord/:patient_id' element={< MedicalRecord />} />
           <Route path="doctormain" element={<DoctorMain />} />
-          <Route path="detail/:patient_id" element={<PatientAwaitDetail />} />
+          <Route path="MedicalRecord/:patient_id" element={<MedicalRecord />} />
+          <Route path="medical-history/:patientId" element={<History_records />} />
+
         </Route>
       </Routes>
     </BrowserRouter>

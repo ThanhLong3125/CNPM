@@ -14,7 +14,7 @@ export async function editdiagnosisId(
 }
 
 // Tao chan doan
-export async function createDiagnosis(newDiagnosis: PaientForm): Promise<boolean> {
+export async function createDiagnosis(newDiagnosis: ): Promise<boolean> {
     try {
         const response = await api.post("/Doctor/doctor", newDiagnosis);
 
