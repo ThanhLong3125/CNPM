@@ -1,40 +1,51 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css'
-
-import Navbar from './components/layout/Navbar'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import DetailCreatedRecord from './components/ReceptionStaff/MedicalRecordForm';
 import LoginPage from './components/Page/LoginPage'
-import HomePage from './components/Page/HomePage'
 import DoctorMain from './components/Doctor/DoctorMain'
 import PatientAwaitDetail from './components/Doctor/PatientAwaitDetail'
-import History_records from "./components/Staff/History_records"
-import ReceptionProfile from "./components/Staff/ReceptionProfile"
-import MedicalRecord from './components/Doctor/MedicalRecord';
+import StaffLayout from './components/layout/StaffLayout'
+import MainStaff from "./components/ReceptionStaff/MainStaff"
+import CreatedRecord from "./components/ReceptionStaff/CreatedRecordList"
+import NewRecord from "./components/ReceptionStaff/NewRecord"
+import PatientRecordView from './components/ReceptionStaff/PatientRecord'
+import HistoryRecords from "./components/ReceptionStaff/History_records"
+import CreateMedicalRecord from "./components/ReceptionStaff/CreateMedicalRecord"
+import UpdatePatientRecord from './components/ReceptionStaff/UpdatePatientRecord'
+import ReceptionProfile from './components/ReceptionStaff/ReceptionProfile'
+import DoctorLayout from './components/layout/DoctorLayout';
+import EditMedicalRecord from "../src/components/ReceptionStaff/EditMedicalRecord"
+import HomePage from './components/Page/HomePage';
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Navbar />
       <Routes>
+        <Route path="/" element={< HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-        {/* 
-      < route path='/MedicalRecord/:patient_id' element {< MedicalRecord />} />
-      < Route path='/History_records' element={<History_records />} />
-      < Route path='/detail/:patient_id' element={< PatientAwaitDetail />} />
-      < Route path='/' element={<DoctorMain />} />
-      < Route path='/' element={<ReceptionProfile />} />
-      < Route path='/' element={<ReceptionProfile />} />
-      < Route path='/HomePage' element={<HomePage />} />
-      
-       */}
-        < Route path='/doctor' element={<DoctorMain />} />
-        < Route path='/MedicalRecord/:patient_id' element={< MedicalRecord />} />
+        <Route path="/staff" element={<StaffLayout />}>
+          <Route index element={<MainStaff />} />
+          <Route path="mainstaff" element={<MainStaff />} />
+          <Route path="CreatedRecordList" element={<CreatedRecord />} />
+          <Route path="create-profile" element={<NewRecord />} />
+          <Route path="patientRecord/:patientId" element={<PatientRecordView />} />
+          <Route path="medical-history/:patientId" element={<HistoryRecords />} />
+          <Route path="create-medical-record/:patientId" element={<CreateMedicalRecord />} />
+          <Route path="update-patient/:patientId" element={<UpdatePatientRecord />} />
+          <Route path="user-profile" element={<ReceptionProfile />} />
+          <Route path="DetailCreatedRecord/:medicalRecordId" element={<DetailCreatedRecord />} />
+          <Route path="EditMedicalRecord/:medicalRecordId" element={<EditMedicalRecord />} />
+        </Route>
 
+        <Route path="/doctor" element={<DoctorLayout />}>
+          <Route index element={<DoctorMain />} />
+          <Route path="doctormain" element={<DoctorMain />} />
+          <Route path="detail/:patient_id" element={<PatientAwaitDetail />} />
+        </Route>
       </Routes>
     </BrowserRouter>
-
   )
 }
+
 export default App
-
-
