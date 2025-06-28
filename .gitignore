@@ -65,3 +65,5 @@ yarn-debug.log*
 yarn-error.log*
 
 backend/wwwroot/images
+backend/obj/
+backend/bin/
