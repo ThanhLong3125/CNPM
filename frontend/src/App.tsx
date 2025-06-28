@@ -17,13 +17,14 @@ import DoctorLayout from './components/layout/DoctorLayout';
 import EditMedicalRecord from "../src/components/ReceptionStaff/EditMedicalRecord"
 import MedicalRecord from './components/Doctor/MedicalRecord';
 import History_records from './components/ReceptionStaff/History_records';
+import HomePage from './components/Page/HomePage';
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-
+        < Route path="/HomePage" element={<HomePage />} />
         <Route path="/staff" element={<StaffLayout />}>
           <Route index element={<MainStaff />} />
           <Route path="mainstaff" element={<MainStaff />} />
