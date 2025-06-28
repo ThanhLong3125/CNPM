@@ -61,6 +61,7 @@ namespace backend.DTOs
         public string FullName { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public string? DiagnosisNotes { get; set; }
+        public bool status { get; set; }
     }
 
     public class MedicalRecordWithDoctorDto

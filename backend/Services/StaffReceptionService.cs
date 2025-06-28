@@ -255,7 +255,8 @@ public class StaffReceptionService : IStaffReceptionService
                     FullName = p.FullName,
                     DateOfBirth = p.DateOfBirth,
                     Gender = p.Gender,
-                    Phone = p.Phone
+                    Phone = p.Phone,
+                    status = r.Status,
                 });
             }
         }
