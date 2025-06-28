@@ -36,14 +36,16 @@ namespace backend.Services
         {
             var diagnosis = new Diagnosis
             {
-                Id = Guid.NewGuid(),  // Id vẫn là Guid cho EF Core
-                DiagnosisId = $"CD{Guid.NewGuid():N}".Substring(0, 6).ToUpper(),  // Id string dùng làm key thao tác
+                Id = Guid.NewGuid(), // Id vẫn là Guid cho EF Core
+                DiagnosisId = $"CD{Guid.NewGuid():N}".Substring(0, 6).ToUpper(), // Id string dùng làm key thao tác
                 MedicalRecordId = createDiagnosisDto.MedicalRecordId,
                 DiagnosedDate = createDiagnosisDto.DiagnosedDate,
                 Notes = createDiagnosisDto.Notes?.Trim(),
             };
 
-            var medicalRecord = await _context.MedicalRecords.FirstOrDefaultAsync(r => r.MedicalRecordId == createDiagnosisDto.MedicalRecordId);
+            var medicalRecord = await _context.MedicalRecords.FirstOrDefaultAsync(r =>
+                r.MedicalRecordId == createDiagnosisDto.MedicalRecordId
+            );
             if (medicalRecord != null)
             {
                 medicalRecord.Status = true;
@@ -62,10 +64,14 @@ namespace backend.Services
             return diagnosis.DiagnosisId;
         }
 
-        public async Task<Diagnosis> UpdateDiagnosisAsync(string diagnosisId, UpdateDiagnosisDto updateDiagnosisDto)
+        public async Task<Diagnosis> UpdateDiagnosisAsync(
+            string diagnosisId,
+            UpdateDiagnosisDto updateDiagnosisDto
+        )
         {
-            var diagnosis = await _context.Diagnoses
-                .FirstOrDefaultAsync(d => d.DiagnosisId == diagnosisId);
+            var diagnosis = await _context.Diagnoses.FirstOrDefaultAsync(d =>
+                d.DiagnosisId == diagnosisId
+            );
 
             if (diagnosis == null)
             {
@@ -91,8 +97,7 @@ namespace backend.Services
         public async Task<List<Diagnosis>> SearchDiagnosisbyMRAsync(string medicalRecordId)
         {
             var diagnoses = await _context
-                .Diagnoses
-                .Where(d => d.MedicalRecordId == medicalRecordId)
+                .Diagnoses.Where(d => d.MedicalRecordId == medicalRecordId)
                 .Include(d => d.MedicalRecord)
                 .ToListAsync();
 
@@ -115,21 +120,29 @@ namespace backend.Services
 
             foreach (var r in records)
             {
-                var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
+                var p = await _context.Patients.FirstOrDefaultAsync(p =>
+                    p.IdPatient == r.PatientId
+                );
                 if (p != null)
                 {
-                    results.Add(new MedicalRecordWithPatientDto
-                    {
-                        Id = r.Id.ToString(),
-                        PatientId = r.PatientId,
-                        MedicalRecordId = r.MedicalRecordId,
-                        PhysicicanId = r.AssignedPhysicianId,
-                        CreatedAt = r.CreatedDate,
-                        FullName = p.FullName,
-                        DateOfBirth = p.DateOfBirth,
-                        Gender = p.Gender,
-                        Phone = p.Phone
-                    });
+                    results.Add(
+                        new MedicalRecordWithPatientDto
+                        {
+                            Id = r.Id.ToString(),
+                            PatientId = r.PatientId,
+                            MedicalRecordId = r.MedicalRecordId,
+                            PhysicicanId = r.AssignedPhysicianId,
+                            CreatedAt = r.CreatedDate,
+                            FullName = p.FullName,
+                            DateOfBirth = p.DateOfBirth,
+                            Gender = p.Gender,
+                            Phone = p.Phone,
+                            Email = p.Email,
+                            MedicalHistory = p.MedicalHistory,
+                            Symptoms = r.Symptoms,
+                            status = r.Status,
+                        }
+                    );
                 }
             }
 
@@ -143,23 +156,33 @@ namespace backend.Services
 
             foreach (var r in records)
             {
-                var p = await _context.Patients.FirstOrDefaultAsync(p => p.IdPatient == r.PatientId);
+                var p = await _context.Patients.FirstOrDefaultAsync(p =>
+                    p.IdPatient == r.PatientId
+                );
                 if (p != null)
                 {
-                    var diagnosis = await _context.Diagnoses.FirstOrDefaultAsync(d => d.MedicalRecordId == r.MedicalRecordId);
-                    results.Add(new MedicalRecordWithPatientDto
-                    {
-                        Id = r.Id.ToString(),
-                        PatientId = r.PatientId,
-                        MedicalRecordId = r.MedicalRecordId,
-                        PhysicicanId = r.AssignedPhysicianId,
-                        CreatedAt = r.CreatedDate,
-                        FullName = p.FullName,
-                        DateOfBirth = p.DateOfBirth,
-                        Gender = p.Gender,
-                        Phone = p.Phone,
-                        DiagnosisNotes = diagnosis?.Notes
-                    });
+                    var diagnosis = await _context.Diagnoses.FirstOrDefaultAsync(d =>
+                        d.MedicalRecordId == r.MedicalRecordId
+                    );
+                    results.Add(
+                        new MedicalRecordWithPatientDto
+                        {
+                            Id = r.Id.ToString(),
+                            PatientId = r.PatientId,
+                            FullName = p.FullName,
+                            Gender = p.Gender,
+                            Email = p.Email,
+                            Phone = p.Phone,
+                            DateOfBirth = p.DateOfBirth,
+                            CreatedAt = r.CreatedDate,
+                            MedicalRecordId = r.MedicalRecordId,
+                            PhysicicanId = r.AssignedPhysicianId,
+                            MedicalHistory = p.MedicalHistory,
+                            Symptoms = r.Symptoms,
+                            DiagnosisNotes = diagnosis?.Notes,
+                            status = r.Status,
+                        }
+                    );
                 }
             }
 

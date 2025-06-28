@@ -55,6 +55,9 @@ namespace backend.DTOs
         public string PatientId { get; set; }
         public string MedicalRecordId { get; set; }
         public string PhysicicanId { get; set; }
+        public string MedicalHistory { get; set; }
+        public string Email { get; set; }
+        public string Symptoms { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Gender { get; set; }
         public string Phone { get; set; }
