@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\CNPM\\backend\\backend.csproj": {}
+    "C:\\Users\\THINKPAD\\Desktop\\CNPM\\backend\\backend.csproj": {}
   },
   "projects": {
-    "D:\\CNPM\\backend\\backend.csproj": {
+    "C:\\Users\\THINKPAD\\Desktop\\CNPM\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\CNPM\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\THINKPAD\\Desktop\\CNPM\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "D:\\CNPM\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\Hung Mai\\.nuget\\packages\\",
-        "outputPath": "D:\\CNPM\\backend\\obj\\",
+        "projectPath": "C:\\Users\\THINKPAD\\Desktop\\CNPM\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\THINKPAD\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\THINKPAD\\Desktop\\CNPM\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Hung Mai\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\THINKPAD\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,13 +43,45 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.OpenApi": {
+            "BCrypt.Net-Next": {
               "target": "Package",
-              "version": "[8.0.15, )"
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.16, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.16, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.16, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.16, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.11, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.6.2, )"
+              "version": "[8.1.4, )"
+            },
+            "Swashbuckle.AspNetCore.Annotations": {
+              "target": "Package",
+              "version": "[8.1.4, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.12.0, )"
             }
           },
           "imports": [
@@ -71,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
