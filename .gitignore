@@ -16,6 +16,8 @@ _ReSharper.*
 bin/
 obj/
 appsettings.json
+Migrations/
+wwwroot/
 
 
 # Package management
