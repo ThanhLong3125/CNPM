@@ -67,7 +67,7 @@ namespace backend.Services
                 await file.CopyToAsync(stream);
             }
 
-            return filePath; // Return only the unique file name
+            return uniqueFileName; // Return only the unique file name
         }
 
         public string GetFilePath(string fileName)

@@ -87,13 +87,6 @@ namespace backend.Services
                 imageId = image.ImageId;
             }
 
-            var medicalrecord = await _context.MedicalRecords.FirstOrDefaultAsync(m => m.MedicalRecordId == dto.MedicalRecordId);
-            if (medicalRecord != null)
-            {
-                medicalRecord.Status = true;
-                await _context.SaveChangesAsync();
-            }
-
             // Ghi log
             await _auditService.WriteLogAsync(new WriteLogDto
             {
