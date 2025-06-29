@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using backend.DTOs;
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -52,16 +53,17 @@ namespace backend.Controllers
         [SwaggerOperation(Summary = "Xem thông tin cá nhân")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            // Lấy PhysicianId từ JWT (ClaimTypes.NameIdentifier là đúng nếu bạn set Id vào đây)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var id))
+            if (string.IsNullOrWhiteSpace(userId))
             {
                 return Unauthorized();
             }
 
             try
             {
-                var user = await _authService.GetUserByIdAsync(id);
+                var user = await _authService.GetUserByIdAsync(userId); // userId là string
                 return Ok(user);
             }
             catch (ApplicationException ex)
@@ -69,6 +71,7 @@ namespace backend.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
 
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
@@ -82,7 +85,7 @@ namespace backend.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet("users/{id}")]
         [SwaggerOperation(Summary = "Xem chi tiết người dùng dựa vào id(ADMIN)")]
-        public async Task<ActionResult<UserDto>> GetUserById(Guid id)
+        public async Task<ActionResult<UserDto>> GetUserById(string id)
         {
             try
             {

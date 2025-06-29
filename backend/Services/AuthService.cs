@@ -14,7 +14,7 @@ namespace backend.Services
     {
         Task<AuthResponseDto> RegisterAsync(RegisterUserDto registerDto);
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
-        Task<UserDto> GetUserByIdAsync(Guid id);
+        Task<UserDto> GetUserByIdAsync(string id);
         Task<List<UserDto>> GetAllUsersAsync();
         Task<bool> UpdateUserAsync(Guid id, UpdateUserDto updateDto);
         Task<bool> DeleteUserAsync(Guid id);
@@ -67,9 +67,9 @@ namespace backend.Services
             return GenerateJwtToken(user);
         }
 
-        public async Task<UserDto> GetUserByIdAsync(Guid id)
+        public async Task<UserDto> GetUserByIdAsync(string id)
         {
-            var user = await _context.Users.FindAsync(id)
+            var user = await _context.Users.FirstOrDefaultAsync(p => p.PhysicianId == id)
                 ?? throw new ApplicationException("Không tìm thấy người dùng.");
 
             await LogAsync("GetProfile", id);
@@ -137,7 +137,7 @@ namespace backend.Services
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.PhysicianId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Full_name),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
@@ -171,6 +171,7 @@ namespace backend.Services
         private UserDto MapToUserDto(User user) => new()
         {
             Id = user.Id,
+            PhysicianId = user.PhysicianId,
             FullName = user.Full_name,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber ?? string.Empty,

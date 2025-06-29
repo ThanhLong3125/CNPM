@@ -30,4 +30,16 @@ namespace backend.DTOs
 
         public string? ImageId { get; set; }
     }
+
+    public class CreateDiagnosisWithOptionalImageDto
+{
+    public string MedicalRecordId { get; set; } = null!;
+    public DateTime DiagnosedDate { get; set; }
+    public string? Notes { get; set; }
+
+    // Thông tin ảnh (nếu có)
+    public IFormFile? ImageFile { get; set; }
+    public string? ImageName { get; set; }
+}
+
 }

@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using backend.DTOs;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -14,6 +16,23 @@ namespace backend.Controllers
         public DoctorController(IDoctorService doctorService)
         {
             _doctorService = doctorService;
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpPost("diagnosis")]
+        [Consumes("multipart/form-data")]
+        [SwaggerOperation(Summary = "Tạo chẩn đoán mới (có thể đính kèm ảnh)")]
+        public async Task<ActionResult<object>> CreateDiagnosisWithImage([FromForm] CreateDiagnosisWithOptionalImageDto dto)
+        {
+            try
+            {
+                var diagnosisId = await _doctorService.CreateDiagnosisWithOptionalImageAsync(dto);
+                return Ok(new { message = "Tạo chẩn đoán thành công", diagnosisId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // POST: api/Doctor/doctor
@@ -63,28 +82,42 @@ namespace backend.Controllers
             try
             {
                 var diagnoses = await _doctorService.SearchDiagnosisbyMRAsync(medicalRecordId);
-            return Ok(diagnoses);
+                return Ok(diagnoses);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-        catch (Exception ex)
+
+        [HttpGet("waiting-patients")]
+        [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đang chờ khám")]
+        public async Task<IActionResult> GetWaitingPatients()
+
         {
-            return NotFound(new { message = ex.Message });
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+
+            var records = await _doctorService.ListWaitingPatientAsync(userId);
+            return Ok(records);
         }
-    }
 
-    [HttpGet("waiting-patients")]
-    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đang chờ khám")]
-    public async Task<IActionResult> GetWaitingPatients()
-    {
-        var records = await _doctorService.ListWaitingPatientAsync();
-        return Ok(records);
-    }
+        [HttpGet("treated-patients")]
+        [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đã được khám")]
+        public async Task<IActionResult> GetTreatedPatients()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    [HttpGet("treated-patients")]
-    [SwaggerOperation(Summary = "Lấy danh sách bệnh nhân đã được khám")]
-    public async Task<IActionResult> GetTreatedPatients()
-    {
-        var records = await _doctorService.ListTreatedPatientAsync();
-        return Ok(records);
-    }
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+            var records = await _doctorService.ListTreatedPatientAsync(userId);
+            return Ok(records);
+        }
     }
 }

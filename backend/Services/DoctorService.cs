@@ -3,6 +3,7 @@ using backend.Data;
 using backend.DTOs;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
 
 namespace backend.Services
 {
@@ -11,8 +12,9 @@ namespace backend.Services
         Task<string> CreateDiagnosisAsync(CreateDiagnosisDto createDiagnosisDto);
         Task<Diagnosis> UpdateDiagnosisAsync(string id, UpdateDiagnosisDto updateDiagnosisDto);
         Task<List<Diagnosis>> SearchDiagnosisbyMRAsync(string id);
-        Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync();
-        Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync();
+        Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync(string PhysicianId);
+        Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync(string PhysicianId);
+        Task<object> CreateDiagnosisWithOptionalImageAsync(CreateDiagnosisWithOptionalImageDto dto);
     }
 
     public class DoctorService : IDoctorService
@@ -21,16 +23,87 @@ namespace backend.Services
         private readonly IConfiguration _configuration;
         private readonly IAuditService _auditService;
 
+        private readonly IFileStorageService _fileStorageService;
+
         public DoctorService(
             AppDbContext context,
             IConfiguration configuration,
+                        IFileStorageService fileStorageService,
             IAuditService auditService
         )
         {
             _context = context;
             _configuration = configuration;
             _auditService = auditService;
+            _fileStorageService = fileStorageService;
         }
+
+        public async Task<object> CreateDiagnosisWithOptionalImageAsync(CreateDiagnosisWithOptionalImageDto dto)
+        {
+            // Tạo diagnosis
+            var diagnosis = new Diagnosis
+            {
+                Id = Guid.NewGuid(),
+                DiagnosisId = $"CD{Guid.NewGuid():N}".Substring(0, 6).ToUpper(),
+                MedicalRecordId = dto.MedicalRecordId,
+                DiagnosedDate = dto.DiagnosedDate,
+                Notes = dto.Notes?.Trim()
+            };
+
+            // Cập nhật trạng thái medical record
+            var medicalRecord = await _context.MedicalRecords
+                .FirstOrDefaultAsync(r => r.MedicalRecordId == dto.MedicalRecordId);
+
+            if (medicalRecord != null)
+            {
+                medicalRecord.Status = true;
+            }
+
+            await _context.Diagnoses.AddAsync(diagnosis);
+            await _context.SaveChangesAsync();
+
+            string? imageId = null;
+
+            // Nếu có ảnh, upload ảnh
+            if (dto.ImageFile != null)
+            {
+                string uniqueFileName = await _fileStorageService.SaveFileAsync(dto.ImageFile);
+
+                var image = new Image
+                {
+                    Id = Guid.NewGuid(),
+                    ImageId = $"IM{Guid.NewGuid():N}".Substring(0, 6).ToUpper(),
+                    DiagnosisId = diagnosis.DiagnosisId,
+                    ImageName = dto.ImageName,
+                    Path = uniqueFileName,
+                    UploadDate = DateTime.UtcNow,
+                    AIAnalysis = null,
+                    IsDeleted = false
+                };
+
+                _context.Images.Add(image);
+                await _context.SaveChangesAsync();
+
+                imageId = image.ImageId;
+            }
+
+            // Ghi log
+            await _auditService.WriteLogAsync(new WriteLogDto
+            {
+                User = "Doctor",
+                Action = "Create Diagnosis (with optional image)",
+                Details = dto
+            });
+
+            // Trả về kết quả
+            return new
+            {
+                DiagnosisId = diagnosis.DiagnosisId,
+                ImageId = imageId // null nếu không có ảnh
+            };
+        }
+
+
 
         public async Task<string> CreateDiagnosisAsync(CreateDiagnosisDto createDiagnosisDto)
         {
@@ -108,9 +181,12 @@ namespace backend.Services
             return diagnoses;
         }
 
-        public async Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync()
+        public async Task<List<MedicalRecordWithPatientDto>> ListWaitingPatientAsync(string physicianId)
         {
-            var records = await _context.MedicalRecords.Where(r => r.Status == false).ToListAsync();
+            var records = await _context.MedicalRecords
+                .Where(r => r.Status == false && r.AssignedPhysicianId == physicianId)
+                .ToListAsync();
+
             var results = new List<MedicalRecordWithPatientDto>();
 
             foreach (var r in records)
@@ -123,7 +199,7 @@ namespace backend.Services
                         Id = r.Id.ToString(),
                         PatientId = r.PatientId,
                         MedicalRecordId = r.MedicalRecordId,
-                        PhysicicanId = r.AssignedPhysicianId,
+                        PhysicicanId = r.AssignedPhysicianId, // đã sửa tên đúng
                         CreatedAt = r.CreatedDate,
                         FullName = p.FullName,
                         DateOfBirth = p.DateOfBirth,
@@ -136,9 +212,12 @@ namespace backend.Services
             return results;
         }
 
-        public async Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync()
+        public async Task<List<MedicalRecordWithPatientDto>> ListTreatedPatientAsync(string physicianId)
         {
-            var records = await _context.MedicalRecords.Where(r => r.Status == true).ToListAsync();
+            var records = await _context.MedicalRecords
+                .Where(r => r.Status == true && r.AssignedPhysicianId == physicianId)
+                .ToListAsync();
+
             var results = new List<MedicalRecordWithPatientDto>();
 
             foreach (var r in records)
