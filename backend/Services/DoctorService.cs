@@ -87,6 +87,13 @@ namespace backend.Services
                 imageId = image.ImageId;
             }
 
+            var medicalrecord = await _context.MedicalRecords.FirstOrDefaultAsync(m => m.MedicalRecordId == dto.MedicalRecordId);
+            if (medicalRecord != null)
+            {
+                medicalRecord.Status = true;
+                await _context.SaveChangesAsync();
+            }
+
             // Ghi log
             await _auditService.WriteLogAsync(new WriteLogDto
             {
@@ -237,7 +244,8 @@ namespace backend.Services
                         DateOfBirth = p.DateOfBirth,
                         Gender = p.Gender,
                         Phone = p.Phone,
-                        DiagnosisNotes = diagnosis?.Notes
+                        DiagnosisNotes = diagnosis?.Notes,
+                        status = r.Status
                     });
                 }
             }
