@@ -100,11 +100,11 @@ namespace backend.Services
 
             byte[] imageBytes = await _fileStorageService.ReadFileBytesAsync(image.Path);
             string mimeType = GetMimeTypeFromFileName(image.Path);
-            string prompt = "What is this image?";
+            string prompt = "Ảnh này bạn thấy gì trong nó(trả lời bằng tiếng việt)?";
 
             if (image.Diagnosis != null)
             {
-                prompt = $"Analyze this image related to diagnosis notes: '{image.Diagnosis.Notes}'. {prompt}";
+                prompt = $"Phân tích chuẩn đoán bức ảnh: '{image.Diagnosis.Notes}'. {prompt}";
             }
 
             string aiAnalysisResult = await _aiAnalysisService.AnalyzeImageWithGeminiAsync(
