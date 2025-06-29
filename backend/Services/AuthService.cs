@@ -14,7 +14,7 @@ namespace backend.Services
     {
         Task<AuthResponseDto> RegisterAsync(RegisterUserDto registerDto);
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
-        Task<UserDto> GetUserByIdAsync(Guid id);
+        Task<User> GetUserByIdAsync(Guid id);
         Task<List<UserDto>> GetAllUsersAsync();
         Task<bool> UpdateUserAsync(Guid id, UpdateUserDto updateDto);
         Task<bool> DeleteUserAsync(Guid id);
@@ -67,13 +67,13 @@ namespace backend.Services
             return GenerateJwtToken(user);
         }
 
-        public async Task<UserDto> GetUserByIdAsync(Guid id)
+        public async Task<User> GetUserByIdAsync(Guid id)
         {
             var user = await _context.Users.FindAsync(id)
                 ?? throw new ApplicationException("Không tìm thấy người dùng.");
 
             await LogAsync("GetProfile", id);
-            return MapToUserDto(user);
+            return user;
         }
 
         public async Task<List<UserDto>> GetAllUsersAsync()

@@ -83,6 +83,7 @@ namespace backend.Data
                 PhysicianId = $"BS{staffId.ToString().Replace("-", "").Substring(0, 6).ToUpper()}",
                 Full_name = "Staff",
                 Email = "staff@aidims.com",
+                PhoneNumber = "0999765432",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Staff123!"),
                 Role = role.Role.Staff,
             });
@@ -94,6 +95,7 @@ namespace backend.Data
                 PhysicianId = $"BS{doctor1.ToString().Replace("-", "").Substring(0, 6).ToUpper()}",
                 Full_name = "Thanh Long",
                 Email = "doctor1@aidims.com",
+                PhoneNumber = "0999765432",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doctor123!"),
                 Role = role.Role.Doctor,
                 Specialty = "Radiology"
