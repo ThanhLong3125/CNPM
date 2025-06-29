@@ -67,11 +67,17 @@ namespace backend.Services
                 await file.CopyToAsync(stream);
             }
 
-            return filePath; // Return only the unique file name
+            return uniqueFileName; // Return only the unique file name
         }
 
         public string GetFilePath(string fileName)
         {
+            // If the fileName already contains the base upload directory, use it as is.
+            // This handles cases where old database entries might have stored the full path.
+            if (fileName.StartsWith(_baseUploadDirectory))
+            {
+                return fileName;
+            }
             return Path.Combine(_baseUploadDirectory, fileName);
         }
 
