@@ -17,6 +17,7 @@ bin/
 obj/
 appsettings.json
 images/
+Migrations/
 
 # Package management
 packages/
