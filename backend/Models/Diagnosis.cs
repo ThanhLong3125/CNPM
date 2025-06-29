@@ -10,7 +10,6 @@ namespace backend.Models
         public Guid Id { get; set; }
 
         [Required]
-
         public string DiagnosisId { get; set; } = string.Empty;
 
         [Required]
