@@ -87,7 +87,7 @@ namespace backend.Services
 
             // Construct the full request URI including the API key
             // Assuming _geminiBaseUrl already contains the model endpoint (e.g., ".../gemini-2.0-flash:generateContent")
-            var requestUri = $"{_geminiBaseUrl}?key={_geminiApiKey}";
+            var requestUri = $"{_geminiBaseUrl}{_geminiApiKey}";
 
             try
             {

@@ -124,8 +124,12 @@ builder.Services.AddHttpClient(
 );
 
 // Program.cs
-builder.Services.Configure<GeminiApiSettings>(builder.Configuration.GetSection("GeminiApi"));
-builder.Services.Configure<FileStorageSettings>(builder.Configuration.GetSection("FileStorage"));
+builder.Services.Configure<GeminiApiSettings>(
+    builder.Configuration.GetSection("GeminiApiSettings")
+);
+builder.Services.Configure<FileStorageSettings>(
+    builder.Configuration.GetSection("FileStorageSettings")
+);
 
 // Register background services
 builder.Services.AddSingleton<NotificationBackgroundService>();
