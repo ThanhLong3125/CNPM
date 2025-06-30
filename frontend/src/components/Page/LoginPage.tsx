@@ -6,7 +6,7 @@ import { authService } from "../../service/authService";
 const LoginPage: React.FC = () => {
     const [emailOrUsername, setEmailOrUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
+
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
                 setError('Unknown role returned from server');
             }
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
             setError('Invalid credentials or server error');
         } finally {

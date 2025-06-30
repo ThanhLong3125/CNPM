@@ -43,7 +43,7 @@ const ReceptionProfile: React.FC = () => {
               <label className="block text-white mb-1">Họ Tên</label>
               <input
                 type="text"
-                value={user?.full_name || ""}
+                value={user?.fullName || ""}
                 className="w-full px-3 py-2 rounded bg-white text-black"
                 disabled
               />

@@ -1,4 +1,4 @@
-import api from "../service/apiSerive"
+import api from "../service/apiService"
 //Đăng nhập
 export const authService = {
   login: async (email: string, password: string) => {
@@ -8,6 +8,25 @@ export const authService = {
     });
     return response.data; 
   },
+};
+//Đăng ký tài khoản mới
+export const registerUser = async (userData: {
+  email: string;
+  password: string;
+  fullName: string;
+  role: string;
+  phone?: string;
+  dateOfBirth?: string;
+  gender?: string;
+}) => {
+  try {
+    const response = await api.post('/Auth/register', userData);
+    console.log("User registered:", response.data);
+    return response.data;
+  } catch (error: unknown) {
+    console.error("Lỗi đăng ký:", error);
+    throw error;
+  }
 };
 //Thông tin người dùng
 export const fetchUser = async () => {
@@ -22,16 +41,17 @@ export const fetchUser = async () => {
     });
     console.log("User data:", response.data);
     return response.data;
-  } catch (error: any) {
-    console.error("Fetch user error:", error.response?.status, error.response?.data);
+  } catch (error: unknown) {
+    console.error("Fetch user error:", error);
     return null;
   }
 };
+
 //Đặt lại mật khẩu
 export const resetPasswordByEmail = async (email: string, newPassword: string): Promise<boolean> => {
   try {
     console.log("Sending reset for:", email, newPassword);
-    const response = await api.post("/api/Auth/reset-password-email", {
+    const response = await api.post("/Auth/reset-password-email", {
       email,
       newPassword,
     });
@@ -44,8 +64,8 @@ export const resetPasswordByEmail = async (email: string, newPassword: string): 
     }
 
     return false;
-  } catch (error: any) {
-    console.error("Lỗi reset mật khẩu:", error.response?.data || error.message);
+  } catch (error: unknown) {
+    console.error("Lỗi reset mật khẩu:", error);
     return false;
   }
 };

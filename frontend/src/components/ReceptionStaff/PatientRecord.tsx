@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import type { PatientRecordDeclare } from "../../types/staff.types";
@@ -24,7 +25,6 @@ const PatientRecordView: React.FC = () => {
         const load = async () => {
             const allPatients = await fetchPatientsDetail();
             let found = null;
-            let foundIndex = -1;
 
             for (let i = 0; i < allPatients.length; i++) {
                 if (allPatients[i].idPatient === patientId) {

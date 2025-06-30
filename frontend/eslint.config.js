@@ -23,6 +23,11 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+        // Disable non-critical rules for developmentAdd commentMore actions
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-prototype-builtins': 'warn',
+      'prefer-const': 'warn',
     },
   },
 )

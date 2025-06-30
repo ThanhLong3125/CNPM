@@ -1,3 +1,4 @@
-import React from "react"
-import { Outlet } from 'react-router-dom';
-
+// Placeholder file for MainLayout component
+export default function MainLayout() {
+  return null;
+}

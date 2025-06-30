@@ -1,4 +1,6 @@
-import api from "../service/apiSerive";
+
+import api from "../service/apiService"
+import { mapGender } from "../utils/formatters";
 import type {
   PatientForm,
   MainStaffDeclare,
@@ -12,12 +14,13 @@ export async function createPatient(newPatient: PatientForm): Promise<boolean> {
     const response = await api.post("/StaffReception/patients", newPatient);
 
     return response.status >= 200 && response.status < 300;
-  } catch (error: any) {
+  } catch (error: unknown) {
     const errors = error?.response?.data?.errors;
     console.error(" Tạo bệnh nhân thất bại:", errors || error.message || error);
     return false;
   }
 }
+
 //API hiển thị bảng ở MainStaff
 export const fetchPatients = async (): Promise<MainStaffDeclare[]> => {
   try {
@@ -26,13 +29,7 @@ export const fetchPatients = async (): Promise<MainStaffDeclare[]> => {
     const patients: MainStaffDeclare[] = response.data.map((p: any) => ({
       patientID: p.idPatient,
       fullName: p.fullName,
-      gender:
-        p.gender.toLowerCase() === "male"
-          ? "Nam"
-          : p.gender.toLowerCase() === "female"
-            ? "Nữ"
-            : p.gender,
-
+      gender: mapGender(p.gender),
       phone: p.phone,
     }));
 
@@ -42,20 +39,35 @@ export const fetchPatients = async (): Promise<MainStaffDeclare[]> => {
     return [];
   }
 };
+
 //API hiển thị ở PatientRecord
 export const fetchPatientsDetail = async (): Promise<any[]> => {
   try {
     const res = await api.get("/StaffReception/patients");
-    return res.data || [];
+    
+    // Map gender cho tất cả patients
+    const mappedPatients = res.data.map((patient: any) => ({
+      ...patient,
+      gender: mapGender(patient.gender)
+    }));
+    
+    return mappedPatients || [];
   } catch (error) {
     console.error("Lỗi khi gọi API fetchPatientsDetail:", error);
     return [];
   }
 };
+
 //Tìm theo ID
 export async function fetchPatientById(idPatient: string): Promise<any | null> {
   try {
     const res = await api.get(`/StaffReception/patients/${idPatient}`);
+    
+    // Map gender cho patient
+    if (res.data) {
+      res.data.gender = mapGender(res.data.gender);
+    }
+    
     return res.data;
   } catch (error) {
     console.error("Lỗi khi gọi chi tiết bệnh nhân:", error);
@@ -71,7 +83,7 @@ export async function updatePatientById(
   try {
     const response = await api.put(`/StaffReception/patients/${idPatient}`, updatedData);
     return response.status >= 200 && response.status < 300;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Chi tiết lỗi cập nhật:", error?.response?.data?.errors || error);
     return false;
   }
@@ -82,21 +94,32 @@ export const createMedicalRecord = async (payload: CreateRecord) => {
   try {
     const res = await api.post("/StaffReception/medicalrecords", payload);
     return res.status === 201 || res.status === 200;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Lỗi tạo bệnh án:", error.response?.data);
     return false;
   }
 };
+
 // Xem lịch sử bệnh án của bệnh nhân
 export async function fetchHistoryPatientById(idPatient: string): Promise<any | null> {
   try {
     const res = await api.get(`/StaffReception/medicalrecords/patient/${idPatient}`);
+    
+    // Map gender cho tất cả records
+    if (res.data && Array.isArray(res.data)) {
+      res.data = res.data.map((record: any) => ({
+        ...record,
+        gender: mapGender(record.gender)
+      }));
+    }
+    
     return res.data;
   } catch (error) {
     console.error("Lỗi khi gọi chi tiết lịch sử bệnh án của bệnh nhân:", error);
     return null;
   }
 }
+
 // Xem lịch sử bệnh án đã tạo
 export const fetchAllHistoryRecord = async (): Promise<CreatedRecordDeclare[]> => {
   try {
@@ -106,7 +129,7 @@ export const fetchAllHistoryRecord = async (): Promise<CreatedRecordDeclare[]> =
       patientID: p.patientId,                
       medicalRecordId: p.medicalRecordId,
       fullName: p.fullName,
-      gender: p.gender,
+      gender: mapGender(p.gender),
       phone: p.phone,
       createdDate: p.createdAt,                 
     }));
@@ -120,19 +143,32 @@ export const fetchAllHistoryRecord = async (): Promise<CreatedRecordDeclare[]> =
 
 // Xem chi tiết bệnh án đã tạo
 export const fetchMedicalRecordById = async (id: string) => {
-  const res = await api.get(`/StaffReception/medicalrecords/${id}`);
-  return res.data;
+  try {
+    const res = await api.get(`/StaffReception/medicalrecords/${id}`);
+    
+    // Map gender nếu có
+    if (res.data && res.data.gender) {
+      res.data.gender = mapGender(res.data.gender);
+    }
+    
+    return res.data;
+  } catch (error: unknown) {
+    console.error("Lỗi khi lấy chi tiết bệnh án:", error.response?.data || error.message);
+    throw error;
+  }
 };
+
 // Xoá bệnh án
 export const deleteMedicalRecord = async (medicalRecordId: string): Promise<boolean> => {
   try {
     const res = await api.delete(`/StaffReception/medicalrecords/${medicalRecordId}`);
     return res.status === 200 || res.status === 204;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(" Lỗi khi xoá bệnh án:", error?.response?.data || error.message);
     return false;
   }
 };
+
 // Cập nhật bệnh án
 export const updateMedicalRecord = async (
   medicalRecordId: string,
@@ -145,28 +181,77 @@ export const updateMedicalRecord = async (
   try {
     const res = await api.put(`/StaffReception/medicalrecords/${medicalRecordId}`, updatedData);
     return res.status >= 200 && res.status < 300;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Lỗi khi cập nhật bệnh án:", error?.response?.data || error.message);
     return false;
   }
 };
+
 //Lịch sử bệnh án của một bệnh nhân.
 export const fetchMedicalRecordsByPatientId = async (idPatient: string) => {
   try {
     const response = await api.get(`/StaffReception/medicalrecords/patient/${idPatient}`);
+    
+    // Map gender cho tất cả records
+    if (response.data && Array.isArray(response.data)) {
+      response.data = response.data.map((record: any) => ({
+        ...record,
+        gender: mapGender(record.gender)
+      }));
+    }
+    
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(" Lỗi khi lấy lịch sử bệnh án:", error.response?.status, error.response?.data);
     return null;
   }
 };
+
 //Lấy danh sách bác sĩ.
 export const fetchDoctor = async (): Promise<any[]> => {
   try {
     const res = await api.get("/StaffReception/doctors");
-    return res.data || [];``
+    return res.data || [];
   } catch (error) {
     console.error("Lỗi khi gọi API fetchDoctor:", error);
+    return [];
+  }
+};
+
+//Lấy danh sách bệnh nhân đang chờ khám
+export const fetchWaitingPatients = async (): Promise<any[]> => {
+  try {
+    const response = await api.get("/StaffReception/waiting-patients");
+    console.log("Waiting patients:", response.data);
+    
+    // Map gender cho tất cả patients
+    const mappedPatients = response.data.map((patient: any) => ({
+      ...patient,
+      gender: mapGender(patient.gender)
+    }));
+    
+    return mappedPatients;
+  } catch (error: unknown) {
+    console.error("Lỗi khi lấy danh sách bệnh nhân đang chờ:", error.response?.data || error.message);
+    return [];
+  }
+};
+
+//Lấy danh sách bệnh nhân đã được khám
+export const fetchTreatedPatients = async (): Promise<any[]> => {
+  try {
+    const response = await api.get("/StaffReception/treated-patients");
+    console.log("Treated patients:", response.data);
+    
+    // Map gender cho tất cả patients
+    const mappedPatients = response.data.map((patient: any) => ({
+      ...patient,
+      gender: mapGender(patient.gender)
+    }));
+    
+    return mappedPatients;
+  } catch (error: unknown) {
+    console.error("Lỗi khi lấy danh sách bệnh nhân đã khám:", error.response?.data || error.message);
     return [];
   }
 };

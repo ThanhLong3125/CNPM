@@ -6,8 +6,6 @@ import type { PatientForm } from "../../types/staff.types";
 const UpdatePatientRecord: React.FC = () => {
   const navigate = useNavigate();
   const { patientId: idPatient } = useParams<{ patientId: string }>();
-  const [realId, setRealId] = useState<string>("");
-
   const [patientCode, setPatientCode] = useState<string>("");
   const [formData, setFormData] = useState<PatientForm>({
     fullName: "",
@@ -33,7 +31,6 @@ const UpdatePatientRecord: React.FC = () => {
         });
 
         setPatientCode(found.idPatient || ""); // để hiển thị
-        setRealId(found.id || ""); // Lưu ID gốc cho update
       }
     };
     fetchData();
