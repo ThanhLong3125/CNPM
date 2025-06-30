@@ -77,10 +77,10 @@ export const fetchWaitingPatients = async (): Promise<patient[]> => {
     }));
     
     return mappedPatients;
-  } catch (error: unknown) {
+  } catch (error) {
     console.error(
       "Lỗi khi lấy danh sách bệnh nhân đang chờ:",
-      error.response?.data || error.message
+      error
     );
     throw error;
   }
@@ -99,10 +99,10 @@ export const fetchTreatedPatients = async (): Promise<patient[]> => {
     }));
     
     return mappedPatients;
-  } catch (error: unknown) {
+  } catch (error) {
     console.error(
       "Lỗi khi lấy danh sách bệnh nhân đã khám:",
-      error.response?.data || error.message
+      error
     );
     throw error;
   }
@@ -135,10 +135,10 @@ export const updateDiagnosis = async (diagnosisId: string, data: any) => {
     const response = await api.put(`/Doctor/doctor/${diagnosisId}`, data);
     console.log("Diagnosis updated:", response.data);
     return response.data;
-  } catch (error: unknown) {
+  } catch (error) {
     console.error(
       "Lỗi khi cập nhật chẩn đoán:",
-      error.response?.data || error.message
+      error
     );
     throw error;
   }
@@ -150,10 +150,10 @@ export const fetchDiagnosisByMedicalRecordId = async (medicalRecordId: string) =
     const response = await api.get(`/Doctor/doctor/medicalRecord/${medicalRecordId}`);
     console.log("Diagnosis by medical record:", response.data);
     return response.data;
-  } catch (error: unknown) {
+  } catch (error) {
     console.error(
       "Lỗi khi lấy chẩn đoán theo medical record:",
-      error.response?.data || error.message
+      error
     );
     throw error;
   }

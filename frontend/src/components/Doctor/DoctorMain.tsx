@@ -135,34 +135,6 @@ const DoctorMain: React.FC = () => {
               className="bg-[#618FCA] w-full max-w-2xl pl-14 pr-3 rounded-4xl p-2 text-white placeholder-white "
             />
           </div>
-
-          <div className="bg-[#618FCA] md:col-span-2 w-full text-white rounded-xl py-2 px-4 text-center">
-            Bác sĩ phụ trách
-          </div>
-          <div className="md:col-span-2">
-            <input
-              type="date"
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="bg-[#618FCA] w-full rounded-xl py-2 px-4 text-white text-center"
-            />
-          </div>
-          <div className="md:col-span-2">
-            <input
-              type="time"
-              value={timeFilter}
-              onChange={(e) => setTimeFilter(e.target.value)}
-              className="bg-[#618FCA] w-full rounded-xl py-2 px-4 text-white text-center"
-            />
-          </div>
-          <div className="md:col-span-2">
-            <button
-              onClick={() => {}}
-              className="bg-[#618FCA] w-full rounded-xl py-2 px-4 text-white text-center hover:bg-[#4b7bb3] transition-colors"
-            >
-              Xem chi tiết
-            </button>
-          </div>
         </div>
         <div>
           <div className="grid grid-cols-6 sticky top-24 z-10 font-semibold bg-[#A7C5EB] text-[#1F3C88] px-4 py-2 rounded-t-xl mt-4 shadow-md">

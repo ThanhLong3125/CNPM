@@ -54,7 +54,7 @@ export const uploadImage = async (
     console.log("Image uploaded:", response.data);
     return response.data;
   } catch (error: unknown) {
-    console.error("Lỗi khi upload ảnh:", error.response?.data || error.message);
+    console.error("Lỗi khi upload ảnh:", error);
     throw error;
   }
 };
@@ -66,7 +66,7 @@ export const fetchImageById = async (imageId: string): Promise<ImageInfo> => {
     console.log("Image info:", response.data);
     return response.data;
   } catch (error: unknown) {
-    console.error("Lỗi khi lấy thông tin ảnh:", error.response?.data || error.message);
+    console.error("Lỗi khi lấy thông tin ảnh:", error);
     throw error;
   }
 };
@@ -78,7 +78,7 @@ export const deleteImage = async (imageId: string): Promise<boolean> => {
     console.log("Image deleted:", response.status);
     return response.status === 200 || response.status === 204;
   } catch (error: unknown) {
-    console.error("Lỗi khi xóa ảnh:", error.response?.data || error.message);
+    console.error("Lỗi khi xóa ảnh:", error);
     return false;
   }
 };
@@ -90,7 +90,7 @@ export const analyzeImage = async (imageId: string): Promise<ImageAnalysisResult
     console.log("Image analysis result:", response.data);
     return response.data;
   } catch (error: unknown) {
-    console.error("Lỗi khi phân tích ảnh:", error.response?.data || error.message);
+    console.error("Lỗi khi phân tích ảnh:", error);
     throw error;
   }
 };
@@ -108,7 +108,7 @@ export const fetchImageBlob = async (imageId: string): Promise<Blob> => {
     });
     return response.data;
   } catch (error: unknown) {
-    console.error("Lỗi khi lấy ảnh blob:", error.response?.data || error.message);
+    console.error("Lỗi khi lấy ảnh blob:", error);
     throw error;
   }
 };
@@ -121,7 +121,7 @@ export const fetchImagesByDiagnosisId = async (diagnosisId: string): Promise<Ima
     console.log(`Fetching images for diagnosisId: ${diagnosisId}`);
     return [];
   } catch (error: unknown) {
-    console.error("Lỗi khi lấy ảnh theo diagnosis:", error.response?.data || error.message);
+    console.error("Lỗi khi lấy ảnh theo diagnosis:", error);
     throw error;
   }
 }; 

@@ -15,8 +15,7 @@ export async function createPatient(newPatient: PatientForm): Promise<boolean> {
 
     return response.status >= 200 && response.status < 300;
   } catch (error: unknown) {
-    const errors = error?.response?.data?.errors;
-    console.error(" Tạo bệnh nhân thất bại:", errors || error.message || error);
+    console.error(" Tạo bệnh nhân thất bại:", error);
     return false;
   }
 }
@@ -84,7 +83,7 @@ export async function updatePatientById(
     const response = await api.put(`/StaffReception/patients/${idPatient}`, updatedData);
     return response.status >= 200 && response.status < 300;
   } catch (error: unknown) {
-    console.error("Chi tiết lỗi cập nhật:", error?.response?.data?.errors || error);
+    console.error("Chi tiết lỗi cập nhật:", error);
     return false;
   }
 }
@@ -95,7 +94,7 @@ export const createMedicalRecord = async (payload: CreateRecord) => {
     const res = await api.post("/StaffReception/medicalrecords", payload);
     return res.status === 201 || res.status === 200;
   } catch (error: unknown) {
-    console.error("Lỗi tạo bệnh án:", error.response?.data);
+    console.error("Lỗi tạo bệnh án:", error);
     return false;
   }
 };
@@ -153,7 +152,7 @@ export const fetchMedicalRecordById = async (id: string) => {
     
     return res.data;
   } catch (error: unknown) {
-    console.error("Lỗi khi lấy chi tiết bệnh án:", error.response?.data || error.message);
+    console.error("Lỗi khi lấy chi tiết bệnh án:", error);
     throw error;
   }
 };
@@ -164,7 +163,7 @@ export const deleteMedicalRecord = async (medicalRecordId: string): Promise<bool
     const res = await api.delete(`/StaffReception/medicalrecords/${medicalRecordId}`);
     return res.status === 200 || res.status === 204;
   } catch (error: unknown) {
-    console.error(" Lỗi khi xoá bệnh án:", error?.response?.data || error.message);
+    console.error(" Lỗi khi xoá bệnh án:", error)
     return false;
   }
 };
@@ -182,7 +181,7 @@ export const updateMedicalRecord = async (
     const res = await api.put(`/StaffReception/medicalrecords/${medicalRecordId}`, updatedData);
     return res.status >= 200 && res.status < 300;
   } catch (error: unknown) {
-    console.error("Lỗi khi cập nhật bệnh án:", error?.response?.data || error.message);
+    console.error("Lỗi khi cập nhật bệnh án:", error)
     return false;
   }
 };
@@ -202,7 +201,7 @@ export const fetchMedicalRecordsByPatientId = async (idPatient: string) => {
     
     return response.data;
   } catch (error: unknown) {
-    console.error(" Lỗi khi lấy lịch sử bệnh án:", error.response?.status, error.response?.data);
+    console.error(" Lỗi khi lấy lịch sử bệnh án:", error);
     return null;
   }
 };
@@ -232,7 +231,7 @@ export const fetchWaitingPatients = async (): Promise<any[]> => {
     
     return mappedPatients;
   } catch (error: unknown) {
-    console.error("Lỗi khi lấy danh sách bệnh nhân đang chờ:", error.response?.data || error.message);
+    console.error("Lỗi khi lấy danh sách bệnh nhân đang chờ:", error);
     return [];
   }
 };
@@ -251,7 +250,7 @@ export const fetchTreatedPatients = async (): Promise<any[]> => {
     
     return mappedPatients;
   } catch (error: unknown) {
-    console.error("Lỗi khi lấy danh sách bệnh nhân đã khám:", error.response?.data || error.message);
+    console.error("Lỗi khi lấy danh sách bệnh nhân đã khám:", error);
     return [];
   }
 };
